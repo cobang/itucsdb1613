@@ -64,5 +64,8 @@ target/
 .vagrant/
 
 # .idea
+.idea
 /.idea
 workspace.xml
+.idea
+.idea
