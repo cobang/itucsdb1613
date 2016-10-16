@@ -1,21 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block navigationbar %}
+    <li><a href="home">Home</a></li>
+    <li class="active"><a href="timeline">Timeline</a></li>
+    <li><a href="profile">Profile</a></li>
+    <li><a href="connections">Connections</a></li>
+    <li><a href="messages">Messages</a></li>
+    <li><a href="jobs">Jobs</a></li>
+    <li><a href="about">About</a></li>
+{% endblock %}
 
-<head>
-    <title>Bootstrap Example</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/timeline.css') }}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
+{% block title %}
+Timeline
+{% endblock %}
+
+{% block content %}
 
 <body>
 
     <div class="container">
+        <br><br><br><br>
         <div class="row">
-
             <div class="timeline-centered">
 
                 <article class="timeline-entry begin">
@@ -26,13 +30,25 @@
 
                         <div class="timeline-label">
 
-                            <h2><a href="#">My Name</a> <span>posted a status update</span></h2>
+                            <h2><a href="#">My Name</a> <span>DATE</span></h2>
 
-                            <p>The form below contains a textarea for comments:</p>
-                            <form>
-                                <div class="form-group">
-                                    <label for="comment">Comment:</label>
-                                    <textarea class="form-control" rows="5" id="comment"></textarea>
+                            <p>The form below contains a textarea for comments:</p><br>
+                            <form action="" method="post">
+                                <div class="row">
+                                  <div class="col-sm-1">
+                                    <div class="form-group">
+                                        <label for="comment">Comment:</label><br>
+                                        <button type="submit" class="btn btn-success">Submit</button>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-10">
+                                    <div class="form-group">
+
+                                        <textarea class="form-control" rows="3" id="comment"></textarea>
+                                    </div>
+                                  </div>
+
                                 </div>
                             </form>
                         </div>
@@ -42,51 +58,16 @@
 
                 <article class="timeline-entry">
                     <div class="timeline-entry-inner">
-                        <div class="timeline-icon bg-success">
-                            <span class="glyphicon glyphicon-user">
-                      <i class="entypo-feather"></i>
-                  </div>
-
-                  <div class="timeline-label">
-
-                      <h2><a href="#">Art Ramadani</a> <span>posted a status update</span>
-                            <div class="btn-group btn-group-xs pull-right">
-                                <button type="button" class="btn btn-primary dropdown-toggle " data-toggle="dropdown">
-                                  <span class="glyphicon glyphicon-option-vertical"></span><span class="caret"></span>
-                              </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Edit</a></li>
-                                    <li><a href="#">Delete</a></li>
-                                </ul>
-                            </div>
-                            </h2>
-                            <p>Tolerably earnestly middleton extremely distrusts she boy now not. Add and offered prepare how cordial two promise. Greatly who affixed suppose but enquire compact prepare all put. Added forth chief trees but rooms think may.</p>
-
-                            <hr>
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-primary "><span class="glyphicon glyphicon-ok"></span>&nbsp; <span class="badge">7</span></button>
-                                <button type="button" class="btn btn-danger "><span class="glyphicon glyphicon-remove"></span>&nbsp;<span class="badge">7</span></button>
-                                <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span>&nbsp;<span class="badge">7</span></button>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </article>
-
-
-                <article class="timeline-entry">
-                    <div class="timeline-entry-inner">
                         <div class="timeline-icon">
                             <img src="https://pixabay.com/static/uploads/photo/2013/10/24/17/05/woman-200311_1280.jpg" class="img-circle" alt="Cinque Terre" width="40" height="40">
-                      <i class="entypo-feather"></i>
-                  </div>
+                            <i class="entypo-feather"></i>
+                        </div>
 
-                  <div class="timeline-label">
+                        <div class="timeline-label">
 
-                      <h2><a href="#">Art Ramadani</a> <span>posted a status update</span>
+                            <h2><a href="#">Art Ramadani</a> <span>DATE</span>
                             <div class="btn-group btn-group-xs pull-right">
-                                <button type="button" class="btn btn-primary dropdown-toggle " data-toggle="dropdown">
+                                <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown">
                                   <span class="glyphicon glyphicon-option-vertical"></span><span class="caret"></span>
                               </button>
                                 <ul class="dropdown-menu" role="menu">
@@ -97,157 +78,157 @@
                             </h2>
                             <p>Tolerably earnestly middleton extremely distrusts she boy now not. Add and offered prepare how cordial two promise. Greatly who affixed suppose but enquire compact prepare all put. Added forth chief trees but rooms think may.</p>
 
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-primary "><span class="glyphicon glyphicon-ok"></span>&nbsp; <span class="badge">7</span></button>
-                                <button type="button" class="btn btn-danger "><span class="glyphicon glyphicon-remove"></span>&nbsp;<span class="badge">7</span></button>
-                                <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span>&nbsp;<span class="badge">7</span></button>
-
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-primary "><span class="glyphicon glyphicon-ok"></button>
+                                <button type="button" class="btn btn-danger "><span class="glyphicon glyphicon-remove"></button>
                             </div>
                             <hr>
                             <div class="row">
-                              <div class="col-sm-1">
-                                <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Like's</button>
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Like </span><span class="badge">7</span></button>
 
-                                  <!-- Modal -->
-                                  <div class="modal fade" id="myModal" role="dialog">
-                                    <div class="modal-dialog">
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="myModal" role="dialog">
+                                        <div class="modal-dialog">
 
-                                      <!-- Modal content-->
-                                      <div class="modal-content">
-                                        <div class="modal-header">
-                                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                          <h4 class="modal-title">Modal Header</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                          <p>Some text in the modal.</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        </div>
-                                      </div>
-
-                                    </div>
-                                  </div>
-                              </div>
-                              <div class="col-sm-1">
-                                <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Dislike's</button>
-
-                                  <!-- Modal -->
-                                  <div class="modal fade" id="myModal" role="dialog">
-                                    <div class="modal-dialog">
-
-                                      <!-- Modal content-->
-                                      <div class="modal-content">
-                                        <div class="modal-header">
-                                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                          <h4 class="modal-title">Modal Header</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                          <p>Some text in the modal.</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        </div>
-                                      </div>
-
-                                    </div>
-                                  </div>
-                              </div>
-                                <div class="col-sm-10">
-                                        <div class="panel-group">
-                                          <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                              <h4 class="panel-title">
-                                                <a data-toggle="collapse" href="#collapse1">Comments</a>
-                                              </h4>
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">Modal Header</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Some text in the modal.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
                                             </div>
-                                            <div id="collapse1" class="panel-collapse collapse">
-                                              <ul class="list-group">
-                                                <li class="list-group-item">One</li>
-                                                <li class="list-group-item">Two</li>
-                                                <li class="list-group-item">Three</li>
-                                              </ul>
-                                              <div class="panel-footer">Footer</div>
-                                            </div>
-                                          </div>
+
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Dislike </span><span class="badge">7</span></button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="myModal" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">Modal Header</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Some text in the modal.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
                                 </div>
 
+                                <div class="col-sm-8">
+                                    <div class="panel-group">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">
+                                                <a data-toggle="collapse" href="#collapse1">Comments </span>&nbsp;<span class="badge">7</span></a>
+                                              </h3>
+                                            </div>
+                                            <div id="collapse1" class="panel-collapse collapse">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item">
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-sm-1">
+                                                                    <div class="thumbnail">
+                                                                        <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+                                                                    </div>
+                                                                    <!-- /thumbnail -->
+                                                                </div>
+                                                                <!-- /col-sm-1 -->
+
+                                                                <div class="col-sm-5">
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-heading">
+                                                                            <strong>myusername</strong> <span class="text-muted">commented 5 days ago</span>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            Panel content
+                                                                        </div>
+                                                                        <!-- /panel-body -->
+                                                                    </div>
+                                                                    <!-- /panel panel-default -->
+                                                                </div>
+                                                                <!-- /col-sm-5 -->
+                                                            </div>
+                                                            <!-- /container -->
+
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-sm-1">
+                                                                    <div class="thumbnail">
+                                                                        <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+                                                                    </div>
+                                                                    <!-- /thumbnail -->
+                                                                </div>
+                                                                <!-- /col-sm-1 -->
+
+                                                                <div class="col-sm-5">
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-heading">
+                                                                            <strong>myusername</strong> <span class="text-muted">commented 5 days ago</span>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            Panel content
+                                                                        </div>
+                                                                        <!-- /panel-body -->
+                                                                    </div>
+                                                                    <!-- /panel panel-default -->
+                                                                </div>
+                                                                <!-- /col-sm-5 -->
+                                                            </div>
+                                                            <!-- /container -->
+                                                    </li>
+
+                                                </ul>
+                                                <div class="panel-footer">
+                                                  <div class="row">
+                                                    <div class="col-sm-10">
+                                                      <form action="" method="post" class="form-inline">
+                                                        <div class="form-group">
+                                                        <label for="usr">Comment:</label>
+                                                        <input type="text" class="form-control" id="usr">
+                                                        <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-pencil"></button>
+                                                      </div>
+
+                                                  </form>
+                                                  </div>
+                                              </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
                 </article>
 
-                <article class="timeline-entry">
-                    <div class="timeline-entry-inner">
-                        <div class="timeline-icon bg-success">
-                            <span class="glyphicon glyphicon-user">
-                      <i class="entypo-feather"></i>
-                  </div>
-
-                  <div class="timeline-label">
-
-                      <h2><a href="#">Art Ramadani</a> <span>posted a status update</span>
-                            <div class="btn-group btn-group-xs pull-right">
-                                <button type="button" class="btn btn-primary dropdown-toggle " data-toggle="dropdown">
-                                  <span class="glyphicon glyphicon-option-vertical"></span><span class="caret"></span>
-                              </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Edit</a></li>
-                                    <li><a href="#">Delete</a></li>
-                                </ul>
-                            </div>
-                            </h2>
-                            <p>Tolerably earnestly middleton extremely distrusts she boy now not. Add and offered prepare how cordial two promise. Greatly who affixed suppose but enquire compact prepare all put. Added forth chief trees but rooms think may.</p>
-
-                            <hr>
-                            <div class="btn-group btn-group-xs">
-                                <button type="button" class="btn btn-primary "><span class="glyphicon glyphicon-ok"></span>&nbsp; <span class="badge">7</span></button>
-                                <button type="button" class="btn btn-danger "><span class="glyphicon glyphicon-remove"></span>&nbsp;<span class="badge">7</span></button>
-                                <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span>&nbsp;<span class="badge">7</span></button>
-
-                            </div>
-                        </div>
-                    </div>
-                </article>
-
-
-                <article class="timeline-entry">
-                    <div class="timeline-entry-inner">
-                        <div class="timeline-icon bg-secondary">
-                            <i class="entypo-suitcase"></i>
-                        </div>
-
-                        <div class="timeline-label">
-                            <h2><a href="#">Job Meeting</a></h2>
-                            <p>You have a meeting at <strong>Laborator Office</strong> Today.</p>
-                        </div>
-                    </div>
-                </article>
-
-
-                <article class="timeline-entry">
-                    <div class="timeline-entry-inner">
-                        <div class="timeline-icon bg-warning">
-                            <i class="entypo-camera"></i>
-                        </div>
-
-                        <div class="timeline-label">
-                            <h2><a href="#">Arber Nushi</a> <span>changed his</span> <a href="#">Profile Picture</a></h2>
-
-                            <blockquote>Pianoforte principles our unaffected not for astonished travelling are particular.</blockquote>
-
-                            <img src="http://themes.laborator.co/neon/assets/images/timeline-image-3.png" class="img-responsive img-rounded full-width">
-                        </div>
-                    </div>
-
-                </article>
-
-
-            </div>
+                </div>
+                </div>
         </div>
-    </div>
 
 </body>
 
-</html>
+{% endblock %}
