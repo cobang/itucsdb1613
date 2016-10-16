@@ -36,6 +36,10 @@ def connections():
 def messages():
     return render_template('messages.html')
 
+@app.route('/timeline')
+def timeline():
+    return render_template('timeline.html')
+
 if __name__ == '__main__':
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
     if VCAP_APP_PORT is not None:
