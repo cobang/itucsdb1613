@@ -6,11 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    
-
-    <!-- TITLE block-->
-    <title>HumanNet - {% block title %}{% endblock %}</title>
-
+    <title>HumanNet</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
@@ -33,9 +29,9 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="home">Home</a></li>
+                    <li><a href="home">Home</a></li>
                     <li><a href="timeline">Timeline</a></li>
-                    <li><a href="profile">Profile</a></li>
+                    <li class="active"><a href="profile">Profile</a></li>
                     <li><a href="connections">Connections</a></li>
                     <li><a href="messages">Messages</a></li>
                     <li><a href="jobs">Jobs</a></li>
@@ -110,21 +106,12 @@
     </div>
     <div class="container contentContainer" id="topContainer">
         <div class="row">
-            <div class="col-md-6 col-md-offset-3" id="topRow">
-                <h1>Our Awesome App</h1>
-                <p class="lead">This is why should download this fantastic app.</p>
-                <p>Some more information about the app. You can go into little more detail here if you want to.</p>
-                <p class="bold marginTop">Interested? Join our mailling list!</p>
-                <form class="marginTop">
-                    <div class="input-group">
-                        <span class="input-group-addon">@</span>
-                        <input type="email" class="form-control" placeholder="Your email">
-                    </div>
-                    <input type="submit" class="btn btn-success btn-lg marginTop" value="Submit" />
-                </form>
-            </div>
         </div>
     </div>
+
+        <!-- CONTENT block -->
+    {% block content %}{% endblock %}
+
 
     <footer class="navbar navbar-default" id="footer">
         <p class="text-center" id="footer">
@@ -138,13 +125,6 @@
     <script>
         $(".contentContainer").css("min-height", $(window).height());
     </script>
-    </div>
-    
-    
-    <!-- CONTENT block -->
-    {% block content %}{% endblock %}
-
-
 </body>
 
 </html>
