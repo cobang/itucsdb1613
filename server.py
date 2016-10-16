@@ -28,6 +28,10 @@ def about():
     return render_template('about.html')
 
 
+@app.route('/connections')
+def connections():
+    return render_template('connections.html')
+
 if __name__ == '__main__':
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
     if VCAP_APP_PORT is not None:
