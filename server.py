@@ -32,13 +32,20 @@ def about():
 def connections():
     return render_template('connections.html')
 
+
 @app.route('/messages')
 def messages():
     return render_template('messages.html')
 
+
 @app.route('/timeline')
 def timeline():
     return render_template('timeline.html')
+
+
+@app.route('/jobs')
+def jobs():
+    return render_template('jobs.html')
 
 if __name__ == '__main__':
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
