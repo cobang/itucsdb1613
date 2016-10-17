@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block navigationbar %}
+    <li><a href="home">Home</a></li>
+    <li class="active"><a href="timeline">Timeline</a></li>
+    <li><a href="profile">Profile</a></li>
+    <li><a href="connections">Connections</a></li>
+    <li><a href="messages">Messages</a></li>
+    <li><a href="jobs">Jobs</a></li>
+    <li><a href="about">About</a></li>
+{% endblock %}
+
+{% block title %}
+Timeline
+{% endblock %}
+
+{% block content %}
+
+<body>
+
+    <div class="container">
+        <br><br><br><br>
+        <div class="row">
+            <div class="timeline-centered">
+
+                <article class="timeline-entry begin">
+                    <div class="timeline-entry-inner">
+                        <div class="timeline-icon" style="-webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg);">
+                            <i class="entypo-flight"></i> +
+                        </div>
+
+                        <div class="timeline-label">
+
+                            <h2><a href="#">My Name</a> <span>DATE</span></h2>
+
+                            <p>You can share some text:</p><br>
+                            <form action="" method="post">
+                                <div class="row">
+                                  <div class="col-sm-1">
+                                    <div class="form-group">
+                                        <label for="comment">Post:</label><br>
+                                        <button type="submit" class="btn btn-success">Share</button>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-10">
+                                    <div class="form-group">
+
+                                        <textarea class="form-control" rows="3" id="comment"></textarea>
+                                    </div>
+                                  </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </article>
+
+                <article class="timeline-entry">
+                    <div class="timeline-entry-inner">
+                        <div class="timeline-icon">
+                            <img src="http://i.imgur.com/bfjplrY.jpg" class="img-circle" alt="Cinque Terre" width="40" height="40">
+                            <i class="entypo-feather"></i>
+                        </div>
+
+                        <div class="timeline-label">
+
+                            <h2><a href="#">Art Ramadani</a> <span>DATE</span>
+                            <div class="btn-group btn-group-xs pull-right">
+                                <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown">
+                                  <span class="glyphicon glyphicon-option-vertical"></span><span class="caret"></span>
+                              </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Edit</a></li>
+                                    <li><a href="#">Delete</a></li>
+                                </ul>
+                            </div>
+                            </h2>
+                            <p>Tolerably earnestly middleton extremely distrusts she boy now not. Add and offered prepare how cordial two promise. Greatly who affixed suppose but enquire compact prepare all put. Added forth chief trees but rooms think may.</p>
+
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-primary "><span class="glyphicon glyphicon-ok"></button>
+                                <button type="button" class="btn btn-danger "><span class="glyphicon glyphicon-remove"></button>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Like </span><span class="badge">7</span></button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="myModal" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">Like</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>The list of those who likes this post.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-info btn-md pull-right" data-toggle="modal" data-target="#myModal2">Dislike </span><span class="badge">7</span></button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="myModal2" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">Dislike</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>The list of those who dislikes this post.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <div class="panel-group">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">
+                                                <a data-toggle="collapse" href="#collapse1">Comments </span>&nbsp;<span class="badge">7</span></a>
+                                              </h3>
+                                            </div>
+                                            <div id="collapse1" class="panel-collapse collapse">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item">
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-sm-1">
+                                                                    <div class="thumbnail">
+                                                                        <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+                                                                    </div>
+                                                                    <!-- /thumbnail -->
+                                                                </div>
+                                                                <!-- /col-sm-1 -->
+
+                                                                <div class="col-sm-5">
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-heading">
+                                                                            <strong>myusername</strong> <span class="text-muted">commented 5 days ago</span>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            Panel content
+                                                                        </div>
+                                                                        <!-- /panel-body -->
+                                                                    </div>
+                                                                    <!-- /panel panel-default -->
+                                                                </div>
+                                                                <!-- /col-sm-5 -->
+                                                            </div>
+                                                            <!-- /container -->
+
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-sm-1">
+                                                                    <div class="thumbnail">
+                                                                        <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+                                                                    </div>
+                                                                    <!-- /thumbnail -->
+                                                                </div>
+                                                                <!-- /col-sm-1 -->
+
+                                                                <div class="col-sm-5">
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-heading">
+                                                                            <strong>myusername</strong> <span class="text-muted">commented 5 days ago</span>
+                                                                        </div>
+                                                                        <div class="panel-body">
+                                                                            Panel content
+                                                                        </div>
+                                                                        <!-- /panel-body -->
+                                                                    </div>
+                                                                    <!-- /panel panel-default -->
+                                                                </div>
+                                                                <!-- /col-sm-5 -->
+                                                            </div>
+                                                            <!-- /container -->
+                                                    </li>
+
+                                                </ul>
+                                                <div class="panel-footer">
+                                                  <div class="row">
+                                                    <div class="col-sm-10">
+                                                      <form action="" method="post" class="form-inline">
+                                                        <div class="form-group">
+                                                        <label for="usr">Comment:</label>
+                                                        <input type="text" class="form-control" id="usr">
+                                                        <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-pencil"></button>
+                                                      </div>
+
+                                                  </form>
+                                                  </div>
+                                              </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </article>
+
+                </div>
+                </div>
+        </div>
+
+</body>
+
+{% endblock %}
