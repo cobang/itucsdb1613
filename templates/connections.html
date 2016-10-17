@@ -12,7 +12,115 @@
 Connections
 {% endblock %}
 {% block content %}
+<body>
     <div class="container contentContainer" id="topContainer">
-
+    <div class="rowCon">
+    <div class="col-sm-4">
+            <div id="custom-search-input">
+                                <div class="input-group">
+                                    <input type="text" class="search-query form-control" placeholder="Search Connections" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-danger" type="button">
+                                            <span class=" glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+        <br>
+                 <div class="list-group">
+                <a href="#" class="list-group-item" style="background-color: #be809b"><b>All Connections</b></a>
+                <a href="#" class="list-group-item">People</a>
+                <a href="#" class="list-group-item">Companies</a>
+                <a href="#" class="list-group-item">Locations</a>
+                <a href="#" class="list-group-item">Industries</a>
+             </div>
     </div>
+    <div class="col-sm-8">
+        <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Artemis Crock</a>
+        </h4>
+      </div>
+      <div id="collapse1" class="panel-collapse collapse in">
+        <div class="panel-body">
+                <div class="media" style="font-size: 12px">
+                        <img class="media-object" src="http://web.itu.edu.tr/yurdakulgu/profile-42914_960_720.png" width="84" height="84" style="float: left">
+                    <p>Student-Istanbul Technical University</p>
+                    <p>Part-Time Software Developer</p>
+                    <p>email:artemiscrock@gmail.com</p>
+                    <br>
+                    <div class="media-body">
+                        <p><a href="#" class="btn btn-xs" style="background-color: #9ba5cd; color: #0f0f0f"><span>150 connections</span></a>
+                                &nbsp;
+                            <a href="#" class="btn btn-xs" style="background-color: #b8e2d9; color: #0f0f0f"><span>Go to profile</span></a></p>
+                        <p>
+                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Message</a>
+                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-ban-circle"></span> Remove from your connections</a>
+                        </p>
+                    </div>
+                </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Bruce Wayne</a>
+        </h4>
+      </div>
+      <div id="collapse2" class="panel-collapse collapse">
+        <div class="panel-body">
+           <div class="media" style="font-size: 12px">
+                        <img class="media-object" src="http://web.itu.edu.tr/yurdakulgu/profile-42914_960_720.png" width="84" height="84" style="float: left">
+                    <p>Student-Istanbul Technical University</p>
+                    <p>Part-Time Software Developer</p>
+                    <p>email:artemiscrock@gmail.com</p>
+                    <br>
+                    <div class="media-body">
+                        <p><a href="#" class="btn btn-xs" style="background-color: #9ba5cd; color: #0f0f0f"><span>150 connections</span></a>
+                                &nbsp;
+                            <a href="#" class="btn btn-xs" style="background-color: #b8e2d9; color: #0f0f0f"><span>Go to profile</span></a></p>
+                        <p>
+                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Message</a>
+                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-ban-circle"></span> Remove from your connections</a>
+                        </p>
+                    </div>
+                </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Cat Grant</a>
+        </h4>
+      </div>
+      <div id="collapse3" class="panel-collapse collapse">
+        <div class="panel-body">
+               <div class="media" style="font-size: 12px">
+                        <img class="media-object" src="http://web.itu.edu.tr/yurdakulgu/profile-42914_960_720.png" width="84" height="84" style="float: left">
+                    <p>Student-Istanbul Technical University</p>
+                    <p>Part-Time Software Developer</p>
+                    <p>email:artemiscrock@gmail.com</p>
+                    <br>
+                    <div class="media-body">
+                        <p><a href="#" class="btn btn-xs" style="background-color: #9ba5cd; color: #0f0f0f"><span>150 connections</span></a>
+                                &nbsp;
+                            <a href="#" class="btn btn-xs" style="background-color: #b8e2d9; color: #0f0f0f"><span>Go to profile</span></a></p>
+                        <p>
+                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Message</a>
+                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-ban-circle"></span> Remove from your connections</a>
+                        </p>
+                    </div>
+                </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
+  </div>
+    </div>
+</body>
 {% endblock %}
