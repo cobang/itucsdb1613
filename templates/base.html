@@ -17,9 +17,9 @@
     <!-- Own CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/timeline.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/timeline.css') }}" />
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/connections.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/connections.css') }}" />
 
 </head>
 
@@ -93,6 +93,15 @@
                             </div>
                         </div>
                         <button class="btn btn-primary btn-block" type="submit">Sign Up</button>
+                        <hr>
+                        <div class="social-box">
+                            <a class="btn btn-block btn-social btn-facebook">
+                                <i class="fa fa-facebook fa-fw"></i> Sign up with Facebook
+                            </a>
+                            <a class="btn btn-block btn-social btn-google-plus">
+                                <i class="fa fa-google-plus fa-fw"></i> Sign up with Google
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -129,13 +138,22 @@
                         </div>
                         <p class="text-right"><a href="#">Forgot password?</a></p>
                         <button class="btn btn-primary btn-block" type="submit">Login</button>
+                        <hr>
+                        <div class="social-box">
+                            <a class="btn btn-block btn-social btn-facebook">
+                                <i class="fa fa-facebook"></i> Login with Facebook
+                            </a>
+                            <a class="btn btn-block btn-social btn-google-plus">
+                                <i class="fa fa-google-plus"></i> Login with Google
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-        <!-- CONTENT block -->
+    <!-- CONTENT block -->
     {% block content %}{% endblock %}
 
 
