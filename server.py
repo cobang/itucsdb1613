@@ -2,7 +2,10 @@ import datetime
 import os
 
 from flask import Flask
-from flask import render_template
+from flask import render_template, request, redirect, url_for
+
+from post import Post
+from posts import Posts
 
 app = Flask(__name__)
 
@@ -38,9 +41,21 @@ def messages():
     return render_template('messages.html')
 
 
-@app.route('/timeline')
+@app.route('/timeline', methods=['GET', 'POST'])
 def timeline():
-    return render_template('timeline.html')
+    if request.method == 'GET':
+        posts = app.posts.get_posts()
+        #redirect(url_for('site.timeline'))
+        return render_template('timeline.html', posts = posts)
+    else:
+        text = request.form['post']
+        date = datetime.datetime.now().ctime()
+        user = "ali"
+        post = Post(user=user, text=text, date=date)
+        app.posts.add_post(post=post)
+        posts = app.posts.get_posts()
+    return redirect(url_for('timeline', posts=posts))
+
 
 
 @app.route('/jobs')
@@ -53,4 +68,6 @@ if __name__ == '__main__':
         port, debug = int(VCAP_APP_PORT), False
     else:
         port, debug = 5000, True
+
+    app.posts = Posts()
     app.run(host='0.0.0.0', port=port, debug=debug)
