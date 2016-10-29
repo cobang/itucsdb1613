@@ -1,5 +1,6 @@
 import datetime
 import os
+import pymysql
 
 from flask import Flask
 from flask import render_template, request, redirect, url_for
@@ -8,7 +9,38 @@ from post import Post
 from posts import Posts
 
 app = Flask(__name__)
+#mysql
+MYSQL_DATABASE_HOST = '176.32.230.23'
+MYSQL_DATABASE_PORT = 3306
+MYSQL_DATABASE_USER = 'cl48-humannet'
+MYSQL_DATABASE_PASSWORD = 'itu1773'
+MYSQL_DATABASE_DB = 'cl48-humannet'
+MYSQL_DATABASE_CHARSET = 'utf8'
 
+
+@app.route('/test/')
+def test_page():
+    try:
+        c, conn = connection()
+        return("okay")
+    except Exception as e:
+        return(str(e))
+
+def connection():
+    try:
+        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER, passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        c = conn.cursor()
+        sql = """CREATE TABLE test (
+                 FIRST_NAME  CHAR(20) NOT NULL,
+                 LAST_NAME  CHAR(20),
+                 AGE INT,
+                 SEX CHAR(1),
+                 INCOME FLOAT )"""
+
+        c.execute(sql)
+        return conn, c
+    except Exception as e:
+        print (str(e))
 
 @app.route('/')
 def home_page():
