@@ -1,6 +1,4 @@
 applications:
-- services:
-  - ElephantSQL-ox
   disk_quota: 1024M
   host: itucsdb1613
   name: itucsdb1613
