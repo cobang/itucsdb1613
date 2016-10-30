@@ -85,8 +85,8 @@ def connection():
         sql = """CREATE TABLE connections(
               user_id INT NOT NULL,
               following_id INT NOT NULL,
-              PRIMARY KEY(user_id,following_id),
-              POST_DATE DATETIME
+              con_date DATETIME,
+              PRIMARY KEY(user_id,following_id)
               )"""
         c.execute(sql)
 
@@ -123,8 +123,7 @@ def about():
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
     try:
-        con = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        con = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER, passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
         c = con.cursor()
         sql = """SELECT * FROM users"""
 
@@ -133,8 +132,10 @@ def connections():
         for row in c:
             dateTime=datetime.datetime.now();
             id,name, surname, username , password = row
-            sql = """INSERT INTO connections(6,id, dateTime)
+            sql = """INSERT INTO connections(user_id,following_id, con_date)
                            VALUES (%d, '%d', '%s' )""" % (6, id, dateTime.strftime(f))
+        c.execute(sql)
+        con.commit()
         c.close()
         con.close()
 
