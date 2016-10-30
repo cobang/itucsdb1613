@@ -177,7 +177,7 @@ def profile():
     else:
         signup()
 
-    return redirect(url_for('profile', users=users))
+    return redirect('profile')
 
 
 @app.route('/about', methods=['GET', 'POST'])
@@ -295,7 +295,7 @@ def timeline():
             except Exception as e:
                 print(str(e))
 
-    return redirect(url_for('timeline', posts=posts))
+    return redirect('timeline')
 
 
 @app.route('/jobs', methods=['GET', 'POST'])
@@ -349,7 +349,7 @@ def jobs():
             except Exception as e:
                 print(str(e))
 
-    return redirect(url_for('jobs', jobs=jobs_archive))
+    return redirect('jobs')
 
 def signup():
     if 'signup' in request.form:
