@@ -87,7 +87,7 @@ def connection():
         sql = """CREATE TABLE connections(
               user_id INT NOT NULL,
               following_id INT NOT NULL,
-              con_date DATETIME,
+              POST_DATE DATETIME,
               PRIMARY KEY(user_id,following_id)
               )"""
         c.execute(sql)
@@ -196,18 +196,20 @@ def connections():
     try:
         con = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER, passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
         c = con.cursor()
+        d=con.cursor()
         sql = """SELECT * FROM users"""
-
-        c.execute(sql)
         f = '%Y-%m-%d %H:%M:%S'
-        for row in c:
-            dateTime=datetime.datetime.now();
-            id,name, surname, username , password = row
-            sql = """INSERT INTO connections(user_id,following_id, con_date)
-                           VALUES (%d, '%d', '%s' )""" % (6, id, dateTime.strftime(f))
         c.execute(sql)
-        con.commit()
+        for row in c:
+            dateTime = datetime.datetime.now()
+            id, name, surname, username, password = row
+            sql2 = """INSERT INTO connections(user_id,following_id,POST_DATE)
+                           VALUES (%d, '%d', '%s' )""" % (15, id, dateTime.strftime(f))
+            d.execute(sql2)
+            con.commit()
+        c.execute(sql)
         c.close()
+        d.close()
         con.close()
 
     except Exception as e:
