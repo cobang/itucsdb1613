@@ -6,7 +6,6 @@ from flask import Flask
 from flask import render_template, request, redirect, url_for
 
 from posts import Posts, Post
-from connections import Connections, Connection
 app = Flask(__name__)
 # mysql
 MYSQL_DATABASE_HOST = '176.32.230.23'
