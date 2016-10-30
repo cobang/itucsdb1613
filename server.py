@@ -258,11 +258,11 @@ def jobs():
     except Exception as e:
         print(str(e))
 
-    jobs = archive.get_jobs()  # "jobs" shows exist jobs
+    jobs_archive = archive.get_jobs()  # "jobs" shows exist jobs
 
     if request.method == 'GET':
 
-        return render_template('jobs.html', jobs=jobs)
+        return render_template('jobs.html', jobs=jobs_archive)
     else:
         if 'addJob' in request.form:
             print("addJob")
@@ -274,8 +274,8 @@ def jobs():
                                        passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
                                        charset=MYSQL_DATABASE_CHARSET)
                 c = conn.cursor()
-                sql = """INSERT INTO posts(JOB_ID, TITLE, DESCRIPTION)
-                                   VALUES (%d, '%s', '%s' )""" % (1, title, description)
+                sql = """INSERT INTO jobs(TITLE, DESCRIPTION)
+                                   VALUES ('%s', '%s' )""" % (title, description)
 
                 c.execute(sql)
 
@@ -286,7 +286,7 @@ def jobs():
             except Exception as e:
                 print(str(e))
 
-    return render_template('jobs.html', jobs=jobs)
+    return render_template('jobs.html', jobs=jobs_archive)
 
 
 if __name__ == '__main__':
