@@ -80,6 +80,17 @@ def connection():
               )"""
         c.execute(sql)
 
+        sql = """DROP TABLE IF EXISTS connections"""
+        c.execute(sql)
+
+        sql = """CREATE TABLE connections(
+              user_id INT NOT NULL,
+              following_id INT NOT NULL,
+              PRIMARY KEY(user_id,following_id),
+              POST_DATE DATETIME
+              )"""
+        c.execute(sql)
+
         conn.commit()
         c.close()
         conn.close()
