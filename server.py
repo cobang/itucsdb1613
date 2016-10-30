@@ -5,8 +5,7 @@ import pymysql
 from flask import Flask
 from flask import render_template, request, redirect, url_for
 
-from post import Post
-from posts import Posts
+from posts import Posts, Post
 
 app = Flask(__name__)
 # mysql
@@ -134,13 +133,8 @@ def timeline():
 
         for row in c:
             post_id, user_id, text, date = row
-            print(post_id)
-            print(user_id)
-            print(text)
-            print(date)
-            post = Post(user=user_id, text=text, date=date)
+            post = Post(post_id=post_id, user=user_id, text=text, date=date)
             store.add_post(post=post)
-
 
         c.close()
         conn.close()
@@ -154,25 +148,48 @@ def timeline():
 
         return render_template('timeline.html', posts=posts)
     else:
-        text = request.form['post']
-        date = datetime.datetime.now()
+        if 'share' in request.form:
+            print("share")
+            text = request.form['post']
+            date = datetime.datetime.now()
 
-        try:
-            conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                                   passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
-            c = conn.cursor()
-            f = '%Y-%m-%d %H:%M:%S'
-            sql = """INSERT INTO posts(USER_ID, POST_TEXT, POST_DATE)
-                             VALUES (%d, '%s', '%s' )""" % (5, text, date.strftime(f))
+            try:
+                conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+                c = conn.cursor()
+                f = '%Y-%m-%d %H:%M:%S'
+                sql = """INSERT INTO posts(USER_ID, POST_TEXT, POST_DATE)
+                               VALUES (%d, '%s', '%s' )""" % (5, text, date.strftime(f))
 
-            c.execute(sql)
+                c.execute(sql)
 
-            conn.commit()
-            c.close()
-            conn.close()
+                conn.commit()
+                c.close()
+                conn.close()
 
-        except Exception as e:
-            print(str(e))
+            except Exception as e:
+                print(str(e))
+
+        if 'delete' in request.form:
+            print("delete")
+            print(request.form['delete'])
+            post_id = request.form['delete']
+
+            try:
+                conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
+                                       charset=MYSQL_DATABASE_CHARSET)
+                c = conn.cursor()
+                sql = """DELETE FROM posts WHERE POST_ID = (%d) """ % (int(post_id))
+
+                c.execute(sql)
+
+                conn.commit()
+                c.close()
+                conn.close()
+
+            except Exception as e:
+                print(str(e))
 
     return redirect(url_for('timeline', posts=posts))
 
