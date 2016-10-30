@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block navigationbar %}
+    <li><a href="home">Home</a></li>
+    <li><a href="timeline">Timeline</a></li>
+    <li><a href="profile">Profile</a></li>
+    <li><a href="connections">Connections</a></li>
+    <li class="active"><a href="messages">Messages</a></li>
+    <li><a href="jobs">Jobs</a></li>
+    <li><a href="about">About</a></li>
+{% endblock %}
+{% block title %}
+Chat - {{ username }}
+{% endblock %}
+{% block content %}
+    <div class="container contentContainer" id="topContainer">
+        <br/><br/><br/><br/>
+        <div class="row">
+            <div class="col-md-1">
+            </div>
+
+            <div class="col-md-3">
+                <a href="#">Back to Inbox</a>
+            </div>
+
+            <div class="col-md-4">
+                <!-- user messages and text area at the end -->
+                {% for sender, receiver, content, datetime in chat.messages %}
+
+                {% endfor %}
+
+                <form action="" method="post">
+                    <div class="form-group">
+                        <textarea class="form-control" name="message" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" name="send" class="btn btn-success">Send</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-4">
+            </div>
+        </div>
+    </div>
+{% endblock %}
