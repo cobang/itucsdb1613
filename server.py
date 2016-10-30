@@ -6,7 +6,7 @@ from flask import Flask
 from flask import render_template, request, redirect, url_for
 
 from posts import Posts, Post
-
+from connections import Connections, Connection
 app = Flask(__name__)
 # mysql
 MYSQL_DATABASE_HOST = '176.32.230.23'
@@ -121,8 +121,27 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/connections')
+@app.route('/connections', methods=['GET', 'POST'])
 def connections():
+    try:
+        con = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        c = con.cursor()
+        sql = """SELECT * FROM users"""
+
+        c.execute(sql)
+        f = '%Y-%m-%d %H:%M:%S'
+        for row in c:
+            dateTime=datetime.datetime.now();
+            id,name, surname, username , password = row
+            sql = """INSERT INTO connections(6,id, dateTime)
+                           VALUES (%d, '%d', '%s' )""" % (6, id, dateTime.strftime(f))
+        c.close()
+        con.close()
+
+    except Exception as e:
+        print(str(e))
+
     return render_template('connections.html')
 
 
