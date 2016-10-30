@@ -133,7 +133,7 @@ def home_page():
     else:
         signup()
 
-    return redirect('home.html')
+    return redirect('home')
 
 
 @app.route('/home', methods=['GET', 'POST'])
@@ -144,7 +144,7 @@ def home():
     else:
         signup()
 
-    return redirect('home.html')
+    return redirect('home')
 
 
 @app.route('/profile', methods=['GET', 'POST'])
@@ -177,7 +177,7 @@ def profile():
     else:
         signup()
 
-    return redirect('profile.html', users=users)
+    return redirect(url_for('profile', users=users))
 
 
 @app.route('/about', methods=['GET', 'POST'])
@@ -188,7 +188,7 @@ def about():
     else:
         signup()
 
-    return redirect('about.html')
+    return redirect('about')
 
 
 @app.route('/connections', methods=['GET', 'POST'])
@@ -349,7 +349,7 @@ def jobs():
             except Exception as e:
                 print(str(e))
 
-    return redirect('jobs.html', jobs=jobs_archive)
+    return redirect(url_for('jobs', jobs=jobs_archive))
 
 def signup():
     if 'signup' in request.form:
