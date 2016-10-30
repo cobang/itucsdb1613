@@ -16,3 +16,12 @@ class Posts:
 
     def get_posts(self):
         return sorted(self.posts.items())
+
+
+class Post:
+    def __init__(self, post_id, user, text, date):
+        self.post_id = post_id
+        self.user = user
+        self.text = text
+        self.date = date
+
