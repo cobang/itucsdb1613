@@ -6,9 +6,6 @@ from flask import Flask
 from flask import render_template, request, redirect, url_for
 
 from posts import Posts, Post
-from jobs import Jobs, Job
-#from connections import Connections, Connection
-
 app = Flask(__name__)
 # mysql
 MYSQL_DATABASE_HOST = '176.32.230.23'
@@ -88,19 +85,8 @@ def connection():
         sql = """CREATE TABLE connections(
               user_id INT NOT NULL,
               following_id INT NOT NULL,
-              PRIMARY KEY(user_id,following_id),
-              POST_DATE DATETIME
-              )"""
-        c.execute(sql)
-
-        sql = """DROP TABLE IF EXISTS jobs"""
-        c.execute(sql)
-
-        sql = """CREATE TABLE jobs(
-              JOB_ID INT NOT NULL AUTO_INCREMENT,
-              TITLE VARCHAR(30) NOT NULL,
-              DESCRIPTION VARCHAR(140) NOT NULL,
-              PRIMARY KEY ( JOB_ID )
+              con_date DATETIME,
+              PRIMARY KEY(user_id,following_id)
               )"""
         c.execute(sql)
 
@@ -137,18 +123,19 @@ def about():
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
     try:
-        con = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                              passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        con = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER, passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
         c = con.cursor()
         sql = """SELECT * FROM users"""
 
         c.execute(sql)
         f = '%Y-%m-%d %H:%M:%S'
         for row in c:
-            dateTime = datetime.datetime.now();
-            id, name, surname, username, password = row
-            sql = """INSERT INTO connections(6,id, dateTime)
+            dateTime=datetime.datetime.now();
+            id,name, surname, username , password = row
+            sql = """INSERT INTO connections(user_id,following_id, con_date)
                            VALUES (%d, '%d', '%s' )""" % (6, id, dateTime.strftime(f))
+        c.execute(sql)
+        con.commit()
         c.close()
         con.close()
 
@@ -185,7 +172,7 @@ def timeline():
     except Exception as e:
         print(str(e))
 
-    posts = store.get_posts()  # "posts" shows exist posts
+    posts = store.get_posts() # "posts" shows exist posts
 
     if request.method == 'GET':
 
@@ -198,8 +185,7 @@ def timeline():
 
             try:
                 conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
-                                       charset=MYSQL_DATABASE_CHARSET)
+                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
                 c = conn.cursor()
                 f = '%Y-%m-%d %H:%M:%S'
                 sql = """INSERT INTO posts(USER_ID, POST_TEXT, POST_DATE)
@@ -238,57 +224,9 @@ def timeline():
     return redirect(url_for('timeline', posts=posts))
 
 
-@app.route('/jobs', methods=['GET', 'POST'])
+@app.route('/jobs')
 def jobs():
-    archive = Jobs()
-    try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
-        c = conn.cursor()
-        sql = "SELECT * FROM jobs"
-
-        c.execute(sql)
-
-        for row in c:
-            job_id, title, description = row
-            job = Job(job_id=job_id, title=title, description=description)
-            archive.add_job(job=job)
-
-        c.close()
-        conn.close()
-
-    except Exception as e:
-        print(str(e))
-
-    jobs = archive.get_jobs()  # "jobs" shows exist jobs
-
-    if request.method == 'GET':
-
-        return render_template('jobs.html', jobs=jobs)
-    else:
-        if 'addJob' in request.form:
-            print("addJob")
-            title = request.form['title']
-            description = request.form['description']
-
-            try:
-                conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
-                                       charset=MYSQL_DATABASE_CHARSET)
-                c = conn.cursor()
-                sql = """INSERT INTO posts(JOB_ID, TITLE, DESCRIPTION)
-                                   VALUES (%d, '%s', '%s' )""" % (1, title, description)
-
-                c.execute(sql)
-
-                conn.commit()
-                c.close()
-                conn.close()
-
-            except Exception as e:
-                print(str(e))
-
-    return render_template('jobs.html', jobs=jobs)
+    return render_template('jobs.html')
 
 
 if __name__ == '__main__':
