@@ -69,7 +69,7 @@ def connection():
               )"""
         c.execute(sql)
 
-        sql = """DROP TABLE IF EXISTS converations"""
+        sql = """DROP TABLE IF EXISTS conversations"""
         c.execute(sql)
 
         sql = """CREATE TABLE conversations(
