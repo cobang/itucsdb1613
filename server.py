@@ -220,9 +220,88 @@ def connections():
     return render_template('connections.html')
 
 
-@app.route('/messages')
+@app.route('/messages', methods=['GET', 'POST'])
 def messages():
-    return render_template('messages.html')
+    my_id = 2  # TEMPORARY
+    inbox = Inbox()
+    try:
+        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        c = conn.cursor()
+        sql = """SELECT user_id, participant_id,
+                            in_out, content, message_datetime
+                  FROM messages, conversations
+                  WHERE (messages.message_id = conversations.message_id)
+                        AND (user_id = %d)
+                  ORDER BY participant_id, datetime""" % (my_id)
+        c.execute(sql)
+
+        old_p = c[0][1]
+        chat = Chat()
+
+        for user, participant, in_out, content, datetime in c:
+            if in_out == 0:
+                sender = user
+                receiver = participant
+            else:
+                sender = participant
+                receiver = user
+
+            msg = Message(sender, receiver, content, datetime)
+
+            if old_p == participant:
+                chat.add(msg)
+            else:
+                inbox.add(chat, old_p)
+                chat = Chat()
+                chat.add(msg)
+            old_p = participant
+
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
+    if request.method == 'GET':
+        chats = inbox.chats
+        return render_template('messages.html', chats=chats)
+    else:
+        if 'send' in request.form:
+            participant = request.form['send']
+            content = request.form['message']
+            date = datetime.datetime.now()
+
+            try:
+                conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
+                                       charset=MYSQL_DATABASE_CHARSET)
+                c = conn.cursor()
+                f = '%Y-%m-%d %H:%M:%S'
+                sql = """INSERT INTO messages(content, message_datetime)
+                          VALUES('%s', '%s')""" % (content, date.strftime(f))
+                c.execute(sql)
+
+                sql = """SELECT MAX(message_id) FROM messages"""
+                c.execute(sql)
+                for x in c:
+                    msg_id = x
+
+                sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
+                          VALUES(%d, %d ,%d, %d)""" % (my_id, int(participant), 0, msg_id)
+                c.execute(sql)
+                sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
+                          VALUES(%d, %d ,%d, %d)""" % (int(participant), my_id, 1, msg_id)
+                c.execute(sql)
+
+                conn.commit()
+                c.close()
+                conn.close()
+
+            except Exception as e:
+                print(str(e))
+
+    return redirect('messages')
 
 
 @app.route('/timeline', methods=['GET', 'POST'])
