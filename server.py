@@ -7,6 +7,7 @@ from flask import render_template, request, redirect, url_for
 
 from posts import Posts, Post
 from jobs import Jobs, Job
+from users import Users, User
 app = Flask(__name__)
 # mysql
 MYSQL_DATABASE_HOST = '176.32.230.23'
@@ -102,6 +103,19 @@ def connection():
                       )"""
         c.execute(sql)
 
+        sql = """DROP TABLE IF EXISTS users"""
+        c.execute(sql)
+
+        sql = """CREATE TABLE users(
+                              id INT NOT NULL AUTO_INCREMENT,
+                              name VARCHAR(45) NOT NULL,
+                              surname VARCHAR(45) NOT NULL,
+                              email VARCHAR(45) NOT NULL,
+                              password VARCHAR(45) NOT NULL,
+                              PRIMARY KEY ( id )
+                              )"""
+        c.execute(sql)
+
         conn.commit()
         c.close()
         conn.close()
@@ -111,25 +125,70 @@ def connection():
         print(str(e))
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home_page():
-    now = datetime.datetime.now()
-    return render_template('home.html', current_time=now.ctime())
+    if request.method == 'GET':
+
+        return render_template('home.html')
+    else:
+        signup()
+
+    return redirect('home.html')
 
 
-@app.route('/home')
+@app.route('/home', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html')
+    if request.method == 'GET':
+
+        return render_template('home.html')
+    else:
+        signup()
+
+    return redirect('home.html')
 
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    return render_template('profile.html')
+    user_list = Users()
+    try:
+        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        c = conn.cursor()
+        sql = """SELECT * FROM users"""
+
+        c.execute(sql)
+
+        for row in c:
+            id, name, surname, email, password = row
+            user = User(id=id, name=name, surname=surname, email=email, password=password)
+            user_list.add_user(user=user)
+
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
+    users = user_list.get_users()
+
+    if request.method == 'GET':
+
+        return render_template('profile.html', users=users)
+    else:
+        signup()
+
+    return redirect('profile.html', users=users)
 
 
-@app.route('/about')
+@app.route('/about', methods=['GET', 'POST'])
 def about():
-    return render_template('about.html')
+    if request.method == 'GET':
+
+        return render_template('about.html')
+    else:
+        signup()
+
+    return redirect('about.html')
 
 
 @app.route('/connections', methods=['GET', 'POST'])
@@ -190,6 +249,7 @@ def timeline():
 
         return render_template('timeline.html', posts=posts)
     else:
+        signup()
         if 'share' in request.form:
             print("share")
             text = request.form['post']
@@ -264,6 +324,7 @@ def jobs():
 
         return render_template('jobs.html', jobs=jobs_archive)
     else:
+        signup()
         if 'addJob' in request.form:
             print("addJob")
             title = request.form['title']
@@ -286,8 +347,32 @@ def jobs():
             except Exception as e:
                 print(str(e))
 
-    return render_template('jobs.html', jobs=jobs_archive)
+    return redirect('jobs.html', jobs=jobs_archive)
 
+def signup():
+    if 'signup' in request.form:
+        print("Sign Up")
+        name = request.form['name']
+        surname = request.form['surname']
+        email = request.form['email']
+        password = request.form['password']
+
+        try:
+            conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                                   passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
+                                   charset=MYSQL_DATABASE_CHARSET)
+            c = conn.cursor()
+            sql = """INSERT INTO users(name, surname, email, password)
+                                   VALUES ('%s', '%s', '%s', '%s' )""" % (name, surname, email, password)
+
+            c.execute(sql)
+
+            conn.commit()
+            c.close()
+            conn.close()
+
+        except Exception as e:
+            print(str(e))
 
 if __name__ == '__main__':
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
