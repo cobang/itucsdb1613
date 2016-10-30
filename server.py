@@ -9,7 +9,7 @@ from post import Post
 from posts import Posts
 
 app = Flask(__name__)
-#mysql
+# mysql
 MYSQL_DATABASE_HOST = '176.32.230.23'
 MYSQL_DATABASE_PORT = 3306
 MYSQL_DATABASE_USER = 'cl48-humannet'
@@ -22,14 +22,20 @@ MYSQL_DATABASE_CHARSET = 'utf8'
 def test_page():
     try:
         c, conn = connection()
-        return("okay")
+        return ("okay")
     except Exception as e:
-        return(str(e))
+        return (str(e))
+
 
 def connection():
     try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER, passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
         c = conn.cursor()
+
+        sql = """DROP TABLE IF EXISTS test"""
+        c.execute(sql)
+
         sql = """CREATE TABLE test (
                  FIRST_NAME  CHAR(20) NOT NULL,
                  LAST_NAME  CHAR(20),
@@ -38,9 +44,28 @@ def connection():
                  INCOME FLOAT )"""
 
         c.execute(sql)
+
+        sql = """DROP TABLE IF EXISTS posts"""
+        c.execute(sql)
+
+        sql = """CREATE TABLE posts(
+              POST_ID INT NOT NULL AUTO_INCREMENT,
+              USER_ID INT NOT NULL,
+              POST_TEXT VARCHAR(100) NOT NULL,
+              POST_DATE DATETIME,
+              PRIMARY KEY ( POST_ID )
+              )"""
+
+        c.execute(sql)
+
+        conn.commit()
+        c.close()
+        conn.close()
+
         return conn, c
     except Exception as e:
-        print (str(e))
+        print(str(e))
+
 
 @app.route('/')
 def home_page():
@@ -75,24 +100,64 @@ def messages():
 
 @app.route('/timeline', methods=['GET', 'POST'])
 def timeline():
+    store = Posts()
+    try:
+        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        c = conn.cursor()
+        sql = """SELECT * FROM posts"""
+
+        c.execute(sql)
+
+        for row in c:
+            post_id, user_id, text, date = row
+            print(post_id)
+            print(user_id)
+            print(text)
+            print(date)
+            post = Post(user=user_id, text=text, date=date)
+            store.add_post(post=post)
+
+
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
+    posts = store.get_posts() # "posts" shows exist posts
+
     if request.method == 'GET':
-        posts = app.posts.get_posts()
-        #redirect(url_for('site.timeline'))
-        return render_template('timeline.html', posts = posts)
+
+        return render_template('timeline.html', posts=posts)
     else:
         text = request.form['post']
-        date = datetime.datetime.now().ctime()
-        user = "ali"
-        post = Post(user=user, text=text, date=date)
-        app.posts.add_post(post=post)
-        posts = app.posts.get_posts()
-    return redirect(url_for('timeline', posts=posts))
+        date = datetime.datetime.now()
 
+        try:
+            conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                                   passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+            c = conn.cursor()
+            f = '%Y-%m-%d %H:%M:%S'
+            sql = """INSERT INTO posts(USER_ID, POST_TEXT, POST_DATE)
+                             VALUES (%d, '%s', '%s' )""" % (5, text, date.strftime(f))
+
+            c.execute(sql)
+
+            conn.commit()
+            c.close()
+            conn.close()
+
+        except Exception as e:
+            print(str(e))
+
+    return redirect(url_for('timeline', posts=posts))
 
 
 @app.route('/jobs')
 def jobs():
     return render_template('jobs.html')
+
 
 if __name__ == '__main__':
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
@@ -101,5 +166,4 @@ if __name__ == '__main__':
     else:
         port, debug = 5000, True
 
-    app.posts = Posts()
     app.run(host='0.0.0.0', port=port, debug=debug)
