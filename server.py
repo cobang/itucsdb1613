@@ -58,6 +58,17 @@ def connection():
 
         c.execute(sql)
 
+        sql = """DROP TABLE IF EXISTS messages"""
+        c.execute(sql)
+
+        sql = """CREATE TABLE messages(
+              message_id INT NOT NULL AUTO_INCREMENT,
+              content VARCHAR(140),
+              message_datetime DATETIME,
+              PRIMARY KEY (message_id)
+              )"""
+        c.execute(sql)
+
         conn.commit()
         c.close()
         conn.close()
