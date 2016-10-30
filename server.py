@@ -77,7 +77,7 @@ def connection():
               participant_id INT NOT NULL,
               in_out INT NOT NULL,
               message_id INT NOT NULL,
-              FOREIGN KEY (message_id) REFERENCES messages(message_id)
+              PRIMARY KEY (user_id)
               )"""
         c.execute(sql)
 
