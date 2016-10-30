@@ -8,6 +8,8 @@ from flask import render_template, request, redirect, url_for
 from posts import Posts, Post
 from jobs import Jobs, Job
 from users import Users, User
+from messages import Message, Chat, Inbox
+
 app = Flask(__name__)
 # mysql
 MYSQL_DATABASE_HOST = '176.32.230.23'
@@ -77,7 +79,7 @@ def connection():
               participant_id INT NOT NULL,
               in_out INT NOT NULL,
               message_id INT NOT NULL,
-              PRIMARY KEY (user_id)
+              PRIMARY KEY (user_id, message_id)
               )"""
         c.execute(sql)
 

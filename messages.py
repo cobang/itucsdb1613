@@ -1,30 +1,37 @@
 class Message:
     def __init__(self, sender, receiver, content, datetime):
-        self.content = content
         self.sender = sender
         self.receiver = receiver
+        self.content = content
         self.datetime = datetime
 
 
 class Chat:
     def __init__(self):
-        self.messages = []
+        self.messages = {}
+        self.key = 0
 
     def __getitem__(self, item):
         return self.messages[item]
 
     def add(self, message):
-        self.messages.append(message)
+        self.key += 1
+        message.key = self.key
+        self.messages[self.key] = message
 
     def delete(self, index):
-        if index <= 0 or len(self.messages) == 0:
-            return False
-        elif index < len(self.messages):
-            del self.messages[index]
-            return True
+        del self.messages[index]
 
-    def pop(self):
-        del self.messages[-1]
+    def get_last(self):
+        return self.messages[self.key]
 
-    def sort(self):
-        self.messages = sorted(self.messages, key=lambda msg: msg.datetime, reverse=True)
+    def get_list(self):
+        return sorted(self.messages, reverse=True)
+
+
+class Inbox:
+    def __init__(self):
+        self.chats = []
+
+    def add(self, chat, participant):
+        self.chats.append((chat, participant))

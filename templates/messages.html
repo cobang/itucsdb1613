@@ -1,3 +1,7 @@
+{#
+parameters:
+    chats (inbox)
+#}
 {% extends "base.html" %}
 {% block navigationbar %}
     <li><a href="home">Home</a></li>
@@ -25,47 +29,63 @@ Messages
 
                 <div class="panel-group">
 
+                    {% for single_chat, participant in chats %}
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <span class="badge">1</span>&nbsp;<a href="#">James Smith</a>
-                            <span style="float: right">TIMESTAMP</span>
+                            <span class="badge"></span>&nbsp;<a href="#">{{ participant }}</a>
+                            <span style="float: right"></span>
                         </div>
-                        <a href="#">
+
+                        <!-- Panel Body -->
+
+                        <a href="#" data-toggle="modal" data-target="#myModal">
                             <div class="panel-body">
                                 <img class="img-circle" src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-128.png" width="50" height="50" style="float: left">
-                                The last message of this user.
+                                {{ single_chat.get_last().content }}
                             </div>
                         </a>
-                    </div>
+                        <div id="myModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
 
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <span class="badge">5</span>&nbsp;<a href="#">University of Earth</a>
-                            <span style="float: right">TIMESTAMP</span>
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h2 class="modal-title">{{ participant }}</h2>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="panel-group">
+
+                                            {% for key, msg in single_chat.messages %}
+                                                <div class="panel panel-{% if msg.sender == participant %}info{% else %}primary{% endif %}">
+                                                    <div class="panel-heading"></div>
+                                                    <div class="panel-body">{{ msg.content }}</div>
+                                                </div>
+                                            {% endfor %}
+
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <form action="" method="post">
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="message" rows="2"></textarea>
+                                             </div>
+                                            <div class="form-group">
+                                                <button class="btn btn-info" type="submit" name="send" value={{ participant }}>Send</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
-                        <a href="#">
-                            <div class="panel-body">
-                                <img class="img-circle" src="https://cdn3.iconfinder.com/data/icons/rcons-user-action/32/boy-512.png" width="50" height="50" style="float: left">
-                                The last message of this user.
-                            </div>
-                        </a>
-                    </div>
 
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <span class="badge">3</span>&nbsp;<a href="#">Samuel Parker</a>
-                            <span style="float: right">TIMESTAMP</span>
-                        </div>
-                        <a href="#">
-                            <div class="panel-body">
-                                <img class="img-circle" src="https://cdn3.iconfinder.com/data/icons/rcons-user-action/32/boy-512.png" width="50" height="50" style="float: left">
-                                The last message of this user.
-                            </div>
-                        </a>
-                    </div>
+                        <!-- End Panel Body --->
+                    </div><!-- End Panel -->
+                    {% endfor %}
 
-                </div>
-
+                </div><!-- End Panel Group -->
             </div>
             <div class="col-md-3">
             </div>
