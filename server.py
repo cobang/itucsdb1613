@@ -90,6 +90,17 @@ def connection():
               )"""
         c.execute(sql)
 
+        sql = """DROP TABLE IF EXISTS jobs"""
+        c.execute(sql)
+
+        sql = """CREATE TABLE jobs(
+                      JOB_ID INT NOT NULL AUTO_INCREMENT,
+                      TITLE VARCHAR(30) NOT NULL,
+                      DESCRIPTION VARCHAR(140) NOT NULL,
+                      PRIMARY KEY ( JOB_ID )
+                      )"""
+        c.execute(sql)
+
         conn.commit()
         c.close()
         conn.close()
@@ -224,9 +235,57 @@ def timeline():
     return redirect(url_for('timeline', posts=posts))
 
 
-@app.route('/jobs')
+@app.route('/jobs', methods=['GET', 'POST'])
 def jobs():
-    return render_template('jobs.html')
+    archive = Jobs()
+    try:
+        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        c = conn.cursor()
+        sql = """SELECT * FROM jobs"""
+
+        c.execute(sql)
+
+        for row in c:
+            job_id, title, description = row
+            job = Job(job_id=job_id, title=title, description=description)
+            archive.add_job(job=job)
+
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
+    jobs = archive.get_jobs()  # "jobs" shows exist jobs
+
+    if request.method == 'GET':
+
+        return render_template('jobs.html', jobs=jobs)
+    else:
+        if 'addJob' in request.form:
+            print("addJob")
+            title = request.form['title']
+            description = request.form['description']
+
+            try:
+                conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
+                                       charset=MYSQL_DATABASE_CHARSET)
+                c = conn.cursor()
+                sql = """INSERT INTO posts(JOB_ID, TITLE, DESCRIPTION)
+                                   VALUES (%d, '%s', '%s' )""" % (1, title, description)
+
+                c.execute(sql)
+
+                conn.commit()
+                c.close()
+                conn.close()
+
+            except Exception as e:
+                print(str(e))
+
+    return render_template('jobs.html', jobs=jobs)
 
 
 if __name__ == '__main__':
