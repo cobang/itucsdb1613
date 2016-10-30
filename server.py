@@ -69,6 +69,18 @@ def connection():
               )"""
         c.execute(sql)
 
+        sql = """DROP TABLE IF EXISTS converations"""
+        c.execute(sql)
+
+        sql = """CREATE TABLE conversations(
+              user_id INT NOT NULL,
+              participant_id INT NOT NULL,
+              in_out INT NOT NULL,
+              message_id INT NOT NULL,
+              FOREIGN KEY (message_id) REFERENCES messages(message_id)
+              )"""
+        c.execute(sql)
+
         conn.commit()
         c.close()
         conn.close()
