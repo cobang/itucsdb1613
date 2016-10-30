@@ -38,7 +38,7 @@ Timeline
                                   <div class="col-sm-1">
                                     <div class="form-group">
                                         <label for="comment">Post:</label><br>
-                                        <button type="submit" name="share" class="btn btn-success">Share</button>
+                                        <button type="submit" name="share" value="share" class="btn btn-success">Share</button>
                                     </div>
                                   </div>
 
@@ -72,16 +72,19 @@ Timeline
                                   <span class="glyphicon glyphicon-option-vertical"></span><span class="caret"></span>
                               </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Edit</a></li>
-                                    <li><a href="#">Delete</a></li>
+                                    <form action="" method="post">
+                                        <li><button type="submit" name="delete" method="post" value= {{ post.post_id }}>Delete</button></li>
+                                        <li><button type="submit" name="edit" method="post" value= {{ post.post_id }}>Edit</button></li>
+
+                                    </form>
                                 </ul>
                             </div>
                             </h2>
                             <p>{{ post.text }}</p>
 
                             <div class="btn-group btn-group-sm">
-                                <button type="button" class="btn btn-primary "><span class="glyphicon glyphicon-ok"></button>
-                                <button type="button" class="btn btn-danger "><span class="glyphicon glyphicon-remove"></button>
+                                <button type="submit" name="like" value="like" class="btn btn-primary "><span class="glyphicon glyphicon-ok"></button>
+                                <button type="submit" name="dislike" value="dislike" class="btn btn-danger "><span class="glyphicon glyphicon-remove"></button>
                             </div>
                             <hr>
                             <div class="row">
@@ -209,7 +212,7 @@ Timeline
                                                         <div class="form-group">
                                                         <label for="usr">Comment:</label>
                                                         <input type="text" class="form-control" id="usr">
-                                                        <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-pencil"></button>
+                                                        <button type="submit" name="comment" value="comment" class="btn btn-success pull-right"><span class="glyphicon glyphicon-pencil"></button>
                                                       </div>
 
                                                   </form>
