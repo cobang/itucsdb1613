@@ -264,7 +264,7 @@ def messages():
         old_p = c[0][1]
         chat = Chat()
 
-        for user, participant, in_out, content, datetime in c:
+        for user, participant, in_out, content, msg_datetime in c:
             if in_out == 0:
                 sender = user
                 receiver = participant
@@ -272,7 +272,7 @@ def messages():
                 sender = participant
                 receiver = user
 
-            msg = Message(sender, receiver, content, datetime)
+            msg = Message(sender, receiver, content, msg_datetime)
 
             if old_p == participant:
                 chat.add(msg)
