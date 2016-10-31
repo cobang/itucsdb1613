@@ -18,32 +18,34 @@ Messages
 {% block content %}
 
     <div class="container contentContainer" id="topContainer">
-        <br/><br/><br/><br/>
+        <br/><br/><br/>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-2">
 
                 <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">New Message</button>
                 <div id="myModal" class="modal fade" role="dialog">
-
-                    {# TO DO: MAKE IT MORE BEAUTIFUL VISUALLY #}
-
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">New Message</h4>
-                        </div>
+                    <div class="modal-dialog">
                         <div class="modal-content">
-                            <form action="" method="post">
-                                <div class="form-group">
-                                    To: <input type="text" name="username" value="2"><br/>
-                                </div>
-                                <div class="form-group">
-                                    <textarea class="form-control" name="message" rows="2"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <button class="btn btn-info" type="submit" name="send" value="0">Send</button>
-                                </div>
-                            </form>
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">New Message</h4>
+                            </div>
+                            <div class="modal-content">
+                                <br/>
+                                <form action="" method="post" style="padding: 1em">
+                                    <div class="form-group">
+                                        To: <input type="text" name="username" value="1"><br/>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="message" rows="2"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-info" type="submit" name="send" value="0">Send</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -51,6 +53,7 @@ Messages
             </div>
 
             <div class="col-md-6">
+
                 <div class="alert alert-info">
                     <strong>This is a testing phase.</strong>
                 </div>
@@ -61,7 +64,7 @@ Messages
                     <div class="panel panel-info">
                         <div class="panel-heading">
                             <span class="badge"></span>&nbsp;<a href="#">{{ participant }}</a>
-                            <span style="float: right"></span>
+                            <span style="float: right">{{ single_chat.get_last().datetime }}</span>
                         </div>
 
                         <!-- Panel Body -->
@@ -85,10 +88,16 @@ Messages
                                         <div class="panel-group">
 
                                             {% for key, msg in single_chat.get_list() %}
-                                                <div class="panel panel-{% if msg.sender == participant %}info{% else %}primary{% endif %}">
-                                                    <div class="panel-heading"></div>
-                                                    <div class="panel-body">{{ msg.content }}</div>
+
+                                                <div class="panel panel-{% if msg.sender == participant %}info{% else %}primary{% endif %}" style="margin: 1px">
+                                                    <div class="panel-heading">
+                                                        {{ msg.sender }}<span style="float: right">{{ msg.datetime }}</span>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        {{ msg.content }}
+                                                    </div>
                                                 </div>
+
                                             {% endfor %}
 
                                         </div>
@@ -109,7 +118,7 @@ Messages
                             </div>
                         </div>
 
-                        <!-- End Panel Body --->
+                        <!-- End Panel Body -->
                     </div><!-- End Panel -->
                     {% endfor %}
 
