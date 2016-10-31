@@ -244,6 +244,7 @@ def connections():
                 print(str(e))
     return redirect('connections')
 
+
 @app.route('/messages', methods=['GET', 'POST'])
 def messages():
     my_id = 2  # TEMPORARY
@@ -293,6 +294,8 @@ def messages():
     else:
         if 'send' in request.form:
             participant = request.form['send']
+            if int(participant) == 0:
+                participant = request.form['username']
             content = request.form['message']
             date = datetime.datetime.now()
 
