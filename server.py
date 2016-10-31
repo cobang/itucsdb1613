@@ -258,7 +258,7 @@ def messages():
                   FROM messages, conversations
                   WHERE (messages.message_id = conversations.message_id)
                         AND (user_id = %d)
-                  ORDER BY participant_id, datetime""" % my_id
+                  ORDER BY participant_id, message_datetime""" % my_id
         c.execute(sql)
 
         old_p = c[0][1]
