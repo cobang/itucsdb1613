@@ -4,12 +4,12 @@ import pymysql
 
 from flask import Flask
 from flask import render_template, request, redirect, url_for
-
+from connections import Connections,Connection
 from posts import Posts, Post
 from jobs import Jobs, Job
 from users import Users, User
 from messages import Message, Chat, Inbox
-
+from random import randint
 app = Flask(__name__)
 # mysql
 MYSQL_DATABASE_HOST = '176.32.230.23'
@@ -89,7 +89,7 @@ def connection():
         sql = """CREATE TABLE connections(
               user_id INT NOT NULL,
               following_id INT NOT NULL,
-              POST_DATE DATETIME,
+              connection_date DATETIME,
               PRIMARY KEY(user_id,following_id)
               )"""
         c.execute(sql)
@@ -195,30 +195,54 @@ def about():
 
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
+    storage = Connections()
     try:
-        con = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER, passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
-        c = con.cursor()
-        d=con.cursor()
+        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        c = conn.cursor()
         sql = """SELECT * FROM users"""
+
+        c.execute(sql)
         f = '%Y-%m-%d %H:%M:%S'
-        c.execute(sql)
+        dateTime = datetime.datetime.now()
         for row in c:
-            dateTime = datetime.datetime.now()
             id, name, surname, username, password = row
-            sql2 = """INSERT INTO connections(user_id,following_id,POST_DATE)
-                           VALUES (%d, '%d', '%s' )""" % (15, id, dateTime.strftime(f))
-            d.execute(sql2)
-            con.commit()
-        c.execute(sql)
+            connection_new = Connection(120, following_id=id, date=dateTime.strftime(f))
+            storage.add_connection(connection=connection_new)
+            print("adding")
         c.close()
-        d.close()
-        con.close()
+        conn.close()
 
     except Exception as e:
         print(str(e))
 
-    return render_template('connections.html')
+    connections_storage = storage.get_connections()
 
+    if request.method == 'GET':
+        return render_template('connections.html', connections=connections_storage)
+    else:
+        signup()
+        if 'add_Connection' in request.form:
+            dateTime = datetime.datetime.now()
+            print("addConnection")
+            rec_id = int(request.form['following_id'])
+            user_id = randint(0, 1000)
+            try:
+                conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
+                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
+                                       charset=MYSQL_DATABASE_CHARSET)
+                c = conn.cursor()
+                sql = """INSERT INTO connections(user_id,following_id,connection_date)
+                           VALUES (%d, '%d', '%s' )""" % (user_id, rec_id, dateTime.strftime(f))
+                c.execute(sql)
+
+                conn.commit()
+                c.close()
+                conn.close()
+
+            except Exception as e:
+                print(str(e))
+    return redirect('connections')
 
 @app.route('/messages', methods=['GET', 'POST'])
 def messages():
