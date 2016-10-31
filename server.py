@@ -265,6 +265,11 @@ def messages():
         chat = Chat()
 
         for user, participant, in_out, content, msg_datetime in c:
+            print(user)
+            print(participant)
+            print(in_out)
+            print(content)
+            print(msg_datetime)
             if in_out == 0:
                 sender = user
                 receiver = participant
@@ -282,6 +287,7 @@ def messages():
                 chat = Chat()
                 chat.add(msg)
             old_p = participant
+        inbox.add(chat, old_p)
 
         c.close()
         conn.close()

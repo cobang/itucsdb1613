@@ -8,6 +8,7 @@ class Message:
 
 class Chat:
     def __init__(self):
+
         self.messages = {}
         self.key = 0
 
@@ -26,7 +27,7 @@ class Chat:
         return self.messages[self.key]
 
     def get_list(self):
-        return sorted(self.messages, reverse=True)
+        return sorted(self.messages.items())
 
 
 class Inbox:

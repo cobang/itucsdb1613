@@ -66,13 +66,13 @@ Messages
 
                         <!-- Panel Body -->
 
-                        <a href="#" data-toggle="modal" data-target="#myModal">
+                        <a href="#" data-toggle="modal" data-target="#myModal{{ participant }}">
                             <div class="panel-body">
                                 <img class="img-circle" src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-128.png" width="50" height="50" style="float: left">
                                 {{ single_chat.get_last().content }}
                             </div>
                         </a>
-                        <div id="myModal" class="modal fade" role="dialog">
+                        <div id="myModal{{ participant }}" class="modal fade" role="dialog">
                             <div class="modal-dialog">
 
                                 <div class="modal-content">
@@ -84,7 +84,7 @@ Messages
                                     <div class="modal-body">
                                         <div class="panel-group">
 
-                                            {% for key, msg in single_chat.messages %}
+                                            {% for key, msg in single_chat.get_list() %}
                                                 <div class="panel panel-{% if msg.sender == participant %}info{% else %}primary{% endif %}">
                                                     <div class="panel-heading"></div>
                                                     <div class="panel-body">{{ msg.content }}</div>
