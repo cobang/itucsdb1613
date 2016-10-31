@@ -313,7 +313,7 @@ def messages():
                 sql = """SELECT MAX(message_id) FROM messages"""
                 c.execute(sql)
                 for x in c:
-                    msg_id = x
+                    msg_id = x[0]
 
                 sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
                           VALUES(%d, %d ,%d, %d)""" % (my_id, int(participant), 0, msg_id)
