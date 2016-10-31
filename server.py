@@ -261,7 +261,7 @@ def messages():
                   ORDER BY participant_id, message_datetime""" % my_id
         c.execute(sql)
 
-        old_p = c[0][1]
+        old_p = 0
         chat = Chat()
 
         for user, participant, in_out, content, msg_datetime in c:
@@ -277,7 +277,8 @@ def messages():
             if old_p == participant:
                 chat.add(msg)
             else:
-                inbox.add(chat, old_p)
+                if chat.key != 0:
+                    inbox.add(chat, old_p)
                 chat = Chat()
                 chat.add(msg)
             old_p = participant
