@@ -39,5 +39,5 @@ class Inbox:
         self.chats = []
 
     def add(self, chat, participant):
-        if len(chat) != 0:
+        if len(chat.messages) != 0:
             self.chats.append((chat, participant))
