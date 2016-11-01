@@ -83,13 +83,15 @@ Timeline
                             <p>{{ post.text }}</p>
 
                             <div class="btn-group btn-group-sm">
-                                <button type="submit" name="like" value="like" class="btn btn-primary "><span class="glyphicon glyphicon-ok"></button>
-                                <button type="submit" name="dislike" value="dislike" class="btn btn-danger "><span class="glyphicon glyphicon-remove"></button>
+                                <form action="" method="post">
+                                    <button type="submit" name="like"  class="btn btn-primary btn-sm" value={{ post.post_id }}><span class="glyphicon glyphicon-ok"></button>
+                                    <button type="submit" name="dislike" class="btn btn-danger btn-sm" value={{ post.post_id }}><span class="glyphicon glyphicon-remove"></button>
+                                </form>
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-sm-1">
-                                    <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Like </span><span class="badge">7</span></button>
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Like </span><span class="badge">{{ post.like_num }}</span></button>
 
                                     <!-- Modal -->
                                     <div class="modal fade" id="myModal" role="dialog">
@@ -113,7 +115,7 @@ Timeline
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
-                                    <button type="button" class="btn btn-info btn-md pull-right" data-toggle="modal" data-target="#myModal2">Dislike </span><span class="badge">7</span></button>
+                                    <button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" data-target="#myModal2">Dislike </span><span class="badge">{{ post.dislike_num }}</span></button>
 
                                     <!-- Modal -->
                                     <div class="modal fade" id="myModal2" role="dialog">
@@ -143,7 +145,7 @@ Timeline
                                         <div class="panel panel-default">
                                             <div class="panel-heading">
                                                 <h3 class="panel-title">
-                                                <a data-toggle="collapse" href="#collapse1">Comments </span>&nbsp;<span class="badge">7</span></a>
+                                                <a data-toggle="collapse" href="#collapse1">Comments </span>&nbsp;<span class="badge">2</span></a>
                                               </h3>
                                             </div>
                                             <div id="collapse1" class="panel-collapse collapse">

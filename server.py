@@ -5,11 +5,12 @@ import pymysql
 from flask import Flask
 from flask import render_template, request, redirect, url_for
 from connections import Connections,Connection
-from posts import Posts, Post
+from posts import posts_get, post_share, post_delete, post_update
 from jobs import Jobs, Job
 from users import Users, User
 from messages import Message, Chat, Inbox
 from random import randint
+
 app = Flask(__name__)
 # mysql
 MYSQL_DATABASE_HOST = '176.32.230.23'
@@ -23,10 +24,10 @@ MYSQL_DATABASE_CHARSET = 'utf8'
 @app.route('/test/')
 def test_page():
     try:
-        c, conn = connection()
-        return ("okay")
+        connection()
+        return "okay"
     except Exception as e:
-        return (str(e))
+        return str(e)
 
 
 def connection():
@@ -51,12 +52,14 @@ def connection():
         c.execute(sql)
 
         sql = """CREATE TABLE posts(
-              POST_ID INT NOT NULL AUTO_INCREMENT,
-              USER_ID INT NOT NULL,
-              POST_TEXT VARCHAR(100) NOT NULL,
-              POST_DATE DATETIME,
-              PRIMARY KEY ( POST_ID )
-              )"""
+                      POST_ID INT NOT NULL AUTO_INCREMENT,
+                      USER_ID INT NOT NULL,
+                      POST_TEXT VARCHAR(100) NOT NULL,
+                      POST_DATE DATETIME,
+                      LIKE_NUM INT,
+                      DISLIKE_NUM INT,
+                      PRIMARY KEY ( POST_ID )
+                      )"""
 
         c.execute(sql)
 
@@ -335,75 +338,39 @@ def messages():
 
 @app.route('/timeline', methods=['GET', 'POST'])
 def timeline():
-    store = Posts()
-    try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
-        c = conn.cursor()
-        sql = """SELECT * FROM posts"""
-
-        c.execute(sql)
-
-        for row in c:
-            post_id, user_id, text, date = row
-            post = Post(post_id=post_id, user=user_id, text=text, date=date)
-            store.add_post(post=post)
-
-        c.close()
-        conn.close()
-
-    except Exception as e:
-        print(str(e))
-
-    posts = store.get_posts() # "posts" shows exist posts
+    posts = posts_get()
 
     if request.method == 'GET':
-
         return render_template('timeline.html', posts=posts)
+
     else:
         signup()
         if 'share' in request.form:
             print("share")
             text = request.form['post']
             date = datetime.datetime.now()
-
-            try:
-                conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
-                c = conn.cursor()
-                f = '%Y-%m-%d %H:%M:%S'
-                sql = """INSERT INTO posts(USER_ID, POST_TEXT, POST_DATE)
-                               VALUES (%d, '%s', '%s' )""" % (5, text, date.strftime(f))
-
-                c.execute(sql)
-
-                conn.commit()
-                c.close()
-                conn.close()
-
-            except Exception as e:
-                print(str(e))
+            user_id = 5
+            post_share(user_id=user_id, text=text, date=date)
 
         if 'delete' in request.form:
             print("delete")
             print(request.form['delete'])
             post_id = request.form['delete']
 
-            try:
-                conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
-                                       charset=MYSQL_DATABASE_CHARSET)
-                c = conn.cursor()
-                sql = """DELETE FROM posts WHERE POST_ID = (%d) """ % (int(post_id))
+            post_delete(post_id=post_id)
 
-                c.execute(sql)
+        if 'like' in request.form:
+            print("like")
+            print(request.form['like'])
+            post_id = request.form['like']
+            post_update(post_id, "LIKE_NUM")
 
-                conn.commit()
-                c.close()
-                conn.close()
+        if 'dislike' in request.form:
+            print("dislike")
+            print(request.form['dislike'])
+            post_id = request.form['dislike']
+            post_update(post_id, "DISLIKE_NUM")
 
-            except Exception as e:
-                print(str(e))
 
     return redirect('timeline')
 
