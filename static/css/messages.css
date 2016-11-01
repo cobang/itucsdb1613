@@ -1,0 +1,12 @@
+.profile_pic {
+    float: left;
+    margin-right: 1em;
+}
+
+.message_box {
+    padding: 0.5em;
+}
+
+.message_box_datetime{
+    float: right;
+}

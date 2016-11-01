@@ -1,77 +1,80 @@
 {#
 parameters:
-    chats (inbox)
+    chats (inbox.chats)
 #}
 {% extends "base.html" %}
 {% block navigationbar %}
-    <li><a href="home">Home</a></li>
-    <li><a href="timeline">Timeline</a></li>
-    <li><a href="profile">Profile</a></li>
-    <li><a href="connections">Connections</a></li>
-    <li class="active"><a href="messages">Messages</a></li>
-    <li><a href="jobs">Jobs</a></li>
-    <li><a href="about">About</a></li>
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('timeline') }}">Timeline</a></li>
+    <li><a href="{{ url_for('profile') }}">Profile</a></li>
+    <li><a href="{{ url_for('connections') }}">Connections</a></li>
+    <li class="active"><a href="{{ url_for('messages') }}">Messages</a></li>
+    <li><a href="{{ url_for('jobs') }}">Jobs</a></li>
+    <li><a href="{{ url_for('about') }}">About</a></li>
 {% endblock %}
 {% block title %}
 Messages
 {% endblock %}
 {% block content %}
 
-    <div class="container contentContainer" id="topContainer">
-        <br/><br/><br/>
-        <div class="row">
-            <div class="col-md-1">
-            </div>
-            <div class="col-md-2">
+<div class="container contentContainer" id="topContainer">
+    <br/><br/><br/>
+    <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-2">
 
-                <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">New Message</button>
-                <div id="myModal" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
+            <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">New Message</button>
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">New Message</h4>
+                        </div>
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">New Message</h4>
-                            </div>
-                            <div class="modal-content">
-                                <br/>
-                                <form action="" method="post" style="padding: 1em">
-                                    <div class="form-group">
-                                        To: <input type="text" name="username" value="1"><br/>
-                                    </div>
-                                    <div class="form-group">
-                                        <textarea class="form-control" name="message" rows="2"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <button class="btn btn-info" type="submit" name="send" value="0">Send</button>
-                                    </div>
-                                </form>
-                            </div>
+                            <br/>
+                            <form action="" method="post" style="padding: 1em">
+                                <div class="form-group">
+                                    To: <input type="text" name="username" value="1"><br/>
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control" name="message" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-info" type="submit" name="send" value="0">Send</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-
             </div>
 
-            <div class="col-md-6">
+        </div>
+        <div class="col-md-6">
 
-                <div class="alert alert-info">
-                    <strong>This is a testing phase.</strong>
-                </div>
+            <div class="alert alert-info">
+                <strong>This is a testing phase.</strong>
+            </div>
 
-                <div class="panel-group">
+            <div class="panel-group">
 
-                    {% for single_chat, participant in chats %}
+                {% for single_chat, participant in chats %}
+
                     <div class="panel panel-info">
                         <div class="panel-heading">
                             <span class="badge"></span>&nbsp;<a href="#">{{ participant }}</a>
-                            <span style="float: right">{{ single_chat.get_last().datetime }}</span>
+                            <span style="float: right">
+                                {{ single_chat.get_last().datetime }}&nbsp;&nbsp;
+                                <button class="close" type="submit" name="delete" value="{{ participant }}">&times;</button>
+                            </span>
                         </div>
 
                         <!-- Panel Body -->
 
                         <a href="#" data-toggle="modal" data-target="#myModal{{ participant }}">
                             <div class="panel-body">
-                                <img class="img-circle" src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-128.png" width="50" height="50" style="float: left">
+                                <img class="img-circle profile_pic" src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-128.png" width="50" height="50">
                                 {{ single_chat.get_last().content }}
                             </div>
                         </a>
@@ -88,16 +91,33 @@ Messages
                                         <div class="panel-group">
 
                                             {% for key, msg in single_chat.get_list() %}
+                                                <div class="row">
+                                                {% if msg.sender == participant %}
+                                                    <div class="col-md-6">
+                                                {% else %}
+                                                    <div class="col-md-6"></div>
+                                                    <div class="col-md-6">
+                                                {% endif %}
 
-                                                <div class="panel panel-{% if msg.sender == participant %}info{% else %}primary{% endif %}" style="margin: 1px">
-                                                    <div class="panel-heading">
-                                                        {{ msg.sender }}<span style="float: right">{{ msg.datetime }}</span>
+                                                    <div class="panel panel-{% if msg.sender == participant %}info{% else %}primary{% endif %}" style="margin: 1px">
+                                                        <div class="panel-heading">
+                                                            {# {{ msg.sender }} #}
+                                                            <span class="label label-{% if msg.sender == participant %}info{% else %}primary{% endif %} message_box_datetime">
+                                                                {{ msg.datetime }}
+                                                            </span>
+                                                        </div>
+                                                        <div class="panel-body message_box">
+                                                            {{ msg.content }}
+                                                        </div>
                                                     </div>
-                                                    <div class="panel-body">
-                                                        {{ msg.content }}
-                                                    </div>
-                                                </div>
 
+                                                {% if msg.sender == participant %}
+                                                    </div>
+                                                    <div class="col-md-6"></div>
+                                                {% else %}
+                                                    </div>
+                                                {% endif %}
+                                                </div><!-- end row class -->
                                             {% endfor %}
 
                                         </div>
@@ -106,10 +126,10 @@ Messages
                                     <div class="modal-footer">
                                         <form action="" method="post">
                                             <div class="form-group">
-                                                <textarea class="form-control" name="message" rows="2"></textarea>
+                                                <textarea class="form-control" name="message" maxlength="140" rows="2"></textarea>
                                              </div>
                                             <div class="form-group">
-                                                <button class="btn btn-info" type="submit" name="send" value={{ participant }}>Send</button>
+                                                <button class="btn btn-info" type="submit" name="send" value="{{ participant }}">Send</button>
                                             </div>
                                         </form>
                                     </div>
@@ -120,14 +140,14 @@ Messages
 
                         <!-- End Panel Body -->
                     </div><!-- End Panel -->
-                    {% endfor %}
 
-                </div><!-- End Panel Group -->
-            </div>
+                {% endfor %}
 
-            <div class="col-md-3">
-            </div>
+            </div><!-- End Panel Group -->
+        </div>
+        <div class="col-md-3">
         </div>
     </div>
+</div>
 
 {% endblock %}

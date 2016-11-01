@@ -8,7 +8,6 @@ class Message:
 
 class Chat:
     def __init__(self):
-
         self.messages = {}
         self.key = 0
 
@@ -24,10 +23,15 @@ class Chat:
         del self.messages[index]
 
     def get_last(self):
+        if self.key == 0:
+            return 0
         return self.messages[self.key]
 
     def get_list(self):
         return sorted(self.messages.items())
+
+    def is_empty(self):
+        return self.key == 0
 
 
 class Inbox:
@@ -35,4 +39,5 @@ class Inbox:
         self.chats = []
 
     def add(self, chat, participant):
-        self.chats.append((chat, participant))
+        if len(chat) != 0:
+            self.chats.append((chat, participant))
