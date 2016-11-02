@@ -5,12 +5,11 @@ import pymysql
 from dbconnection import MySQL
 from flask import Flask
 from flask import render_template, request, redirect, url_for
-from connections import Connections,Connection
+from connections import Connections,Recommendations, Connection, connection_add, connection_remove
 from posts import posts_get, post_share, post_delete, post_update
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_list, user_edit, user_delete
 from messages import get_inbox, send_message, delete_conversation, like_message
-from random import randint
 
 app = Flask(__name__)
 
@@ -184,20 +183,19 @@ def about():
 
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
-    storage = Connections()
+    storage = Recommendations()
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         sql = """SELECT * FROM users"""
-
         c.execute(sql)
         f = '%Y-%m-%d %H:%M:%S'
         dateTime = datetime.datetime.now()
         for row in c:
             id, name, surname, username, password = row
             connection_new = Connection(120, following_id=id, date=dateTime.strftime(f))
-            storage.add_connection(connection=connection_new)
+            storage.add_recommendation(connection=connection_new)
             print("adding")
         c.close()
         conn.close()
@@ -205,31 +203,24 @@ def connections():
     except Exception as e:
         print(str(e))
 
-    connections_storage = storage.get_connections()
-
+    rec_storage = storage.get_recommendations()
     if request.method == 'GET':
-        return render_template('connections.html', connections=connections_storage)
+        return render_template('connections.html', recommendations=rec_storage)
     else:
         signup()
         if 'add_Connection' in request.form:
             dateTime = datetime.datetime.now()
             print("addConnection")
+            key_id = int(request.form['key'])
+            storage.delete_recommendation(counter=key_id)
+            print("del")
             rec_id = int(request.form['following_id'])
-            user_id = randint(0, 1000)
-            try:
-                conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                       passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-                c = conn.cursor()
-                sql = """INSERT INTO connections(user_id,following_id,connection_date)
-                           VALUES (%d, '%d', '%s' )""" % (user_id, rec_id, dateTime.strftime(f))
-                c.execute(sql)
-
-                conn.commit()
-                c.close()
-                conn.close()
-
-            except Exception as e:
-                print(str(e))
+            user_id = int(request.form['user_id'])
+            connection_add(u_id=user_id,fol_id=rec_id, time=dateTime)
+        elif 'remove_Connection' in request.form:
+            rec_id = int(request.form['following_id'])
+            u_id = int(request.form['user_id'])
+            connection_remove(u_id, rec_id)
     return redirect('connections')
 
 
