@@ -8,7 +8,7 @@ from flask import render_template, request, redirect, url_for
 from connections import Connections,Connection
 from posts import posts_get, post_share, post_delete, post_update
 from jobs import Jobs, Job
-from users import user_list, user_edit
+from users import user_list, user_edit, user_delete
 from messages import Message, Chat, Inbox
 from random import randint
 
@@ -156,14 +156,15 @@ def profile():
         return render_template('profile.html', users=users)
     else:
         if 'signup' in request.form:
-            print("sign up")
             signup()
         elif 'edit_user' in request.form:
-            print("edit user")
             user_id = request.form['edit_user']
             user_name = request.form['name']
             user_surname = request.form['surname']
             user_edit(user_id, user_name, user_surname)
+        elif 'delete_user' in request.form:
+            user_id = request.form['delete_user']
+            user_delete(user_id=user_id)
 
     return redirect('profile')
 

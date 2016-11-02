@@ -57,14 +57,25 @@ def user_edit(user_id, user_name, user_surname):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        print(user_name)
-        print(user_surname)
-        print(user_id)
         sql = """UPDATE users SET user_name = '%s', user_surname = '%s'  WHERE user_id = %d """ % (
             user_name, user_surname, int(user_id))
 
         c.execute(sql)
+        conn.commit()
+        c.close()
+        conn.close()
 
+    except Exception as e:
+        print(str(e))
+
+
+def user_delete(user_id):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+        sql = """DELETE FROM users WHERE user_id = (%d) """ % (int(user_id))
+        c.execute(sql)
         conn.commit()
         c.close()
         conn.close()

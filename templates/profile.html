@@ -72,8 +72,10 @@
                 <div class="panel-footer">
                     <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
                     <span class="pull-right">
-                        <a href="#edit" data-original-title="Edit this user" data-toggle="modal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
-                        <a href="#" data-original-title="Delete this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i></a>
+                        <form action="" method="post">
+                            <a href="#edit" data-original-title="Edit this user" data-toggle="modal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                            <button name="delete_user" value="{{ user.user_id }}"class="btn btn-sm btn-danger" type="submit"><i class="glyphicon glyphicon-trash"></i></button>
+                        </form>
                     </span>
                 </div>
 
