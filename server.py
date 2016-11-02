@@ -316,6 +316,25 @@ def messages():
             except Exception as e:
                 print(str(e))
 
+        if 'delete' in request.form:
+            participant = int(request.form['delete'])
+
+            try:
+                conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                       passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+                c = conn.cursor()
+
+                sql = """DELETE FROM conversations
+                              WHERE (user_id = %d)
+                                AND (participant_id = %d)""" % (my_id, participant)
+                c.execute(sql)
+
+                conn.commit()
+                c.close()
+                conn.close()
+            except Exception as e:
+                print(str(e))
+
     return redirect('messages')
 
 

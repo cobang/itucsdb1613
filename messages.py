@@ -1,9 +1,10 @@
 class Message:
-    def __init__(self, sender, receiver, content, datetime):
+    def __init__(self, sender, receiver, content, datetime, is_liked=0):
         self.sender = sender
         self.receiver = receiver
         self.content = content
         self.datetime = datetime
+        self.is_liked = is_liked  # Integer value, from sql (0 or 1)
 
 
 class Chat:
@@ -41,3 +42,4 @@ class Inbox:
     def add(self, chat, participant):
         if len(chat.messages) != 0:
             self.chats.append((chat, participant))
+

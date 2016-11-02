@@ -62,11 +62,16 @@ Messages
                 {% for single_chat, participant in chats %}
 
                     <div class="panel panel-info">
+
+                    <!-- Panel Heading -->
+
                         <div class="panel-heading">
-                            <span class="badge"></span>&nbsp;<a href="#">{{ participant }}</a>
+                            &nbsp;<a href="#">{{ participant }}</a>
                             <span style="float: right">
                                 {{ single_chat.get_last().datetime }}&nbsp;&nbsp;
-                                <button class="close" type="submit" name="delete" value="{{ participant }}">&times;</button>
+                                <form class="reset" action="" method="post">
+                                    <button class="close" type="submit" name="delete" value="{{ participant }}">&times;</button>
+                                </form>
                             </span>
                         </div>
 
@@ -101,6 +106,10 @@ Messages
 
                                                     <div class="panel panel-{% if msg.sender == participant %}info{% else %}primary{% endif %}" style="margin: 1px">
                                                         <div class="panel-heading">
+                                                            <form class="reset" action="" method="post">
+                                                                <!-- CHANGE BELOW CHANGE BELOW -->
+                                                                <button class="close" type="submit" name="like" value="CHANGE">L</button>
+                                                            </form>
                                                             {# {{ msg.sender }} #}
                                                             <span class="label label-{% if msg.sender == participant %}info{% else %}primary{% endif %} message_box_datetime">
                                                                 {{ msg.datetime }}
