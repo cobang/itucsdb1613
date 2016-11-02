@@ -58,8 +58,8 @@
                                      <span class="glyphicon glyphicon-option-vertical"></span>
                                 </button>
                             <ul class="dropdown-menu " role="menu">
-                                <li><a data-toggle="modal" href="#editjob">Edit</a></li>
-                                <li><a data-toggle="modal" href="#deletejob">Delete</a></li>
+                                <li><a data-toggle="modal" href="#editjob{{ job.job_id }}">Edit</a></li>
+                                <li><a data-toggle="modal" href="#deletejob{{ job.job_id }}">Delete</a></li>
                             </ul>
                         </div>
                         <h4><i class="fa fa-briefcase fa-fw"></i> {{ job.title }}</h4>
@@ -74,7 +74,7 @@
                 </div>
             </div>
             <!--  Edit Job Modal -->
-            <div class="modal fade" id="editjob">
+            <div class="modal fade" id="editjob{{ job.job_id }}">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -105,7 +105,7 @@
                 </div>
             </div>
             <!--  Delete Job Modal -->
-            <div class="modal fade" id="deletejob">
+            <div class="modal fade" id="deletejob{{ job.job_id }}">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">

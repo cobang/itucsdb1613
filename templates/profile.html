@@ -73,7 +73,7 @@
                     <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
                     <span class="pull-right">
                         <form action="" method="post">
-                            <a href="#edit" data-original-title="Edit this user" data-toggle="modal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                            <a href="#edit{ user.user_id }}" data-original-title="Edit this user" data-toggle="modal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
                             <button name="delete_user" value="{{ user.user_id }}"class="btn btn-sm btn-danger" type="submit"><i class="glyphicon glyphicon-trash"></i></button>
                         </form>
                     </span>
@@ -82,7 +82,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="edit">
+    <div class="modal fade" id="edit{ user.user_id }}">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
