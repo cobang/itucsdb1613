@@ -9,7 +9,7 @@
     <li><a href="about">About</a></li>
 {% endblock %}
 {% block title %}
-    Connections
+    Recommendations
 {% endblock %}
 {% block content %}
     <body>
@@ -38,20 +38,20 @@
             <div class="col-sm-8">
                 <br><br>
                 <div style="color: floralwhite"><p><b>Recommended Users</b></p></div>
-                {% for key,connection in connections %}
+                {% for key, connection in recommendations %}
                     <div class="panel-group" id="accordion">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#Collapse1">Name Surname</a>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#{{ connection.following }}">{{ connection.get_name() }}</a>
                                 </h4>
                             </div>
-                            <div id="Collapse1" class="panel-collapse collapse in">
+                            <div id="{{ connection.following }}" class="panel-collapse collapse in">
                                   <form role="form" action="" method="post" >
                                 <div class="panel-body">
 
                                     <div class="media" style="font-size: 12px">
-                                         <textarea name="following_id" class="form-control" rows="1" id="following_id">{{ connection.following }}</textarea>
+
                                         <br>
                                         <img class="media-object" src="http://web.itu.edu.tr/yurdakulgu/profile-42914_960_720.png" width="84" height="84" style="float: left;margin-right:12px">
                                          <p>Part-Time Software Developer</p>
@@ -60,8 +60,8 @@
 
                                         <br>
                                         <div class="media-body">
-                                            <a href="#" class="btn btn-xs" data-toggle="modal" data-target="#myModal" style="background-color: #9ba5cd; color: #0f0f0f"><span>150 connections</span></a>
-                                            &nbsp;<div class="modal fade" id="myModal" role="dialog">
+                                            <a href="#" class="btn btn-xs" data-toggle="modal" data-target="#list" style="background-color: #9ba5cd; color: #0f0f0f"><span>150 connections</span></a>
+                                            &nbsp;<div class="modal fade" id="list" role="dialog">
                                             <div class="modal-dialog">
                                                 <!-- Modal content-->
                                                 <div class="modal-content">
@@ -78,11 +78,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                            <a href="#" class="btn btn-xs" style="background-color: #b8e2d9; color: #0f0f0f"><span>Go to profile</span></a>
+                                            <a href="profile" class="btn btn-xs" style="background-color: #b8e2d9; color: #0f0f0f"><span>Go to profile</span></a>
                                             <br><br>
                                             <p>
                                                 <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Message</a>
-                                                <button type="submit" name="add_Connection" value="add_Connection" class="btn btn-xs btn-default"><span class="glyphicon glyphicons-user-add"></span>Add to your connections</button>
+                                              <input type="hidden" name="following_id" value="{{ connection.following }}"/>
+                                              <input type="hidden" name="user_id" value="{{ connection.user }}"/>
+                                              <input type="hidden" name="key" value="{{ key }}"/>
+                                              <input type="submit" name="add_Connection" value="Follow" class="btn btn-xs btn-default"/>
+                                              <input type="submit" name="remove_Connection" value="Unfollow" class="btn btn-xs btn-default"/>
                                             </form>
                                             </p>
                                         </div>
