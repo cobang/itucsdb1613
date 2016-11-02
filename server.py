@@ -9,7 +9,7 @@ from connections import Connections,Connection
 from posts import posts_get, post_share, post_delete, post_update
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_list, user_edit, user_delete
-from messages import Message, Chat, Inbox
+from messages import Message, Chat, Inbox, get_inbox, send_message, delete_conversation
 from random import randint
 
 app = Flask(__name__)
@@ -236,105 +236,25 @@ def connections():
 @app.route('/messages', methods=['GET', 'POST'])
 def messages():
     my_id = 2  # TEMPORARY
-    inbox = Inbox()
-    try:
-        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-        c = conn.cursor()
-        sql = """SELECT user_id, participant_id,
-                            in_out, content, message_datetime
-                  FROM messages, conversations
-                  WHERE (messages.message_id = conversations.message_id)
-                        AND (user_id = %d)
-                  ORDER BY participant_id, message_datetime""" % my_id
-        c.execute(sql)
-
-        old_p = 0
-        chat = Chat()
-
-        for user, participant, in_out, content, msg_datetime in c:
-            if in_out == 0:
-                sender = user
-                receiver = participant
-            else:
-                sender = participant
-                receiver = user
-
-            msg = Message(sender, receiver, content, msg_datetime)
-
-            if old_p == participant:
-                chat.add(msg)
-            else:
-                if chat.key != 0:
-                    inbox.add(chat, old_p)
-                chat = Chat()
-                chat.add(msg)
-            old_p = participant
-        inbox.add(chat, old_p)
-
-        c.close()
-        conn.close()
-
-    except Exception as e:
-        print(str(e))
+    inbox = get_inbox(my_id)
 
     if request.method == 'GET':
         chats = inbox.chats
         return render_template('messages.html', chats=chats)
     else:
         if 'send' in request.form:
-            participant = request.form['send']
-            if int(participant) == 0:
-                participant = request.form['username']
+            participant = int(request.form['send'])
+            if participant == 0:
+                participant = int(request.form['username'])
             content = request.form['message']
             date = datetime.datetime.now()
 
-            try:
-                conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                       passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-                c = conn.cursor()
-                f = '%Y-%m-%d %H:%M:%S'
-                sql = """INSERT INTO messages(content, message_datetime)
-                          VALUES('%s', '%s')""" % (content, date.strftime(f))
-                c.execute(sql)
-
-                sql = """SELECT MAX(message_id) FROM messages"""
-                c.execute(sql)
-                for x in c:
-                    msg_id = x[0]
-
-                sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
-                          VALUES(%d, %d ,%d, %d)""" % (my_id, int(participant), 0, msg_id)
-                c.execute(sql)
-                sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
-                          VALUES(%d, %d ,%d, %d)""" % (int(participant), my_id, 1, msg_id)
-                c.execute(sql)
-
-                conn.commit()
-                c.close()
-                conn.close()
-
-            except Exception as e:
-                print(str(e))
+            send_message(my_id, participant, content, date)
 
         if 'delete' in request.form:
             participant = int(request.form['delete'])
 
-            try:
-                conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                       passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-                c = conn.cursor()
-
-                sql = """DELETE FROM conversations
-                              WHERE (user_id = %d)
-                                AND (participant_id = %d)""" % (my_id, participant)
-                c.execute(sql)
-
-                conn.commit()
-                c.close()
-                conn.close()
-            except Exception as e:
-                print(str(e))
+            delete_conversation(my_id, participant)
 
     return redirect('messages')
 
