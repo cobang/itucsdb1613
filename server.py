@@ -86,6 +86,7 @@ def connection():
         sql = """CREATE TABLE connections(
               user_id INT NOT NULL,
               following_id INT NOT NULL,
+              added_to_favorites INT,
               connection_date DATETIME,
               PRIMARY KEY(user_id,following_id)
               )"""
