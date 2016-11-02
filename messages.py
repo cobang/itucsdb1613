@@ -56,17 +56,18 @@ def get_inbox(user_id):
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         sql = """SELECT user_id, participant_id,
-                                in_out, content, message_datetime
-                      FROM messages, conversations
-                      WHERE (messages.message_id = conversations.message_id)
-                            AND (user_id = %d)
-                      ORDER BY participant_id, message_datetime""" % user_id
+                        in_out, content,
+                        message_datetime, messages.message_id, is_liked
+                 FROM messages, conversations
+                 WHERE (messages.message_id = conversations.message_id)
+                    AND (user_id = %d)
+                 ORDER BY participant_id, message_datetime""" % user_id
         c.execute(sql)
 
         old_p = 0
         chat = Chat()
 
-        for user, participant, in_out, content, msg_datetime in c:
+        for user, participant, in_out, content, msg_datetime, msg_id, is_liked in c:
             if in_out == 0:
                 sender = user
                 receiver = participant
@@ -74,7 +75,7 @@ def get_inbox(user_id):
                 sender = participant
                 receiver = user
 
-            msg = Message(sender, receiver, content, msg_datetime)
+            msg = Message(sender, receiver, content, msg_datetime, is_liked=is_liked, msg_id=msg_id)
 
             if old_p == participant:
                 chat.add(msg)
@@ -101,8 +102,8 @@ def send_message(user_id, participant_id, content, date):
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         f = '%Y-%m-%d %H:%M:%S'
-        sql = """INSERT INTO messages(content, message_datetime)
-                              VALUES('%s', '%s')""" % (content, date.strftime(f))
+        sql = """INSERT INTO messages(content, message_datetime, is_liked)
+                              VALUES('%s', '%s', 0)""" % (content, date.strftime(f))
         c.execute(sql)
 
         sql = """SELECT MAX(message_id) FROM messages"""
@@ -139,6 +140,25 @@ def delete_conversation(user_id, participant_id):
         conn.commit()
         c.close()
         conn.close()
+    except Exception as e:
+        print(str(e))
+
+
+def like_message(message_id):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        sql = """UPDATE messages
+                  SET is_liked = 1
+                  WHERE message_id = %d""" % message_id
+        c.execute(sql)
+
+        conn.commit()
+        c.close()
+        conn.close()
+
     except Exception as e:
         print(str(e))
 

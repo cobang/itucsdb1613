@@ -9,7 +9,7 @@ from connections import Connections,Connection
 from posts import posts_get, post_share, post_delete, post_update
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_list, user_edit, user_delete
-from messages import Message, Chat, Inbox, get_inbox, send_message, delete_conversation
+from messages import get_inbox, send_message, delete_conversation, like_message
 from random import randint
 
 app = Flask(__name__)
@@ -255,6 +255,11 @@ def messages():
             participant = int(request.form['delete'])
 
             delete_conversation(my_id, participant)
+
+        if 'like' in request.form:
+            msg_id = int(request.form['like'])
+
+            like_message(msg_id)
 
     return redirect('messages')
 

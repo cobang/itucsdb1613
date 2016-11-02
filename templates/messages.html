@@ -106,10 +106,15 @@ Messages
 
                                                     <div class="panel panel-{% if msg.sender == participant %}info{% else %}primary{% endif %}" style="margin: 1px">
                                                         <div class="panel-heading message_box_header">
+
+                                                            {% if msg.sender == participant and msg.is_liked == 0 %}
                                                             <form class="reset" action="" method="post">
-                                                                <!-- CHANGE BELOW CHANGE BELOW -->
-                                                                <button class="close" type="submit" name="like" value="CHANGE">L</button>
+                                                                <button class="close message_like" type="submit" name="like" value="{{ msg.msg_id }}">Like</button>
                                                             </form>
+                                                            {% else %}{% if msg.is_liked == 1 %}
+                                                            <span class="close message_like">Liked!</span>
+                                                            {% endif %}{% endif %}
+
                                                             {# {{ msg.sender }} #}
                                                             <span class="label label-{% if msg.sender == participant %}info{% else %}primary{% endif %} message_box_datetime">
                                                                 {{ msg.datetime }}

@@ -4,7 +4,12 @@
 }
 
 .message_box{
-    padding: 0.5em;
+    padding: 0.25em 0.5em 0.25em 0.5em;
+}
+
+.message_like{
+    float: left;
+    font-size: 1em;
 }
 
 .message_box_datetime{
