@@ -1,14 +1,18 @@
-.profile_pic {
+.profile_pic{
     float: left;
     margin-right: 1em;
 }
 
-.message_box {
+.message_box{
     padding: 0.5em;
 }
 
 .message_box_datetime{
     float: right;
+}
+
+.message_box_header{
+
 }
 
 .reset{

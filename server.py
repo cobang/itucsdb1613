@@ -64,6 +64,7 @@ def connection():
               message_id INT NOT NULL AUTO_INCREMENT,
               content VARCHAR(140),
               message_datetime DATETIME,
+              is_liked INT,
               PRIMARY KEY (message_id)
               )"""
         c.execute(sql)
