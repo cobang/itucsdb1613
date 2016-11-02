@@ -1,3 +1,7 @@
+import pymysql
+from dbconnection import MySQL
+
+
 class Users:
     def __init__(self):
         self.users = {}
@@ -16,9 +20,54 @@ class Users:
 
 
 class User:
-    def __init__(self, id, name, surname, email, password):
-        self.id = id
-        self.name = name
-        self.surname = surname
-        self.email = email
-        self.password = password
+    def __init__(self, user_id, user_name, user_surname, user_email, user_password):
+        self.user_id = user_id
+        self.user_name = user_name
+        self.user_surname = user_surname
+        self.user_email = user_email
+        self.user_password = user_password
+
+
+def user_list():
+    store = Users()
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+        sql = """SELECT * FROM users"""
+
+        c.execute(sql)
+
+        for row in c:
+            user_id, user_name, user_surname, user_email, user_password = row
+            user = User(user_id=user_id, user_name=user_name, user_surname=user_surname, user_email=user_email, user_password=user_password)
+            store.add_user(user=user)
+
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
+    return store.get_users()
+
+
+def user_edit(user_id, user_name, user_surname):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+        print(user_name)
+        print(user_surname)
+        print(user_id)
+        sql = """UPDATE users SET user_name = '%s', user_surname = '%s'  WHERE user_id = %d """ % (
+            user_name, user_surname, int(user_id))
+
+        c.execute(sql)
+
+        conn.commit()
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))

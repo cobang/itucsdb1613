@@ -2,23 +2,17 @@ import datetime
 import os
 import pymysql
 
+from dbconnection import MySQL
 from flask import Flask
 from flask import render_template, request, redirect, url_for
 from connections import Connections,Connection
 from posts import posts_get, post_share, post_delete, post_update
 from jobs import Jobs, Job
-from users import Users, User
+from users import user_list, user_edit
 from messages import Message, Chat, Inbox
 from random import randint
 
 app = Flask(__name__)
-# mysql
-MYSQL_DATABASE_HOST = '176.32.230.23'
-MYSQL_DATABASE_PORT = 3306
-MYSQL_DATABASE_USER = 'cl48-humannet'
-MYSQL_DATABASE_PASSWORD = 'itu1773'
-MYSQL_DATABASE_DB = 'cl48-humannet'
-MYSQL_DATABASE_CHARSET = 'utf8'
 
 
 @app.route('/test/')
@@ -32,8 +26,8 @@ def test_page():
 
 def connection():
     try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
 
         sql = """DROP TABLE IF EXISTS test"""
@@ -112,12 +106,12 @@ def connection():
         c.execute(sql)
 
         sql = """CREATE TABLE users(
-                              id INT NOT NULL AUTO_INCREMENT,
-                              name VARCHAR(45) NOT NULL,
-                              surname VARCHAR(45) NOT NULL,
-                              email VARCHAR(45) NOT NULL,
-                              password VARCHAR(45) NOT NULL,
-                              PRIMARY KEY ( id )
+                              user_id INT NOT NULL AUTO_INCREMENT,
+                              user_name VARCHAR(20) NOT NULL,
+                              user_surname VARCHAR(20) NOT NULL,
+                              user_email VARCHAR(25) NOT NULL,
+                              user_password VARCHAR(16) NOT NULL,
+                              PRIMARY KEY ( user_id )
                               )"""
         c.execute(sql)
 
@@ -154,33 +148,22 @@ def home():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    user_list = Users()
-    try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
-        c = conn.cursor()
-        sql = """SELECT * FROM users"""
 
-        c.execute(sql)
-
-        for row in c:
-            id, name, surname, email, password = row
-            user = User(id=id, name=name, surname=surname, email=email, password=password)
-            user_list.add_user(user=user)
-
-        c.close()
-        conn.close()
-
-    except Exception as e:
-        print(str(e))
-
-    users = user_list.get_users()
+    users = user_list()
 
     if request.method == 'GET':
 
         return render_template('profile.html', users=users)
     else:
-        signup()
+        if 'signup' in request.form:
+            print("sign up")
+            signup()
+        elif 'edit_user' in request.form:
+            print("edit user")
+            user_id = request.form['edit_user']
+            user_name = request.form['name']
+            user_surname = request.form['surname']
+            user_edit(user_id, user_name, user_surname)
 
     return redirect('profile')
 
@@ -191,7 +174,8 @@ def about():
 
         return render_template('about.html')
     else:
-        signup()
+        if 'signup' in request.form:
+            signup()
 
     return redirect('about')
 
@@ -200,8 +184,8 @@ def about():
 def connections():
     storage = Connections()
     try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         sql = """SELECT * FROM users"""
 
@@ -231,9 +215,8 @@ def connections():
             rec_id = int(request.form['following_id'])
             user_id = randint(0, 1000)
             try:
-                conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
-                                       charset=MYSQL_DATABASE_CHARSET)
+                conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                       passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
                 c = conn.cursor()
                 sql = """INSERT INTO connections(user_id,following_id,connection_date)
                            VALUES (%d, '%d', '%s' )""" % (user_id, rec_id, dateTime.strftime(f))
@@ -253,8 +236,8 @@ def messages():
     my_id = 2  # TEMPORARY
     inbox = Inbox()
     try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         sql = """SELECT user_id, participant_id,
                             in_out, content, message_datetime
@@ -305,9 +288,8 @@ def messages():
             date = datetime.datetime.now()
 
             try:
-                conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
-                                       charset=MYSQL_DATABASE_CHARSET)
+                conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                       passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
                 c = conn.cursor()
                 f = '%Y-%m-%d %H:%M:%S'
                 sql = """INSERT INTO messages(content, message_datetime)
@@ -379,8 +361,8 @@ def timeline():
 def jobs():
     archive = Jobs()
     try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         sql = """SELECT * FROM jobs"""
 
@@ -410,9 +392,8 @@ def jobs():
             description = request.form['description']
 
             try:
-                conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                                       passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
-                                       charset=MYSQL_DATABASE_CHARSET)
+                conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                       passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
                 c = conn.cursor()
                 sql = """INSERT INTO jobs(TITLE, DESCRIPTION)
                                    VALUES ('%s', '%s' )""" % (title, description)
@@ -431,18 +412,17 @@ def jobs():
 def signup():
     if 'signup' in request.form:
         print("Sign Up")
-        name = request.form['name']
-        surname = request.form['surname']
-        email = request.form['email']
-        password = request.form['password']
+        user_name = request.form['name']
+        user_surname = request.form['surname']
+        user_email = request.form['email']
+        user_password = request.form['password']
 
         try:
-            conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                                   passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
-                                   charset=MYSQL_DATABASE_CHARSET)
+            conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
-            sql = """INSERT INTO users(name, surname, email, password)
-                                   VALUES ('%s', '%s', '%s', '%s' )""" % (name, surname, email, password)
+            sql = """INSERT INTO users(user_name, user_surname, user_email, user_password)
+                                   VALUES ('%s', '%s', '%s', '%s' )""" % (user_name, user_surname, user_email, user_password)
 
             c.execute(sql)
 

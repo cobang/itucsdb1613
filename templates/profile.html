@@ -1,5 +1,9 @@
 {% extends "base.html" %} {% block navigationbar %}
-<li><a href="home">Home</a></li>
+<style type="text/css">
+    #edit {
+    }
+</style>
+    <li><a href="home">Home</a></li>
 <li><a href="timeline">Timeline</a></li>
 <li class="active"><a href="profile">Profile</a></li>
 <li><a href="connections">Connections</a></li>
@@ -18,7 +22,7 @@
 
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ user.name }} {{ user.surname }}</h3>
+                    <h3 class="panel-title">{{ user.user_name }} {{ user.user_surname }}</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -51,7 +55,7 @@
                                         </tr>
                                         <tr>
                                             <td>Email</td>
-                                            <td><a href="mailto:info@support.com">{{ user.email }}</a></td>
+                                            <td><a href="mailto:info@support.com">{{ user.user_email }}</a></td>
                                         </tr>
                                         <td>Phone Number</td>
                                         <td></td>
@@ -68,10 +72,40 @@
                 <div class="panel-footer">
                     <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
                     <span class="pull-right">
-                            <a href="#" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
-                        </span>
+                        <a href="#edit" data-original-title="Edit this user" data-toggle="modal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                        <a href="#" data-original-title="Delete this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-trash"></i></a>
+                    </span>
                 </div>
 
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="edit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" action="" method="post" class="registration-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="name" name="name" placeholder="{{ user.user_name }}" type="name" required autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="surname">Surname</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="surname" name="surname" placeholder="{{ user.user_surname }}" type="surname" required>
+                            </div>
+                        </div>
+                        <button name="edit_user" value="{{ user.user_id }}" class="btn btn-primary btn-block" type="submit">Update</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

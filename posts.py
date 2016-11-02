@@ -1,4 +1,5 @@
 import pymysql
+from dbconnection import MySQL
 
 
 class Posts:
@@ -30,20 +31,12 @@ class Post:
         self.like_num = like_num
         self.dislike_num = dislike_num
 
-# mysql
-MYSQL_DATABASE_HOST = '176.32.230.23'
-MYSQL_DATABASE_PORT = 3306
-MYSQL_DATABASE_USER = 'cl48-humannet'
-MYSQL_DATABASE_PASSWORD = 'itu1773'
-MYSQL_DATABASE_DB = 'cl48-humannet'
-MYSQL_DATABASE_CHARSET = 'utf8'
-
 
 def posts_get():
     store = Posts()
     try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         sql = """SELECT * FROM posts"""
 
@@ -65,8 +58,8 @@ def posts_get():
 
 def post_share(user_id, text, date):
     try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB, charset=MYSQL_DATABASE_CHARSET)
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         f = '%Y-%m-%d %H:%M:%S'
         sql = """INSERT INTO posts(USER_ID, POST_TEXT, POST_DATE, LIKE_NUM, DISLIKE_NUM)
@@ -84,9 +77,8 @@ def post_share(user_id, text, date):
 
 def post_delete(post_id):
     try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
-                               charset=MYSQL_DATABASE_CHARSET)
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         sql = """DELETE FROM posts WHERE POST_ID = (%d) """ % (int(post_id))
         print(sql)
@@ -102,9 +94,8 @@ def post_delete(post_id):
 
 def post_update(post_id, tuple_name):
     try:
-        conn = pymysql.connect(host=MYSQL_DATABASE_HOST, port=MYSQL_DATABASE_PORT, user=MYSQL_DATABASE_USER,
-                               passwd=MYSQL_DATABASE_PASSWORD, db=MYSQL_DATABASE_DB,
-                               charset=MYSQL_DATABASE_CHARSET)
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         sql = """UPDATE posts SET %s = %s +1  WHERE POST_ID = %d """ % (tuple_name, tuple_name, int(post_id))
 
