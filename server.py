@@ -7,7 +7,7 @@ from flask import Flask
 from flask import render_template, request, redirect, url_for
 from connections import Connections,Connection
 from posts import posts_get, post_share, post_delete, post_update
-from jobs import Jobs, Job
+from jobs import job_add, job_edit, job_delete, job_share
 from users import user_list, user_edit, user_delete
 from messages import Message, Chat, Inbox
 from random import randint
@@ -380,55 +380,28 @@ def timeline():
 
 @app.route('/jobs', methods=['GET', 'POST'])
 def jobs():
-    archive = Jobs()
-    try:
-        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-        c = conn.cursor()
-        sql = """SELECT * FROM jobs"""
-
-        c.execute(sql)
-
-        for row in c:
-            job_id, title, description = row
-            job = Job(job_id=job_id, title=title, description=description)
-            archive.add_job(job=job)
-
-        c.close()
-        conn.close()
-
-    except Exception as e:
-        print(str(e))
-
-    jobs_archive = archive.get_jobs()  # "jobs" shows exist jobs
+    jobs_archive = job_share()  # "jobs" shows exist jobs
 
     if request.method == 'GET':
-
         return render_template('jobs.html', jobs=jobs_archive)
     else:
         signup()
         if 'addJob' in request.form:
-            print("addJob")
             title = request.form['title']
             description = request.form['description']
+            job_add(title, description)
 
-            try:
-                conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                       passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-                c = conn.cursor()
-                sql = """INSERT INTO jobs(TITLE, DESCRIPTION)
-                                   VALUES ('%s', '%s' )""" % (title, description)
-
-                c.execute(sql)
-
-                conn.commit()
-                c.close()
-                conn.close()
-
-            except Exception as e:
-                print(str(e))
+        elif 'editJob' in request.form:
+            job_id = request.form['editJob']
+            title = request.form['title']
+            description = request.form['description']
+            job_edit(job_id, title, description)
+        elif 'deleteJob' in request.form:
+            job_id = request.form['deleteJob']
+            job_delete(job_id)
 
     return redirect('jobs')
+
 
 def signup():
     if 'signup' in request.form:
