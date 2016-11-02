@@ -5,7 +5,7 @@ import pymysql
 from dbconnection import MySQL
 from flask import Flask
 from flask import render_template, request, redirect, url_for
-from connections import Connections,Recommendations, Connection, connection_add, connection_remove
+from connections import Connections,Recommendations, Connection, connection_add, connection_remove, add_to_favorites
 from posts import posts_get, post_share, post_delete, post_update
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_list, user_edit, user_delete
@@ -208,6 +208,8 @@ def connections():
     if request.method == 'GET':
         return render_template('connections.html', recommendations=rec_storage)
     else:
+        rec_id = int(request.form['following_id'])
+        u_id = int(request.form['user_id'])
         signup()
         if 'add_Connection' in request.form:
             dateTime = datetime.datetime.now()
@@ -215,13 +217,11 @@ def connections():
             key_id = int(request.form['key'])
             storage.delete_recommendation(counter=key_id)
             print("del")
-            rec_id = int(request.form['following_id'])
-            user_id = int(request.form['user_id'])
-            connection_add(u_id=user_id,fol_id=rec_id, time=dateTime)
+            connection_add(u_id=u_id,fol_id=rec_id, time=dateTime)
         elif 'remove_Connection' in request.form:
-            rec_id = int(request.form['following_id'])
-            u_id = int(request.form['user_id'])
             connection_remove(u_id, rec_id)
+        elif 'add_to_favorites' in request.form:
+            add_to_favorites(u_id, rec_id)
     return redirect('connections')
 
 

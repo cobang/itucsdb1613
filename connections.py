@@ -6,7 +6,7 @@ class Connection:
         self.user = user_id
         self.following = following_id
         self.date = date
-
+        self.added_to_favorites = 0
     def get_name(self):
         try:
             user_name=" "
@@ -93,6 +93,24 @@ def connection_remove(u_id, fol_id):
         c.close()
         conn.close()
         print("afterdelete")
+
+    except Exception as e:
+        print(str(e))
+
+def add_to_favorites (u_id, fol_id):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        sql = """UPDATE connections
+                  SET added_to_favorites = 1
+                  WHERE user_id = (%d) AND  following_id = (%d)""" % (int(u_id), int(fol_id))
+        c.execute(sql)
+
+        conn.commit()
+        c.close()
+        conn.close()
 
     except Exception as e:
         print(str(e))
