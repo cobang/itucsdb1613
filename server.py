@@ -371,7 +371,6 @@ def signup():
             conn.commit()
             c.close()
             conn.close()
-
         except Exception as e:
             print(str(e))
 
