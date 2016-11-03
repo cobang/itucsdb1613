@@ -151,7 +151,6 @@ def home():
 def profile():
 
     users = user_list()
-
     if request.method == 'GET':
 
         return render_template('profile.html', users=users)
@@ -186,7 +185,6 @@ def about():
 storage = Recommendations()
 added_Con = Connections()
 
-
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
     try:
@@ -198,12 +196,34 @@ def connections():
             c.execute(sql)
             f = '%Y-%m-%d %H:%M:%S'
             dateTime = datetime.datetime.now()
+            user_count=0
             for row in c:
                 id, name, surname, username, password = row
                 connection_new = Connection(120, following_id=id, date=dateTime.strftime(f))
                 storage.add_recommendation(connection=connection_new)
+                global user_count
+                user_count+=1
                 print("adding")
             storage.get = 1
+        elif storage.get == 2:
+            conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+            c = conn.cursor()
+            sql = """SELECT * FROM users"""
+            c.execute(sql)
+            counter=0
+            f = '%Y-%m-%d %H:%M:%S'
+            dateTime = datetime.datetime.now()
+            for row in c:
+                counter+=1
+                if (user_count - counter) > 0:
+                    for index in range(user_count - counter):
+                        id, name, surname, username, password = row
+                        connection_new = Connection(120, following_id=id, date=dateTime.strftime(f))
+                        storage.add_recommendation(connection=connection_new)
+                        print("adding")
+            storage.get = 1
+
         else:
             print("added once")
         c.close()
@@ -371,6 +391,8 @@ def signup():
             conn.commit()
             c.close()
             conn.close()
+            storage.get = 2
+
         except Exception as e:
             print(str(e))
 
