@@ -9,7 +9,7 @@
     <li><a href="about">About</a></li>
 {% endblock %}
 {% block title %}
-    Recommendations
+    Connections
 {% endblock %}
 {% block content %}
     <body>
@@ -28,17 +28,18 @@
                 </div>
                 <br>
                 <div class="list-group">
-                    <a href="added_connections" class="list-group-item" style="background-color: #be809b"><b>All Connections</b></a>
+                    <a href="connections" class="list-group-item" style="background-color: #be809b" disabled><b>All Connections</b></a>
                     <a href="#" class="list-group-item">People</a>
                     <a href="#" class="list-group-item">Companies</a>
                     <a href="#" class="list-group-item">Locations</a>
                     <a href="#" class="list-group-item">Industries</a>
+                    <a href="connections" class="list-group-item" style="background-color: #be809b"><b>Recommended Connections</b></a>
                 </div>
             </div>
             <div class="col-sm-8">
                 <br><br>
-                <div style="color: floralwhite"><p><b>Recommended Users</b></p></div>
-                {% for key, connection in recommendations %}
+                <div style="color: floralwhite"><p><b>Connections</b></p></div>
+                {% for key, connection in connections %}
                     <div class="panel-group" id="accordion">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -84,7 +85,8 @@
                                               <input type="hidden" name="following_id" value="{{ connection.following }}"/>
                                               <input type="hidden" name="user_id" value="{{ connection.user }}"/>
                                               <input type="hidden" name="key" value="{{ key }}"/>
-                                              <input type="submit" name="add_Connection" value="Follow" class="btn btn-xs btn-default"/>
+                                              <input type="submit" name="remove_Connection" value="Unfollow" class="btn btn-xs btn-default"/>
+                                              <input type="submit" name="add_to_favorites" value="Add to your favorite connections <3" class="btn btn-xs btn-default"/>
                                             </form>
                                             </p>
                                         </div>

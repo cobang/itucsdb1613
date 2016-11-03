@@ -182,29 +182,35 @@ def about():
     return redirect('about')
 
 
+
+storage = Recommendations()
+added_Con = Connections()
+
+
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
-    storage = Recommendations()
-    added_Con= Connections()
     try:
-        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-        c = conn.cursor()
-        sql = """SELECT * FROM users"""
-        c.execute(sql)
-        f = '%Y-%m-%d %H:%M:%S'
-        dateTime = datetime.datetime.now()
-        for row in c:
-            id, name, surname, username, password = row
-            connection_new = Connection(120, following_id=id, date=dateTime.strftime(f))
-            storage.add_recommendation(connection=connection_new)
-            print("adding")
+        if storage.get == 0:
+            conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+            c = conn.cursor()
+            sql = """SELECT * FROM users"""
+            c.execute(sql)
+            f = '%Y-%m-%d %H:%M:%S'
+            dateTime = datetime.datetime.now()
+            for row in c:
+                id, name, surname, username, password = row
+                connection_new = Connection(120, following_id=id, date=dateTime.strftime(f))
+                storage.add_recommendation(connection=connection_new)
+                print("adding")
+            storage.get = 1
+        else:
+            print("added once")
         c.close()
         conn.close()
 
     except Exception as e:
         print(str(e))
-
     rec_storage = storage.get_recommendations()
     if request.method == 'GET':
         return render_template('connections.html', recommendations=rec_storage)
@@ -212,20 +218,42 @@ def connections():
         rec_id = int(request.form['following_id'])
         u_id = int(request.form['user_id'])
         signup()
+        key_id = int(request.form['key'])
         if 'add_Connection' in request.form:
             dateTime = datetime.datetime.now()
             print("addConnection")
-            key_id = int(request.form['key'])
             storage.delete_recommendation(key=key_id)
+            f = '%Y-%m-%d %H:%M:%S'
             c_new = Connection(120, following_id=rec_id, date=dateTime.strftime(f))
             added_Con.add_connection(c_new)
             print("del")
             connection_add(u_id=u_id,fol_id=rec_id, time=dateTime)
-        elif 'remove_Connection' in request.form:
-            connection_remove(u_id, rec_id)
         elif 'add_to_favorites' in request.form:
             add_to_favorites(u_id, rec_id)
     return redirect('connections')
+
+
+@app.route('/added_connections', methods=['GET', 'POST'])
+def added_connections():
+    added = added_Con.get_connections()
+    if request.method == 'GET':
+        return render_template('added_connections.html', connections=added)
+    else:
+        rec_id = int(request.form['following_id'])
+        u_id = int(request.form['user_id'])
+        signup()
+        f = '%Y-%m-%d %H:%M:%S'
+        dateTime = datetime.datetime.now()
+        if 'remove_Connection' in request.form:
+            connection_remove(u_id, rec_id)
+            c_new = Connection(120, following_id=rec_id, date=dateTime.strftime(f))
+            storage.add_recommendation(c_new)
+            key_id = int(request.form['key'])
+            added_Con.delete_connection(counter=key_id)
+        elif 'add_to_favorites' in request.form:
+            add_to_favorites(u_id, rec_id)
+
+    return redirect('added_connections')
 
 
 @app.route('/messages', methods=['GET', 'POST'])

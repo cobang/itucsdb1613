@@ -56,7 +56,7 @@ class Connections:
         self.connections[self.counter] = connection
 
     def delete_connection(self, counter):
-        del self.connections[counter -1]
+        del self.connections[counter]
         self.counter -= 1
 
     def get_connection(self, counter):
@@ -70,6 +70,7 @@ class Recommendations:
     def __init__(self):
         self.recommendations = {}
         self.key = 0
+        self.get=0
 
     def add_recommendation(self, connection):
         self.key += 1
@@ -77,8 +78,9 @@ class Recommendations:
 
     def delete_recommendation(self, key):
         print(key)
-        self.key -= 1
         del self.recommendations[key]
+        self.key -= 1
+
     def get_recommendation(self, key):
         return self.recommendations[key]
 
