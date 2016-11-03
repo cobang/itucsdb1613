@@ -81,6 +81,16 @@ class Recommendations:
         del self.recommendations[key]
         self.key -= 1
 
+    def delet_byid(self, id):
+        for c in self.recommendations:
+            if id == self.get_recommendation(c).following:
+                self.delete_recommendation(c)
+
+    def is_item(self, id):
+        for c in self.recommendations:
+            if id == self.get_recommendation(c).following:
+                return 0
+        return 1
     def get_recommendation(self, key):
         return self.recommendations[key]
 

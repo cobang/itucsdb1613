@@ -165,7 +165,7 @@ def profile():
         elif 'delete_user' in request.form:
             user_id = request.form['delete_user']
             user_delete(user_id=user_id)
-
+            storage.delet_byid(user_id)
     return redirect('profile')
 
 
@@ -188,7 +188,7 @@ added_Con = Connections()
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
     try:
-        if storage.get == 0:
+        if storage.get == 0 or storage.key == 0:
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                    passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
@@ -196,34 +196,28 @@ def connections():
             c.execute(sql)
             f = '%Y-%m-%d %H:%M:%S'
             dateTime = datetime.datetime.now()
-            user_count=0
             for row in c:
                 id, name, surname, username, password = row
                 connection_new = Connection(120, following_id=id, date=dateTime.strftime(f))
                 storage.add_recommendation(connection=connection_new)
-                global user_count
-                user_count+=1
                 print("adding")
             storage.get = 1
         elif storage.get == 2:
+            print("pof adding")
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                    passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
             sql = """SELECT * FROM users"""
             c.execute(sql)
-            counter=0
             f = '%Y-%m-%d %H:%M:%S'
             dateTime = datetime.datetime.now()
             for row in c:
-                counter+=1
-                if (user_count - counter) > 0:
-                    for index in range(user_count - counter):
-                        id, name, surname, username, password = row
-                        connection_new = Connection(120, following_id=id, date=dateTime.strftime(f))
-                        storage.add_recommendation(connection=connection_new)
-                        print("adding")
+                id, name, surname, username, password = row
+                if storage.is_item(id=id) == 1:
+                    connection_new = Connection(120, following_id=id, date=dateTime.strftime(f))
+                    storage.add_recommendation(connection=connection_new)
+                    print("new adding")
             storage.get = 1
-
         else:
             print("added once")
         c.close()
