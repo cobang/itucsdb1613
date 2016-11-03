@@ -185,6 +185,7 @@ def about():
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
     storage = Recommendations()
+    added_Con= Connections()
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
@@ -215,7 +216,9 @@ def connections():
             dateTime = datetime.datetime.now()
             print("addConnection")
             key_id = int(request.form['key'])
-            storage.delete_recommendation(counter=key_id)
+            storage.delete_recommendation(key=key_id)
+            c_new = Connection(120, following_id=rec_id, date=dateTime.strftime(f))
+            added_Con.add_connection(c_new)
             print("del")
             connection_add(u_id=u_id,fol_id=rec_id, time=dateTime)
         elif 'remove_Connection' in request.form:

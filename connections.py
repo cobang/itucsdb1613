@@ -27,6 +27,24 @@ class Connection:
             print(str(e))
         return user_name + " " + user_surname
 
+
+    def get_email(self):
+        try:
+            user_email = " "
+            conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+            c = conn.cursor()
+            sql = """SELECT * FROM users WHERE user_id = (%d)""" % (int(self.following))
+            c.execute(sql)
+            for row in c:
+                user_id, user_name, user_surname, user_email, user_password = row
+            c.close()
+            conn.close()
+        except Exception as e:
+            print(str(e))
+        return user_email
+
+
 class Connections:
     def __init__(self):
         self.connections = {}
@@ -38,7 +56,8 @@ class Connections:
         self.connections[self.counter] = connection
 
     def delete_connection(self, counter):
-        del self.connections[counter]
+        del self.connections[counter -1]
+        self.counter -= 1
 
     def get_connection(self, counter):
         return self.connections[counter]
@@ -50,17 +69,18 @@ class Connections:
 class Recommendations:
     def __init__(self):
         self.recommendations = {}
-        self.counter = 0
+        self.key = 0
 
     def add_recommendation(self, connection):
-        self.counter += 1
-        self.recommendations[self.counter] = connection
+        self.key += 1
+        self.recommendations[self.key] = connection
 
-    def delete_recommendation(self, counter):
-        del self.recommendations[counter]
-
-    def get_recommendation(self, counter):
-        return self.recommendations[counter]
+    def delete_recommendation(self, key):
+        print(key)
+        self.key -= 1
+        del self.recommendations[key]
+    def get_recommendation(self, key):
+        return self.recommendations[key]
 
     def get_recommendations(self):
         return self.recommendations.items()
