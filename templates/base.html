@@ -97,9 +97,9 @@
                         <button name="signup" value="signup" class="btn btn-primary btn-block" type="submit">Sign Up</button>
                         <hr>
                         <div class="social-box">
-                            <a class="btn btn-block btn-social btn-facebook">
+                            <div class="btn btn-block btn-social btn-facebook" scope="public_profile,email" onlogin="checkLoginState();">
                                 <i class="fa fa-facebook fa-fw"></i> Sign up with Facebook
-                            </a>
+                            </div>
                             <a class="btn btn-block btn-social btn-google-plus">
                                 <i class="fa fa-google-plus fa-fw"></i> Sign up with Google
                             </a>
@@ -142,9 +142,9 @@
                         <button class="btn btn-primary btn-block" type="submit">Login</button>
                         <hr>
                         <div class="social-box">
-                            <a class="btn btn-block btn-social btn-facebook">
+                            <div class="btn btn-block btn-social btn-facebook" scope="public_profile,email" onlogin="checkLoginState();">
                                 <i class="fa fa-facebook"></i> Login with Facebook
-                            </a>
+                            </div>
                             <a class="btn btn-block btn-social btn-google-plus">
                                 <i class="fa fa-google-plus"></i> Login with Google
                             </a>
@@ -170,6 +170,7 @@
 
     <script type="text/javascript" src="../static/js/jquery.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/FBlogin.js"></script>
     <script>
         $(".contentContainer").css("min-height", $(window).height());
     </script>
