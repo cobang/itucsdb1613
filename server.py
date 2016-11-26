@@ -141,6 +141,39 @@ DEFAULT CHARACTER SET = utf8;
         """
 
         c.execute(sql)
+
+        sql = """CREATE TABLE IF NOT EXISTS `cl48-humannet`.`messages` (
+          `message_id` INT NOT NULL AUTO_INCREMENT,
+          `content` VARCHAR(140) NOT NULL,
+          `message_datetime` DATETIME NOT NULL,
+          `is_liked` INT NOT NULL,
+          PRIMARY KEY (`message_id`))
+        DEFAULT CHARACTER SET = utf8;"""
+
+        c.execute(sql)
+
+        sql = """CREATE TABLE IF NOT EXISTS `cl48-humannet`.`conversations` (
+          `in_out` INT NOT NULL,
+          `message_id` INT NOT NULL,
+          `participant_id` INT NOT NULL,
+          `user_id` INT NOT NULL,
+          PRIMARY KEY (`in_out`, `message_id`),
+          INDEX `fk_conversations_messages_idx` (`message_id` ASC),
+          INDEX `fk_conversations_users1_idx` (`participant_id` ASC),
+          CONSTRAINT `fk_conversations_messages`
+            FOREIGN KEY (`message_id`)
+            REFERENCES `cl48-humannet`.`messages` (`message_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+          CONSTRAINT `fk_conversations_users1`
+            FOREIGN KEY (`participant_id`)
+            REFERENCES `cl48-humannet`.`users` (`user_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION)
+        DEFAULT CHARACTER SET = utf8;"""
+
+        c.execute(sql)
+
         conn.commit()
         c.close()
         conn.close()

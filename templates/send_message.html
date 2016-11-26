@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block navigationbar %}
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('timeline') }}">Timeline</a></li>
+    <li><a href="{{ url_for('profile') }}">Profile</a></li>
+    <li><a href="{{ url_for('connections') }}">Connections</a></li>
+    <li class="active"><a href="{{ url_for('messages') }}">Messages</a></li>
+    <li><a href="{{ url_for('jobs') }}">Jobs</a></li>
+    <li><a href="{{ url_for('about') }}">About</a></li>
+{% endblock %}
+{% block title %}
+Send Message
+{% endblock %}
+{% block content %}
+
+<div class="container contentContainer" id="topContainer">
+    <br/><br/><br/>
+    <div class="row">
+        <div class="col-md-3"></div>
+
+        <div class="col-md-3">
+            <form action="" method="post">
+                <div class="form-group">
+                    <textarea class="form-control no_resize" name="message" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-info" type="submit" name="send" value="{{ participant }}">Send</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-6"></div>
+    </div>
+</div>
+
+{% endblock %}
