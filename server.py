@@ -5,7 +5,7 @@ import pymysql
 from dbconnection import MySQL
 from flask import Flask
 from flask import render_template, request, redirect, url_for
-from connections import Connections,Recommendations, Connection, connection_add, connection_remove, add_to_favorites
+from connections import Connections, Recommendations, Connection, connection_add, connection_remove, add_to_favorites
 from posts import posts_get, post_share, post_delete, post_update
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_list, user_edit, user_delete
@@ -29,93 +29,118 @@ def connection():
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
 
-        sql = """DROP TABLE IF EXISTS test"""
+        sql = """
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`university`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `university` (
+  `university_id` INT NOT NULL,
+  `university_email` VARCHAR(45) NOT NULL,
+  `university_password` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`university_id`))
+DEFAULT CHARACTER SET = utf8;
+        """
         c.execute(sql)
 
-        sql = """CREATE TABLE test (
-                 FIRST_NAME  CHAR(20) NOT NULL,
-                 LAST_NAME  CHAR(20),
-                 AGE INT,
-                 SEX CHAR(1),
-                 INCOME FLOAT )"""
+        sql = """
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `company_id` INT NULL,
+  `university_id` INT NULL,
+  `user_name` VARCHAR(20) NOT NULL,
+  `user_surname` VARCHAR(20) NOT NULL,
+  `user_email` VARCHAR(25) NOT NULL,
+  `user_password` VARCHAR(16) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  INDEX `fk_users_company1_idx` (`company_id` ASC),
+  INDEX `fk_users_university1_idx` (`university_id` ASC),
+  CONSTRAINT `fk_users_company1`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `cl48-humannet`.`company` (`company_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_users_university1`
+    FOREIGN KEY (`university_id`)
+    REFERENCES `cl48-humannet`.`university` (`university_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+DEFAULT CHARACTER SET = utf8;
+        """
 
         c.execute(sql)
 
-        sql = """DROP TABLE IF EXISTS posts"""
+        sql = """
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`location`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `location` (
+  `location_id` INT NOT NULL,
+  `location_state` VARCHAR(45) NOT NULL,
+  `location_country` VARCHAR(45) NOT NULL,
+  `location_zipcode` VARCHAR(45) NULL,
+  PRIMARY KEY (`location_id`))
+DEFAULT CHARACTER SET = utf8;
+        """
+
         c.execute(sql)
 
-        sql = """CREATE TABLE posts(
-                      POST_ID INT NOT NULL AUTO_INCREMENT,
-                      USER_ID INT NOT NULL,
-                      POST_TEXT VARCHAR(100) NOT NULL,
-                      POST_DATE DATETIME,
-                      LIKE_NUM INT,
-                      DISLIKE_NUM INT,
-                      PRIMARY KEY ( POST_ID )
-                      )"""
+        sql = """
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`user_detail`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`user_detail` (
+  `user_id` INT NOT NULL,
+  `date_of_birth` DATE NULL,
+  `phone` VARCHAR(15) NULL,
+  `address` VARCHAR(45) NULL,
+  `location_location_id` INT NOT NULL,
+  INDEX `fk_user_detail_users1_idx` (`user_id` ASC),
+  INDEX `fk_user_detail_location1_idx` (`location_location_id` ASC),
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `fk_user_detail_users1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `cl48-humannet`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_detail_location1`
+    FOREIGN KEY (`location_location_id`)
+    REFERENCES `cl48-humannet`.`location` (`location_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+DEFAULT CHARACTER SET = utf8;
+        """
 
         c.execute(sql)
 
-        sql = """DROP TABLE IF EXISTS messages"""
-        c.execute(sql)
+        sql = """
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`university_detail`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `university_detail` (
+  `university_id` INT NOT NULL,
+  `university_name` VARCHAR(45) NULL,
+  `university_address` VARCHAR(45) NULL,
+  `location_id` INT NOT NULL,
+  INDEX `fk_university_detail_university1_idx` (`university_id` ASC),
+  INDEX `fk_university_detail_location1_idx` (`location_id` ASC),
+  PRIMARY KEY (`university_id`),
+  CONSTRAINT `fk_university_detail_university1`
+    FOREIGN KEY (`university_id`)
+    REFERENCES `cl48-humannet`.`university` (`university_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_university_detail_location1`
+    FOREIGN KEY (`location_id`)
+    REFERENCES `cl48-humannet`.`location` (`location_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+DEFAULT CHARACTER SET = utf8;
+        """
 
-        sql = """CREATE TABLE messages(
-              message_id INT NOT NULL AUTO_INCREMENT,
-              content VARCHAR(140),
-              message_datetime DATETIME,
-              is_liked INT,
-              PRIMARY KEY (message_id)
-              )"""
         c.execute(sql)
-
-        sql = """DROP TABLE IF EXISTS conversations"""
-        c.execute(sql)
-
-        sql = """CREATE TABLE conversations(
-              user_id INT NOT NULL,
-              participant_id INT NOT NULL,
-              in_out INT NOT NULL,
-              message_id INT NOT NULL,
-              PRIMARY KEY (user_id, message_id)
-              )"""
-        c.execute(sql)
-
-        sql = """DROP TABLE IF EXISTS connections"""
-        c.execute(sql)
-
-        sql = """CREATE TABLE connections(
-              user_id INT NOT NULL,
-              following_id INT NOT NULL,
-              added_to_favorites INT,
-              connection_date DATETIME,
-              PRIMARY KEY(user_id,following_id)
-              )"""
-        c.execute(sql)
-
-        sql = """DROP TABLE IF EXISTS jobs"""
-        c.execute(sql)
-
-        sql = """CREATE TABLE jobs(
-                      JOB_ID INT NOT NULL AUTO_INCREMENT,
-                      TITLE VARCHAR(30) NOT NULL,
-                      DESCRIPTION VARCHAR(140) NOT NULL,
-                      PRIMARY KEY ( JOB_ID )
-                      )"""
-        c.execute(sql)
-
-        sql = """DROP TABLE IF EXISTS users"""
-        c.execute(sql)
-
-        sql = """CREATE TABLE users(
-                              user_id INT NOT NULL AUTO_INCREMENT,
-                              user_name VARCHAR(20) NOT NULL,
-                              user_surname VARCHAR(20) NOT NULL,
-                              user_email VARCHAR(25) NOT NULL,
-                              user_password VARCHAR(16) NOT NULL,
-                              PRIMARY KEY ( user_id )
-                              )"""
-        c.execute(sql)
-
         conn.commit()
         c.close()
         conn.close()
@@ -149,7 +174,6 @@ def home():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
-
     users = user_list()
     if request.method == 'GET':
 
@@ -181,9 +205,9 @@ def about():
     return redirect('about')
 
 
-
 storage = Recommendations()
 added_Con = Connections()
+
 
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
@@ -241,7 +265,7 @@ def connections():
             c_new = Connection(120, following_id=rec_id, date=dateTime.strftime(f))
             added_Con.add_connection(c_new)
             print("del")
-            connection_add(u_id=u_id,fol_id=rec_id, time=dateTime)
+            connection_add(u_id=u_id, fol_id=rec_id, time=dateTime)
         elif 'add_to_favorites' in request.form:
             add_to_favorites(u_id, rec_id)
     return redirect('connections')
@@ -336,7 +360,6 @@ def timeline():
             post_id = request.form['dislike']
             post_update(post_id, "DISLIKE_NUM")
 
-
     return redirect('timeline')
 
 
@@ -378,7 +401,8 @@ def signup():
                                    passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
             sql = """INSERT INTO users(user_name, user_surname, user_email, user_password)
-                                   VALUES ('%s', '%s', '%s', '%s' )""" % (user_name, user_surname, user_email, user_password)
+                                   VALUES ('%s', '%s', '%s', '%s' )""" % (
+            user_name, user_surname, user_email, user_password)
 
             c.execute(sql)
 
@@ -389,6 +413,7 @@ def signup():
 
         except Exception as e:
             print(str(e))
+
 
 if __name__ == '__main__':
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
