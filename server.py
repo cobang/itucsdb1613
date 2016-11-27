@@ -305,8 +305,65 @@ CREATE TABLE IF NOT EXISTS `cl48-humannet`.`university_detail` (
     REFERENCES `cl48-humannet`.`location` (`location_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-DEFAULT CHARACTER SET = utf8;
-"""
+DEFAULT CHARACTER SET = utf8;"""
+
+        c.execute(sql)
+
+        sql="""-- -----------------------------------------------------
+-- Table `cl48-humannet`.`company`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`company` (
+  `company_id` INT NOT NULL,
+  `company_email` VARCHAR(45) NOT NULL,
+  `company_password` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`company_id`))
+DEFAULT CHARACTER SET = utf8;"""
+
+        c.execute(sql)
+
+        sql="""-- -----------------------------------------------------
+-- Table `cl48-humannet`.`jobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`jobs` (
+  `job_id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(30) NOT NULL,
+  `description` VARCHAR(140) NOT NULL,
+  `company_id` INT NOT NULL,
+  PRIMARY KEY (`job_id`),
+  INDEX `fk_jobs_company1_idx` (`company_id` ASC),
+  CONSTRAINT `fk_jobs_company1`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `cl48-humannet`.`company` (`company_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+DEFAULT CHARACTER SET = utf8;"""
+
+        c.execute(sql)
+
+        sql="""-- -----------------------------------------------------
+-- Table `cl48-humannet`.`company_detail`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`company_detail` (
+  `company_id` INT NOT NULL,
+  `company_name` VARCHAR(45) NOT NULL,
+  `company_address` VARCHAR(45) NULL,
+  `company_phone` VARCHAR(45) NULL,
+  `location_location_id` INT NOT NULL,
+  INDEX `fk_company_detail_company1_idx` (`company_id` ASC),
+  PRIMARY KEY (`company_id`),
+  INDEX `fk_company_detail_location1_idx` (`location_location_id` ASC),
+  CONSTRAINT `fk_company_detail_company1`
+    FOREIGN KEY (`company_id`)
+    REFERENCES `cl48-humannet`.`company` (`company_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_company_detail_location1`
+    FOREIGN KEY (`location_location_id`)
+    REFERENCES `cl48-humannet`.`location` (`location_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
