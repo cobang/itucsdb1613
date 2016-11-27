@@ -23,13 +23,12 @@ class Posts:
 
 
 class Post:
-    def __init__(self, post_id, user, text, date, like_num=0, dislike_num=0):
+    def __init__(self, post_id, user, text, date, like_num=0):
         self.post_id = post_id
         self.user = user
         self.text = text
         self.date = date
         self.like_num = like_num
-        self.dislike_num = dislike_num
 
 
 def posts_get():
@@ -43,8 +42,8 @@ def posts_get():
         c.execute(sql)
 
         for row in c:
-            post_id, user_id, text, date, like_num, dislike_num = row
-            post = Post(post_id=post_id, user=user_id, text=text, date=date, like_num=like_num, dislike_num=dislike_num)
+            post_id, user_id, text, date, like_num = row
+            post = Post(post_id=post_id, user=user_id, text=text, date=date, like_num=like_num)
             store.add_post(post=post)
 
         c.close()
@@ -62,8 +61,8 @@ def post_share(user_id, text, date):
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         f = '%Y-%m-%d %H:%M:%S'
-        sql = """INSERT INTO posts(USER_ID, POST_TEXT, POST_DATE, LIKE_NUM, DISLIKE_NUM)
-                       VALUES (%d, '%s', '%s', %d, %d )""" % (user_id, text, date.strftime(f), 0, 0)
+        sql = """INSERT INTO posts(USER_ID, POST_TEXT, POST_DATE, LIKE_NUM)
+                       VALUES (%d, '%s', '%s', %d)""" % (user_id, text, date.strftime(f), 0)
 
         c.execute(sql)
 
@@ -92,13 +91,16 @@ def post_delete(post_id):
         print(str(e))
 
 
-def post_update(post_id, tuple_name):
+def post_update(post_id, action):
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """UPDATE posts SET %s = %s +1  WHERE POST_ID = %d """ % (tuple_name, tuple_name, int(post_id))
 
+        if action == "LIKE_NUM":
+            sql = """UPDATE posts SET LIKE_NUM = LIKE_NUM +1  WHERE POST_ID = %d """ % (int(post_id))
+        elif action == "DISLIKE_NUM":
+            sql = """UPDATE posts SET LIKE_NUM = LIKE_NUM -1  WHERE POST_ID = %d """ % (int(post_id))
         c.execute(sql)
 
         conn.commit()

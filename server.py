@@ -174,6 +174,62 @@ DEFAULT CHARACTER SET = utf8;
 
         c.execute(sql)
 
+        sql = """CREATE TABLE IF NOT EXISTS `posts` (
+  `post_id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `post_text` VARCHAR(140) NOT NULL,
+  `post_date` DATETIME NOT NULL,
+  `like_num` INT NULL DEFAULT 0,
+  PRIMARY KEY (`post_id`),
+  INDEX `fk_posts_users1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_posts_users1`""
+    FOREIGN KEY (`user_id`)
+    REFERENCES `cl48-humannet`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+DEFAULT CHARACTER SET = utf8;
+        """
+
+        c.execute(sql)
+
+        sql = """CREATE TABLE IF NOT EXISTS `comment` (
+  `comment_id` INT NOT NULL,
+  `comment_text` VARCHAR(140) NOT NULL,
+  `comment_date` DATETIME NOT NULL,
+  `post_id` INT NOT NULL,
+  PRIMARY KEY (`comment_id`),
+  INDEX `fk_comment_posts1_idx` (`post_id` ASC),
+  CONSTRAINT `fk_comment_posts1`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `cl48-humannet`.`posts` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+DEFAULT CHARACTER SET = utf8;
+                """
+
+        c.execute(sql)
+
+        sql = """CREATE TABLE IF NOT EXISTS `likes` (
+  `user_id` INT NOT NULL,
+  `posts_post_id` INT NOT NULL,
+  PRIMARY KEY (`user_id`, `posts_post_id`),
+  INDEX `fk_likes_users1_idx` (`user_id` ASC),
+  INDEX `fk_likes_posts1_idx` (`posts_post_id` ASC),
+  CONSTRAINT `fk_likes_users1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `cl48-humannet`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_likes_posts1`
+    FOREIGN KEY (`posts_post_id`)
+    REFERENCES `cl48-humannet`.`posts` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+DEFAULT CHARACTER SET = utf8;
+                """
+
+        c.execute(sql)
+
         conn.commit()
         c.close()
         conn.close()
@@ -371,7 +427,7 @@ def timeline():
             print("share")
             text = request.form['post']
             date = datetime.datetime.now()
-            user_id = 5
+            user_id = 1
             post_share(user_id=user_id, text=text, date=date)
 
         if 'delete' in request.form:
