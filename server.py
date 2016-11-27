@@ -434,11 +434,11 @@ def messages():
 
 
 @app.route('/send_message/<int:key>', methods=['GET', 'POST'])
-def send_message(key):
+def send_single_message(key):
     my_id = 2  # TEMPORARY
 
     if request.method == 'GET':
-        return render_template('send_message', participant=key)
+        return render_template('send_message.html', participant=key)
     else:
         if 'send' in request.form:
             # participant = int(request.form['send'])
