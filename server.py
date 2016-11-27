@@ -6,7 +6,7 @@ from dbconnection import MySQL
 from flask import Flask
 from flask import render_template, request, redirect, url_for
 from connections import Connections, Recommendations, Connection, connection_add, connection_remove, add_to_favorites
-from posts import posts_get, post_share, post_delete, post_update
+from posts import posts_get, post_share, post_delete, post_update, post_comment_add
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_list, user_edit, user_delete
 from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message
@@ -585,7 +585,7 @@ def timeline():
             print("share")
             text = request.form['post']
             date = datetime.datetime.now()
-            user_id = 1
+            user_id = 6  #degistirilecek
             post_share(user_id=user_id, text=text, date=date)
 
         if 'delete' in request.form:
@@ -606,6 +606,16 @@ def timeline():
             print(request.form['dislike'])
             post_id = request.form['dislike']
             post_update(post_id, "DISLIKE_NUM")
+
+        if 'comment' in request.form:
+            print("comment")
+            comment_text= request.form['comment_text']
+            post_id = request.form['comment']
+            date = datetime.datetime.now()
+            user_id = 6 #degisecek
+            post_comment_add(comment_text,post_id,date,user_id)
+
+
 
     return redirect('timeline')
 
