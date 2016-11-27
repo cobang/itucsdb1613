@@ -1,5 +1,6 @@
 import pymysql
 from dbconnection import MySQL
+from users import Users, User
 
 
 class Posts:
@@ -23,12 +24,13 @@ class Posts:
 
 
 class Post:
-    def __init__(self, post_id, user, text, date, like_num=0):
+    def __init__(self, post_id, user, text, date, like_num=0, likes=Users()):
         self.post_id = post_id
         self.user = user
         self.text = text
         self.date = date
         self.like_num = like_num
+        self.likes = likes
 
 
 def posts_get():
@@ -43,7 +45,8 @@ def posts_get():
 
         for row in c:
             post_id, user_id, text, date, like_num = row
-            post = Post(post_id=post_id, user=user_id, text=text, date=date, like_num=like_num)
+            post = Post(post_id=post_id, user=user_id, text=text, date=date, like_num=like_num,
+                        likes=likes_get(post_id))
             store.add_post(post=post)
 
         c.close()
@@ -109,3 +112,28 @@ def post_update(post_id, action):
 
     except Exception as e:
         print(str(e))
+
+
+def likes_get(post_id):
+    store = Users()
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+        sql = """SELECT users.user_id, user_name, user_surname FROM users INNER JOIN
+                (SELECT user_id FROM likes WHERE %d=posts_post_id) AS who_like
+                ON users.user_id IN (who_like.user_id)""" % post_id
+
+        c.execute(sql)
+        for row in c:
+            user_id, user_name, user_surname = row
+            user = User(user_id=user_id, user_name=user_name, user_surname=user_surname)
+            store.add_user(user=user)
+
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
+    return store.get_users()
