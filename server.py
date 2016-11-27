@@ -433,6 +433,22 @@ def messages():
     return redirect('messages')
 
 
+@app.route('/send_message/<int:key>', methods=['GET', 'POST'])
+def send_message(key):
+    my_id = 2  # TEMPORARY
+
+    if request.method == 'GET':
+        return render_template('send_message', participant=key)
+    else:
+        if 'send' in request.form:
+            # participant = int(request.form['send'])
+            content = request.form['message']
+            date = datetime.datetime.now()
+            send_message(my_id, key, content, date)
+
+    return redirect('messages')
+
+
 @app.route('/timeline', methods=['GET', 'POST'])
 def timeline():
     posts = posts_get()

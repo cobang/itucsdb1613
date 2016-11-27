@@ -171,3 +171,22 @@ def like_message(message_id):
     except Exception as e:
         print(str(e))
 
+
+def unlike_message(message_id):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        sql = """UPDATE messages
+                  SET is_liked = 0
+                  WHERE message_id = %d""" % message_id
+        c.execute(sql)
+
+        conn.commit()
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
