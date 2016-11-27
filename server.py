@@ -408,9 +408,9 @@ def profile():
 
         return render_template('profile.html', users=users)
     else:
-        if 'signup' in request.form:
-            signup()
-        elif 'edit_user' in request.form:
+        signup()
+        login()
+        if 'edit_user' in request.form:
             user_id = request.form['edit_user']
             user_name = request.form['name']
             user_surname = request.form['surname']
