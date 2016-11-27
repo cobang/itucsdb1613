@@ -14,6 +14,9 @@ from messages import get_inbox, send_message, delete_conversation, like_message,
 app = Flask(__name__)
 
 
+general_id = 0
+
+
 @app.route('/test/')
 def test_page():
     try:
@@ -659,6 +662,42 @@ def signup():
         except Exception as e:
             print(str(e))
 
+def login():
+    if 'login' in request.form:
+        print("Login")
+        user_email = request.form['email']
+        user_password = request.form['password']
+        print(user_email)
+        print(user_password)
+        if valid_login(user_email, user_password):
+            print('logged in')
+            print(general_id)
+
+
+def valid_login(user_email, user_password):
+    conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                           passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+    c = conn.cursor()
+    sql = """SELECT user_id, user_email FROM users WHERE user_email='%s' and user_password='%s'""" % (
+        user_email, user_password)
+
+    c.execute(sql)
+
+    for row in c:
+        print(row)
+        user_id, user_email = row
+        print(user_id)
+        global general_id
+        general_id = user_id
+        print(general_id)
+
+    print(general_id)
+    if general_id != 0:
+        print(user_email)
+        return True
+    else:
+        print('false')
+        return False
 
 if __name__ == '__main__':
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
