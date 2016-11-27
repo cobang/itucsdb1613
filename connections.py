@@ -1,12 +1,13 @@
 import pymysql
 from dbconnection import MySQL
+from users import Users, User
 
 class Connection:
-    def __init__(self, user_id, following_id, date):
+    def __init__(self, user_id, following_id, fav, date):
         self.user = user_id
         self.following = following_id
         self.date = date
-        self.added_to_favorites = 0
+        self.added_to_favorites = fav
     def get_name(self):
         try:
             user_name=" "
@@ -17,7 +18,7 @@ class Connection:
             sql = """SELECT * FROM users WHERE user_id = (%d)""" % (int(self.following))
             c.execute(sql)
             for row in c:
-                user_id, user_name, user_surname, user_email, user_password = row
+                user_id, c_id, u_id, user_name, user_surname, user_email, user_password = row
                 print("df")
                 print(user_name)
                 print("df")
@@ -37,7 +38,7 @@ class Connection:
             sql = """SELECT * FROM users WHERE user_id = (%d)""" % (int(self.following))
             c.execute(sql)
             for row in c:
-                user_id, user_name, user_surname, user_email, user_password = row
+                user_id, c_id, u_id, user_name, user_surname, user_email, user_password = row
             c.close()
             conn.close()
         except Exception as e:
@@ -48,7 +49,6 @@ class Connection:
 class Connections:
     def __init__(self):
         self.connections = {}
-        self.recommendations = {}
         self.counter = 0
 
     def add_connection(self, connection):
@@ -129,6 +129,39 @@ def connection_remove(u_id, fol_id):
     except Exception as e:
         print(str(e))
 
+
+def recommendation_add(u_id, fol_id):
+    try:
+        print("add to rec table")
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+        sql = """INSERT INTO recommended(following_id,user_id)
+                              VALUES (%d, '%d' )""" % (fol_id,u_id)
+        c.execute(sql)
+        conn.commit()
+        c.close()
+        conn.close()
+    except Exception as e:
+        print(str(e))
+
+def recommendation_remove(u_id, fol_id):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+        print(fol_id)
+        sql = """DELETE FROM recommended WHERE user_id = (%d) AND  following_id = (%d)""" % (int(u_id), int(fol_id))
+        c.execute(sql)
+        conn.commit()
+        c.close()
+        conn.close()
+        print("afterdelete")
+
+    except Exception as e:
+        print(str(e))
+
+
 def add_to_favorites (u_id, fol_id):
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
@@ -147,3 +180,38 @@ def add_to_favorites (u_id, fol_id):
     except Exception as e:
         print(str(e))
 
+
+def remove_from_favorites (u_id, fol_id):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        sql = """UPDATE connections
+                  SET added_to_favorites = 0
+                  WHERE user_id = (%d) AND  following_id = (%d)""" % (int(u_id), int(fol_id))
+        c.execute(sql)
+
+        conn.commit()
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
+def num():
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        sql = """SELECT COUNT(*) FROM recommendations"""
+        c.execute(sql)
+        for row in c:
+            number = row
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+    return number
