@@ -34,7 +34,7 @@ def user_list():
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """SELECT * FROM users"""
+        sql = """SELECT user_id, user_name, user_surname, user_email, user_password FROM users"""
 
         c.execute(sql)
 

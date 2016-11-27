@@ -4,7 +4,7 @@ import pymysql
 
 from dbconnection import MySQL
 from flask import Flask
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, session
 from connections import Connections, Recommendations, Connection, connection_add, connection_remove, add_to_favorites
 from posts import posts_get, post_share, post_delete, post_update
 from jobs import job_add, job_edit, job_delete, job_share
@@ -13,6 +13,7 @@ from messages import get_inbox, send_message, delete_conversation, like_message,
 
 app = Flask(__name__)
 
+general_id = 0
 
 @app.route('/test/')
 def test_page():
@@ -71,7 +72,6 @@ DEFAULT CHARACTER SET = utf8;
         """
 
         c.execute(sql)
-
 
         sql = """
 -- -----------------------------------------------------
@@ -198,7 +198,7 @@ DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
-        sql="""
+        sql = """
 
 -- -----------------------------------------------------
 -- Table `cl48-humannet`.`recommended`
@@ -219,7 +219,7 @@ DEFAULT CHARACTER SET = utf8;
 """
         c.execute(sql)
 
-        sql="""
+        sql = """
 -- -----------------------------------------------------
 -- Table `cl48-humannet`.`connections_detail`
 -- -----------------------------------------------------
@@ -309,7 +309,7 @@ DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
-        sql="""-- -----------------------------------------------------
+        sql = """-- -----------------------------------------------------
 -- Table `cl48-humannet`.`company`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`company` (
@@ -321,7 +321,7 @@ DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
-        sql="""-- -----------------------------------------------------
+        sql = """-- -----------------------------------------------------
 -- Table `cl48-humannet`.`jobs`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`jobs` (
@@ -340,7 +340,7 @@ DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
-        sql="""-- -----------------------------------------------------
+        sql = """-- -----------------------------------------------------
 -- Table `cl48-humannet`.`company_detail`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`company_detail` (
@@ -383,6 +383,7 @@ def home_page():
         return render_template('home.html')
     else:
         signup()
+        login()
 
     return redirect('home')
 
@@ -394,6 +395,7 @@ def home():
         return render_template('home.html')
     else:
         signup()
+        login()
 
     return redirect('home')
 
@@ -405,9 +407,9 @@ def profile():
 
         return render_template('profile.html', users=users)
     else:
-        if 'signup' in request.form:
-            signup()
-        elif 'edit_user' in request.form:
+        signup()
+        login()
+        if 'edit_user' in request.form:
             user_id = request.form['edit_user']
             user_name = request.form['name']
             user_surname = request.form['surname']
@@ -427,6 +429,7 @@ def about():
     else:
         if 'signup' in request.form:
             signup()
+            login()
 
     return redirect('about')
 
@@ -482,6 +485,7 @@ def connections():
         rec_id = int(request.form['following_id'])
         u_id = int(request.form['user_id'])
         signup()
+        login()
         key_id = int(request.form['key'])
         if 'add_Connection' in request.form:
             dateTime = datetime.datetime.now()
@@ -506,6 +510,7 @@ def added_connections():
         rec_id = int(request.form['following_id'])
         u_id = int(request.form['user_id'])
         signup()
+        login()
         f = '%Y-%m-%d %H:%M:%S'
         dateTime = datetime.datetime.now()
         if 'remove_Connection' in request.form:
@@ -529,6 +534,8 @@ def messages():
         chats = inbox.chats
         return render_template('messages.html', chats=chats)
     else:
+        signup()
+        login()
         if 'send' in request.form:
             participant = int(request.form['send'])
             if participant == 0:
@@ -581,6 +588,7 @@ def timeline():
 
     else:
         signup()
+        login()
         if 'share' in request.form:
             print("share")
             text = request.form['post']
@@ -618,6 +626,7 @@ def jobs():
         return render_template('jobs.html', jobs=jobs_archive)
     else:
         signup()
+        login()
         if 'addJob' in request.form:
             title = request.form['title']
             description = request.form['description']
@@ -649,7 +658,7 @@ def signup():
             c = conn.cursor()
             sql = """INSERT INTO users(user_name, user_surname, user_email, user_password)
                                    VALUES ('%s', '%s', '%s', '%s' )""" % (
-            user_name, user_surname, user_email, user_password)
+                user_name, user_surname, user_email, user_password)
 
             c.execute(sql)
 
@@ -660,6 +669,44 @@ def signup():
 
         except Exception as e:
             print(str(e))
+
+
+def login():
+    if 'login' in request.form:
+        print("Login")
+        user_email = request.form['email']
+        user_password = request.form['password']
+        print(user_email)
+        print(user_password)
+        if valid_login(user_email, user_password):
+            print('asd')
+            print(general_id)
+
+
+def valid_login(user_email, user_password):
+    conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                           passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+    c = conn.cursor()
+    sql = """SELECT user_id, user_email FROM users WHERE user_email='%s' and user_password='%s'""" % (
+        user_email, user_password)
+
+    c.execute(sql)
+
+    for row in c:
+        print(row)
+        user_id, user_email = row
+        print(user_id)
+        global general_id
+        general_id = user_id
+        print(general_id)
+
+    print(general_id)
+    if general_id != 0:
+        print(user_email)
+        return True
+    else:
+        print('false')
+        return False
 
 
 if __name__ == '__main__':

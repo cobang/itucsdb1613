@@ -123,14 +123,14 @@
                             <label for="email">Email address</label>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
-                                <input class="form-control" id="email" placeholder="Enter email" type="email" required autofocus>
+                                <input class="form-control" id="email" name="email" placeholder="Enter email" type="email" required autofocus>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-lock fa-fw" aria-hidden="true"></i></span>
-                                <input class="form-control" id="password" placeholder="Enter password" type="password" required>
+                                <input class="form-control" id="password" name="password" placeholder="Enter password" type="password" required>
                             </div>
                         </div>
                         <div class="checkbox">
@@ -139,7 +139,7 @@
                             </label>
                         </div>
                         <p class="text-right"><a href="#">Forgot password?</a></p>
-                        <button class="btn btn-primary btn-block" type="submit">Login</button>
+                        <button class="btn btn-primary btn-block" name="login" value="login" type="submit">Login</button>
                         <hr>
                         <div class="social-box">
                             <div class="btn btn-block btn-social btn-facebook" scope="public_profile,email" onlogin="checkLoginState();">
@@ -170,7 +170,6 @@
 
     <script type="text/javascript" src="../static/js/jquery.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
-    <script src="../static/js/FBlogin.js"></script>
     <script>
         $(".contentContainer").css("min-height", $(window).height());
     </script>
