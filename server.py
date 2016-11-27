@@ -4,16 +4,15 @@ import pymysql
 
 from dbconnection import MySQL
 from flask import Flask
-from flask import render_template, request, redirect, url_for, session
-from connections import Connections, Recommendations, Connection, connection_add, connection_remove, add_to_favorites
-from posts import posts_get, post_share, post_delete, post_update
+from flask import render_template, request, redirect, url_for
+from connections import Connections, Recommendations, Connection, connection_add, connection_remove, add_to_favorites, recommendation_add, recommendation_remove, num, remove_from_favorites
+from posts import posts_get, post_share, post_delete, post_update, post_comment_add
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_list, user_edit, user_delete
 from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message
 
 app = Flask(__name__)
 
-general_id = 0
 
 @app.route('/test/')
 def test_page():
@@ -72,6 +71,7 @@ DEFAULT CHARACTER SET = utf8;
         """
 
         c.execute(sql)
+
 
         sql = """
 -- -----------------------------------------------------
@@ -198,7 +198,7 @@ DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
-        sql = """
+        sql="""
 
 -- -----------------------------------------------------
 -- Table `cl48-humannet`.`recommended`
@@ -219,7 +219,7 @@ DEFAULT CHARACTER SET = utf8;
 """
         c.execute(sql)
 
-        sql = """
+        sql="""
 -- -----------------------------------------------------
 -- Table `cl48-humannet`.`connections_detail`
 -- -----------------------------------------------------
@@ -309,7 +309,7 @@ DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
-        sql = """-- -----------------------------------------------------
+        sql="""-- -----------------------------------------------------
 -- Table `cl48-humannet`.`company`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`company` (
@@ -321,7 +321,7 @@ DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
-        sql = """-- -----------------------------------------------------
+        sql="""-- -----------------------------------------------------
 -- Table `cl48-humannet`.`jobs`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`jobs` (
@@ -340,7 +340,7 @@ DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
-        sql = """-- -----------------------------------------------------
+        sql="""-- -----------------------------------------------------
 -- Table `cl48-humannet`.`company_detail`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`company_detail` (
@@ -383,7 +383,6 @@ def home_page():
         return render_template('home.html')
     else:
         signup()
-        login()
 
     return redirect('home')
 
@@ -395,7 +394,6 @@ def home():
         return render_template('home.html')
     else:
         signup()
-        login()
 
     return redirect('home')
 
@@ -407,9 +405,9 @@ def profile():
 
         return render_template('profile.html', users=users)
     else:
-        signup()
-        login()
-        if 'edit_user' in request.form:
+        if 'signup' in request.form:
+            signup()
+        elif 'edit_user' in request.form:
             user_id = request.form['edit_user']
             user_name = request.form['name']
             user_surname = request.form['surname']
@@ -417,7 +415,6 @@ def profile():
         elif 'delete_user' in request.form:
             user_id = request.form['delete_user']
             user_delete(user_id=user_id)
-            storage.delet_byid(user_id)
     return redirect('profile')
 
 
@@ -429,53 +426,31 @@ def about():
     else:
         if 'signup' in request.form:
             signup()
-            login()
 
     return redirect('about')
-
-
-storage = Recommendations()
-added_Con = Connections()
 
 
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
     try:
-        if storage.get == 0 or storage.key == 0:
+        storage = Recommendations()
+        if storage.get == 0 or num < storage.key:
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                    passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
-            sql = """SELECT * FROM users"""
+            sql = """SELECT * FROM recommended"""
             c.execute(sql)
             f = '%Y-%m-%d %H:%M:%S'
             dateTime = datetime.datetime.now()
             for row in c:
-                id, name, surname, username, password = row
-                connection_new = Connection(120, following_id=id, date=dateTime.strftime(f))
+                fol_id, u_id = row
+                connection_new = Connection(120, following_id=fol_id,fav=0, date=dateTime.strftime(f))
                 storage.add_recommendation(connection=connection_new)
                 print("adding")
-            storage.get = 1
-        elif storage.get == 2:
-            print("pof adding")
-            conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-            c = conn.cursor()
-            sql = """SELECT * FROM users"""
-            c.execute(sql)
-            f = '%Y-%m-%d %H:%M:%S'
-            dateTime = datetime.datetime.now()
-            for row in c:
-                id, name, surname, username, password = row
-                if storage.is_item(id=id) == 1:
-                    connection_new = Connection(120, following_id=id, date=dateTime.strftime(f))
-                    storage.add_recommendation(connection=connection_new)
-                    print("new adding")
-            storage.get = 1
         else:
             print("added once")
         c.close()
         conn.close()
-
     except Exception as e:
         print(str(e))
     rec_storage = storage.get_recommendations()
@@ -485,15 +460,12 @@ def connections():
         rec_id = int(request.form['following_id'])
         u_id = int(request.form['user_id'])
         signup()
-        login()
         key_id = int(request.form['key'])
         if 'add_Connection' in request.form:
             dateTime = datetime.datetime.now()
             print("addConnection")
             storage.delete_recommendation(key=key_id)
-            f = '%Y-%m-%d %H:%M:%S'
-            c_new = Connection(120, following_id=rec_id, date=dateTime.strftime(f))
-            added_Con.add_connection(c_new)
+            recommendation_remove(u_id,rec_id)
             print("del")
             connection_add(u_id=u_id, fol_id=rec_id, time=dateTime)
         elif 'add_to_favorites' in request.form:
@@ -503,6 +475,21 @@ def connections():
 
 @app.route('/added_connections', methods=['GET', 'POST'])
 def added_connections():
+    try:
+        added_Con = Connections()
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+        sql = """SELECT * FROM connections"""
+        c.execute(sql)
+        for row in c:
+            u_id, fol_id, fav, date = row
+            connection_new = Connection(120, following_id=fol_id, fav=fav, date=date)
+            added_Con.add_connection(connection=connection_new)
+        c.close()
+        conn.close()
+    except Exception as e:
+        print(str(e))
     added = added_Con.get_connections()
     if request.method == 'GET':
         return render_template('added_connections.html', connections=added)
@@ -510,18 +497,15 @@ def added_connections():
         rec_id = int(request.form['following_id'])
         u_id = int(request.form['user_id'])
         signup()
-        login()
-        f = '%Y-%m-%d %H:%M:%S'
-        dateTime = datetime.datetime.now()
         if 'remove_Connection' in request.form:
             connection_remove(u_id, rec_id)
-            c_new = Connection(120, following_id=rec_id, date=dateTime.strftime(f))
-            storage.add_recommendation(c_new)
+            recommendation_add(120, rec_id)
             key_id = int(request.form['key'])
             added_Con.delete_connection(counter=key_id)
         elif 'add_to_favorites' in request.form:
             add_to_favorites(u_id, rec_id)
-
+        elif 'remove_from_favorites':
+            remove_from_favorites(u_id, rec_id)
     return redirect('added_connections')
 
 
@@ -534,8 +518,6 @@ def messages():
         chats = inbox.chats
         return render_template('messages.html', chats=chats)
     else:
-        signup()
-        login()
         if 'send' in request.form:
             participant = int(request.form['send'])
             if participant == 0:
@@ -588,12 +570,11 @@ def timeline():
 
     else:
         signup()
-        login()
         if 'share' in request.form:
             print("share")
             text = request.form['post']
             date = datetime.datetime.now()
-            user_id = 1
+            user_id = 6  #degistirilecek
             post_share(user_id=user_id, text=text, date=date)
 
         if 'delete' in request.form:
@@ -615,6 +596,16 @@ def timeline():
             post_id = request.form['dislike']
             post_update(post_id, "DISLIKE_NUM")
 
+        if 'comment' in request.form:
+            print("comment")
+            comment_text= request.form['comment_text']
+            post_id = request.form['comment']
+            date = datetime.datetime.now()
+            user_id = 6 #degisecek
+            post_comment_add(comment_text,post_id,date,user_id)
+
+
+
     return redirect('timeline')
 
 
@@ -626,7 +617,6 @@ def jobs():
         return render_template('jobs.html', jobs=jobs_archive)
     else:
         signup()
-        login()
         if 'addJob' in request.form:
             title = request.form['title']
             description = request.form['description']
@@ -658,55 +648,16 @@ def signup():
             c = conn.cursor()
             sql = """INSERT INTO users(user_name, user_surname, user_email, user_password)
                                    VALUES ('%s', '%s', '%s', '%s' )""" % (
-                user_name, user_surname, user_email, user_password)
+            user_name, user_surname, user_email, user_password)
 
             c.execute(sql)
 
             conn.commit()
             c.close()
             conn.close()
-            storage.get = 2
 
         except Exception as e:
             print(str(e))
-
-
-def login():
-    if 'login' in request.form:
-        print("Login")
-        user_email = request.form['email']
-        user_password = request.form['password']
-        print(user_email)
-        print(user_password)
-        if valid_login(user_email, user_password):
-            print('asd')
-            print(general_id)
-
-
-def valid_login(user_email, user_password):
-    conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                           passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-    c = conn.cursor()
-    sql = """SELECT user_id, user_email FROM users WHERE user_email='%s' and user_password='%s'""" % (
-        user_email, user_password)
-
-    c.execute(sql)
-
-    for row in c:
-        print(row)
-        user_id, user_email = row
-        print(user_id)
-        global general_id
-        general_id = user_id
-        print(general_id)
-
-    print(general_id)
-    if general_id != 0:
-        print(user_email)
-        return True
-    else:
-        print('false')
-        return False
 
 
 if __name__ == '__main__':

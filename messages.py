@@ -16,13 +16,15 @@ class Chat:
     def __init__(self):
         self.messages = {}
         self.key = 0
+        self.name = ''
+        self.surname = ''
 
     def __getitem__(self, item):
         return self.messages[item]
 
     def add(self, message):
         self.key += 1
-        message.key = self.key
+        # message.key = self.key
         self.messages[self.key] = message
 
     def delete(self, index):
@@ -55,19 +57,23 @@ def get_inbox(user_id):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """SELECT user_id, participant_id,
-                        in_out, content,
-                        message_datetime, messages.message_id, is_liked
-                 FROM messages, conversations
-                 WHERE (messages.message_id = conversations.message_id)
-                    AND (user_id = %d)
-                 ORDER BY participant_id, message_datetime""" % user_id
+        sql = """SELECT c.user_id, c.participant_id,
+                        c.in_out, m.content, m.message_datetime,
+                        m.message_id, m.is_liked,
+                        u.user_name, u.user_surname
+                 FROM messages AS m
+                 INNER JOIN conversations AS c
+                    ON c.message_id = m.message_id
+                 INNER JOIN users AS u
+                    ON u.user_id = c.participant_id
+                 WHERE c.user_id = %d
+                 ORDER BY c.participant_id, m.message_datetime""" % user_id
         c.execute(sql)
 
         old_p = 0
         chat = Chat()
 
-        for user, participant, in_out, content, msg_datetime, msg_id, is_liked in c:
+        for user, participant, in_out, content, msg_datetime, msg_id, is_liked, name, surname in c:
             if in_out == 0:
                 sender = user
                 receiver = participant
@@ -75,7 +81,8 @@ def get_inbox(user_id):
                 sender = participant
                 receiver = user
 
-            msg = Message(sender, receiver, content, msg_datetime, is_liked=is_liked, msg_id=msg_id)
+            msg = Message(sender, receiver, content, msg_datetime,
+                          is_liked=is_liked, msg_id=msg_id)
 
             if old_p == participant:
                 chat.add(msg)
@@ -83,8 +90,13 @@ def get_inbox(user_id):
                 if chat.key != 0:
                     inbox.add(chat, old_p)
                 chat = Chat()
+                chat.name = name
+                chat.surname = surname
                 chat.add(msg)
             old_p = participant
+
+        chat.name = name
+        chat.surname = surname
         inbox.add(chat, old_p)
 
         c.close()

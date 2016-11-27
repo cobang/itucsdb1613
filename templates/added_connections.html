@@ -82,11 +82,15 @@
                                             <br><br>
                                             <p>
                                                 <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Message</a>
-                                              <input type="hidden" name="following_id" value="{{ connection.following }}"/>
-                                              <input type="hidden" name="user_id" value="{{ connection.user }}"/>
-                                              <input type="hidden" name="key" value="{{ key }}"/>
-                                              <input type="submit" name="remove_Connection" value="Unfollow" class="btn btn-xs btn-default"/>
-                                              <input type="submit" name="add_to_favorites" value="Add to your favorite connections <3" class="btn btn-xs btn-default"/>
+                                                <input type="hidden" name="following_id" value="{{ connection.following }}"/>
+                                                <input type="hidden" name="user_id" value="{{ connection.user }}"/>
+                                                <input type="hidden" name="key" value="{{ key }}"/>
+                                                <input type="submit" name="remove_Connection" value="Unfollow" class="btn btn-xs btn-default"/>
+                                                {% if connection.added_to_favorites == 1 %}
+                                                    <input type="submit" name="remove_from_favorites" value="Remove from your favorites" class="btn btn-xs btn-default"/>
+                                                {% else %}
+                                                    <input type="submit" name="add_to_favorites" value="Add to your your favorites" class="btn btn-xs btn-default"/>
+                                                {% endif%}
                                             </form>
                                             </p>
                                         </div>
