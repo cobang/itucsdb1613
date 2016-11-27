@@ -33,7 +33,7 @@ def connection():
 -- -----------------------------------------------------
 -- Table `cl48-humannet`.`university`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `university` (
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`university` (
   `university_id` INT NOT NULL,
   `university_email` VARCHAR(45) NOT NULL,
   `university_password` VARCHAR(45) NOT NULL,
@@ -46,7 +46,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `cl48-humannet`.`users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`users` (
   `user_id` INT NOT NULL AUTO_INCREMENT,
   `company_id` INT NULL,
   `university_id` INT NULL,
@@ -74,9 +74,71 @@ DEFAULT CHARACTER SET = utf8;
 
         sql = """
 -- -----------------------------------------------------
+-- Table `cl48-humannet`.`messages`
+-- -----------------------------------------------------
+                  CREATE TABLE IF NOT EXISTS `cl48-humannet`.`messages` (
+                  `message_id` INT NOT NULL AUTO_INCREMENT,
+                  `content` VARCHAR(140) NOT NULL,
+                  `message_datetime` DATETIME NOT NULL,
+                  `is_liked` INT NOT NULL,
+                  PRIMARY KEY (`message_id`))
+                DEFAULT CHARACTER SET = utf8;"""
+
+        c.execute(sql)
+
+        sql = """
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`conversations`
+-- -----------------------------------------------------
+                  CREATE TABLE IF NOT EXISTS `cl48-humannet`.`conversations` (
+                  `in_out` INT NOT NULL,
+                  `message_id` INT NOT NULL,
+                  `participant_id` INT NOT NULL,
+                  `user_id` INT NOT NULL,
+                  PRIMARY KEY (`in_out`, `message_id`),
+                  INDEX `fk_conversations_messages_idx` (`message_id` ASC),
+                  INDEX `fk_conversations_users1_idx` (`participant_id` ASC),
+                  CONSTRAINT `fk_conversations_messages`
+                    FOREIGN KEY (`message_id`)
+                    REFERENCES `cl48-humannet`.`messages` (`message_id`)
+                    ON DELETE NO ACTION
+                    ON UPDATE NO ACTION,
+                  CONSTRAINT `fk_conversations_users1`
+                    FOREIGN KEY (`participant_id`)
+                    REFERENCES `cl48-humannet`.`users` (`user_id`)
+                    ON DELETE NO ACTION
+                    ON UPDATE NO ACTION)
+                DEFAULT CHARACTER SET = utf8;"""
+
+        c.execute(sql)
+
+        sql = """
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`posts`
+-- -----------------------------------------------------
+          CREATE TABLE IF NOT EXISTS `cl48-humannet`.`posts` (
+          `post_id` INT NOT NULL AUTO_INCREMENT,
+          `user_id` INT NOT NULL,
+          `post_text` VARCHAR(140) NOT NULL,
+          `post_date` DATETIME NOT NULL,
+          `like_num` INT NULL DEFAULT 0,
+          PRIMARY KEY (`post_id`),
+          INDEX `fk_posts_users1_idx` (`user_id` ASC),
+          CONSTRAINT `fk_posts_users1`""
+            FOREIGN KEY (`user_id`)
+            REFERENCES `cl48-humannet`.`users` (`user_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION)
+        DEFAULT CHARACTER SET = utf8;
+                """
+
+        c.execute(sql)
+
+        sql = """
+-- -----------------------------------------------------
 -- Table `cl48-humannet`.`location`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `location` (
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`location` (
   `location_id` INT NOT NULL,
   `location_state` VARCHAR(45) NOT NULL,
   `location_country` VARCHAR(45) NOT NULL,
@@ -110,8 +172,53 @@ CREATE TABLE IF NOT EXISTS `cl48-humannet`.`user_detail` (
     REFERENCES `cl48-humannet`.`location` (`location_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-DEFAULT CHARACTER SET = utf8;
-        """
+DEFAULT CHARACTER SET = utf8;"""
+
+        c.execute(sql)
+
+
+        sql = """
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`comment`
+-- -----------------------------------------------------
+          CREATE TABLE IF NOT EXISTS `cl48-humannet`.`comment` (
+          `comment_id` INT NOT NULL,
+          `comment_text` VARCHAR(140) NOT NULL,
+          `comment_date` DATETIME NOT NULL,
+          `post_id` INT NOT NULL,
+          PRIMARY KEY (`comment_id`),
+          INDEX `fk_comment_posts1_idx` (`post_id` ASC),
+          CONSTRAINT `fk_comment_posts1`
+            FOREIGN KEY (`post_id`)
+            REFERENCES `cl48-humannet`.`posts` (`post_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION)
+        DEFAULT CHARACTER SET = utf8;
+                        """
+
+        c.execute(sql)
+
+        sql = """
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`likes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`likes` (
+  `user_id` INT NOT NULL,
+  `posts_post_id` INT NOT NULL,
+  PRIMARY KEY (`user_id`, `posts_post_id`),
+  INDEX `fk_likes_users1_idx` (`user_id` ASC),
+  INDEX `fk_likes_posts1_idx` (`posts_post_id` ASC),
+  CONSTRAINT `fk_likes_users1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `cl48-humannet`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_likes_posts1`
+    FOREIGN KEY (`posts_post_id`)
+    REFERENCES `cl48-humannet`.`posts` (`post_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
@@ -119,7 +226,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `cl48-humannet`.`university_detail`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `university_detail` (
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`university_detail` (
   `university_id` INT NOT NULL,
   `university_name` VARCHAR(45) NULL,
   `university_address` VARCHAR(45) NULL,
@@ -138,95 +245,7 @@ CREATE TABLE IF NOT EXISTS `university_detail` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 DEFAULT CHARACTER SET = utf8;
-        """
-
-        c.execute(sql)
-
-        sql = """CREATE TABLE IF NOT EXISTS `cl48-humannet`.`messages` (
-          `message_id` INT NOT NULL AUTO_INCREMENT,
-          `content` VARCHAR(140) NOT NULL,
-          `message_datetime` DATETIME NOT NULL,
-          `is_liked` INT NOT NULL,
-          PRIMARY KEY (`message_id`))
-        DEFAULT CHARACTER SET = utf8;"""
-
-        c.execute(sql)
-
-        sql = """CREATE TABLE IF NOT EXISTS `cl48-humannet`.`conversations` (
-          `in_out` INT NOT NULL,
-          `message_id` INT NOT NULL,
-          `participant_id` INT NOT NULL,
-          `user_id` INT NOT NULL,
-          PRIMARY KEY (`in_out`, `message_id`),
-          INDEX `fk_conversations_messages_idx` (`message_id` ASC),
-          INDEX `fk_conversations_users1_idx` (`participant_id` ASC),
-          CONSTRAINT `fk_conversations_messages`
-            FOREIGN KEY (`message_id`)
-            REFERENCES `cl48-humannet`.`messages` (`message_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-          CONSTRAINT `fk_conversations_users1`
-            FOREIGN KEY (`participant_id`)
-            REFERENCES `cl48-humannet`.`users` (`user_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION)
-        DEFAULT CHARACTER SET = utf8;"""
-
-        c.execute(sql)
-
-        sql = """CREATE TABLE IF NOT EXISTS `posts` (
-  `post_id` INT NOT NULL AUTO_INCREMENT,
-  `user_id` INT NOT NULL,
-  `post_text` VARCHAR(140) NOT NULL,
-  `post_date` DATETIME NOT NULL,
-  `like_num` INT NULL DEFAULT 0,
-  PRIMARY KEY (`post_id`),
-  INDEX `fk_posts_users1_idx` (`user_id` ASC),
-  CONSTRAINT `fk_posts_users1`""
-    FOREIGN KEY (`user_id`)
-    REFERENCES `cl48-humannet`.`users` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-DEFAULT CHARACTER SET = utf8;
-        """
-
-        c.execute(sql)
-
-        sql = """CREATE TABLE IF NOT EXISTS `comment` (
-  `comment_id` INT NOT NULL,
-  `comment_text` VARCHAR(140) NOT NULL,
-  `comment_date` DATETIME NOT NULL,
-  `post_id` INT NOT NULL,
-  PRIMARY KEY (`comment_id`),
-  INDEX `fk_comment_posts1_idx` (`post_id` ASC),
-  CONSTRAINT `fk_comment_posts1`
-    FOREIGN KEY (`post_id`)
-    REFERENCES `cl48-humannet`.`posts` (`post_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-DEFAULT CHARACTER SET = utf8;
-                """
-
-        c.execute(sql)
-
-        sql = """CREATE TABLE IF NOT EXISTS `likes` (
-  `user_id` INT NOT NULL,
-  `posts_post_id` INT NOT NULL,
-  PRIMARY KEY (`user_id`, `posts_post_id`),
-  INDEX `fk_likes_users1_idx` (`user_id` ASC),
-  INDEX `fk_likes_posts1_idx` (`posts_post_id` ASC),
-  CONSTRAINT `fk_likes_users1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `cl48-humannet`.`users` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_likes_posts1`
-    FOREIGN KEY (`posts_post_id`)
-    REFERENCES `cl48-humannet`.`posts` (`post_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-DEFAULT CHARACTER SET = utf8;
-                """
+"""
 
         c.execute(sql)
 
