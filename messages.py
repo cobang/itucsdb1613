@@ -106,16 +106,25 @@ def send_message(user_id, participant_id, content, date):
                               VALUES('%s', '%s', 0)""" % (content, date.strftime(f))
         c.execute(sql)
 
-        sql = """SELECT MAX(message_id) FROM messages"""
-        c.execute(sql)
-        for x in c:
-            msg_id = x[0]
+        # sql = """SELECT MAX(message_id) FROM messages"""
+        # c.execute(sql)
+        # for x in c:
+        #    msg_id = x[0]
+
+        # sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
+        #                      VALUES(%d, %d ,%d, %d)""" % (user_id, int(participant_id), 0, msg_id)
 
         sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
-                              VALUES(%d, %d ,%d, %d)""" % (user_id, int(participant_id), 0, msg_id)
+           SELECT %d, %d, %d, MAX(message_id)
+           FROM messages""" % (user_id, participant_id, 0)
         c.execute(sql)
+
+        # sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
+        #                      VALUES(%d, %d ,%d, %d)""" % (int(participant_id), user_id, 1, msg_id)
+
         sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
-                              VALUES(%d, %d ,%d, %d)""" % (int(participant_id), user_id, 1, msg_id)
+           SELECT %d, %d, %d, MAX(message_id)
+           FROM messages""" % (participant_id, user_id, 1)
         c.execute(sql)
 
         conn.commit()
