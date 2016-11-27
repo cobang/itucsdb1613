@@ -72,6 +72,7 @@ DEFAULT CHARACTER SET = utf8;
 
         c.execute(sql)
 
+
         sql = """
 -- -----------------------------------------------------
 -- Table `cl48-humannet`.`messages`
@@ -83,6 +84,27 @@ DEFAULT CHARACTER SET = utf8;
                   `is_liked` INT NOT NULL,
                   PRIMARY KEY (`message_id`))
                 DEFAULT CHARACTER SET = utf8;"""
+
+        c.execute(sql)
+
+        sql = """
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`connections`
+-- -----------------------------------------------------
+            CREATE TABLE IF NOT EXISTS `cl48 - humannet`.`connections`(
+            `user_id` INT NOT NULL,
+            `following_id` INT NOT NULL,
+            `added_to_favorites` INT NOT NULL DEFAULT 0,
+            `connection_date` DATETIME NOT NULL,
+            INDEX `fk_connections_users1_idx`(`following_id` ASC),
+            PRIMARY KEY(`user_id`, `following_id`),
+            CONSTRAINT `fk_connections_users1`
+            FOREIGN KEY(`following_id`)
+            REFERENCES `cl48 - humannet`.`users`(`user_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION)
+        ENGINE = InnoDB
+        DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
@@ -176,6 +198,45 @@ DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
+        sql="""
+
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`recommended`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`recommended` (
+  `following_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  PRIMARY KEY (`following_id`, `user_id`),
+  INDEX `fk_recomended_users1_idx` (`following_id` ASC),
+  CONSTRAINT `fk_recomended_users1`
+    FOREIGN KEY (`following_id`)
+    REFERENCES `cl48-humannet`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+"""
+        c.execute(sql)
+
+        sql="""
+-- -----------------------------------------------------
+-- Table `cl48-humannet`.`connections_detail`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`connections_detail` (
+  `user_id` INT NOT NULL,
+  `num_of_connections` INT NOT NULL DEFAULT 0,
+  INDEX `fk_connections_detail_users1_idx` (`user_id` ASC),
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `fk_connections_detail_users1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `cl48-humannet`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+"""
+        c.execute(sql)
 
         sql = """
 -- -----------------------------------------------------
