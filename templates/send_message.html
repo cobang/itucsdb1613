@@ -1,3 +1,8 @@
+{#
+parameters:
+    participant id
+    name & surname ??
+#}
 {% extends "base.html" %}
 {% block navigationbar %}
     <li><a href="{{ url_for('timeline') }}">Timeline</a></li>
@@ -13,6 +18,17 @@ Send Message
 
 <div class="container contentContainer" id="topContainer">
     <br/><br/><br/>
+    <div class="row">
+        <div class="col-md-3"></div>
+
+        <div class="col-md-3">
+            <div class="alert alert-info">
+                Message to <strong>{{ name }}&nbsp;{{ surname }}</strong>
+            </div>
+        </div>
+
+        <div class="col-md-6"></div>
+    </div>
     <div class="row">
         <div class="col-md-3"></div>
 

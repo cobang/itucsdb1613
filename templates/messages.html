@@ -117,7 +117,7 @@ Messages
                                                                 </form>
 
                                                                 {% endif %}
-                                                            {% else %}
+                                                            {% else %}{# if msg.sender != participant #}
                                                                 {% if msg.is_liked == 1 %}
 
                                                                 <span class="close message_like">Liked!</span>
@@ -129,6 +129,12 @@ Messages
                                                             <span class="label label-{% if msg.sender == participant %}info{% else %}primary{% endif %} message_box_datetime">
                                                                 {{ msg.datetime }}
                                                             </span>
+
+                                                            {% if msg.sender != participant %}
+                                                            <form class="reset" action="" method="post" style="float: right;">
+                                                                &nbsp;<button class="close" type="submit" name="delete_message" value="{{ msg.msg_id }}">&times;</button>
+                                                            </form>
+                                                            {% endif %}
                                                         </div>
                                                         <div class="panel-body message_box">
                                                             {{ msg.content }}

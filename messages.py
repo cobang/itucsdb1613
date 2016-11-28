@@ -57,6 +57,7 @@ def get_inbox(user_id):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
+
         sql = """SELECT c.user_id, c.participant_id,
                         c.in_out, m.content, m.message_datetime,
                         m.message_id, m.is_liked,
@@ -64,7 +65,7 @@ def get_inbox(user_id):
                  FROM messages AS m
                  INNER JOIN conversations AS c
                     ON c.message_id = m.message_id
-                 INNER JOIN users AS u
+                 INNER JOIN user_detail AS u
                     ON u.user_id = c.participant_id
                  WHERE c.user_id = %d
                  ORDER BY c.participant_id, m.message_datetime""" % user_id
@@ -202,3 +203,47 @@ def unlike_message(message_id):
     except Exception as e:
         print(str(e))
 
+
+def delete_message(message_id):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        sql = """DELETE FROM conversations
+                         WHERE message_id = %d""" % message_id
+        c.execute(sql)
+
+        sql = """DELETE FROM messages
+                         WHERE message_id = %d""" % message_id
+        c.execute(sql)
+
+        conn.commit()
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
+
+def get_name_surname(user_id):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        sql = """SELECT user_name, user_surname
+                 FROM user_details
+                 WHERE user_id = %d""" % user_id
+        c.execute(sql)
+
+        for name, surname in c:
+            user_info = (name, surname)
+
+        c.close()
+        conn.close()
+
+        return user_info
+
+    except Exception as e:
+        print(str(e))
