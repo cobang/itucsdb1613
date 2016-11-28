@@ -10,7 +10,7 @@ from connections import Connections, Recommendations, Connection, connection_add
 from posts import posts_get, post_share, post_delete, post_update, post_comment_add
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_list, user_edit, user_delete
-from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message
+from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message, delete_message
 
 app = Flask(__name__)
 
@@ -565,6 +565,11 @@ def messages():
             msg_id = int(request.form['unlike'])
 
             unlike_message(msg_id)
+
+        elif 'delete_message' in request.form:
+            msg_id = int(request.form['delete_message'])
+
+            delete_message(msg_id)
 
     return redirect('messages')
 

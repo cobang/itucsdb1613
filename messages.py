@@ -211,11 +211,11 @@ def delete_message(message_id):
         c = conn.cursor()
 
         sql = """DELETE FROM conversations
-                         WHERE message_id = %d""" % message_id
+                    WHERE message_id = %d""" % message_id
         c.execute(sql)
 
         sql = """DELETE FROM messages
-                         WHERE message_id = %d""" % message_id
+                    WHERE message_id = %d""" % message_id
         c.execute(sql)
 
         conn.commit()
