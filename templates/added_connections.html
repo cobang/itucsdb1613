@@ -56,7 +56,7 @@
                                         <p>{{ connection.get_email() }}</p>
                                         <br>
                                         <div class="media-body">
-                                            <a href="#" class="btn btn-xs" data-toggle="modal" data-target="#list" style="background-color: #9ba5cd; color: #0f0f0f"><span>150 connections</span></a>
+                                            <a href="#" class="btn btn-xs" data-toggle="modal" data-target="#list" style="background-color: #9ba5cd; color: #0f0f0f"><span>{{ connection.get_num_of_connections() }} connections</span></a>
                                             &nbsp;<div class="modal fade" id="list" role="dialog">
                                             <div class="modal-dialog">
                                                 <!-- Modal content-->

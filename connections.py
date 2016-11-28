@@ -1,6 +1,5 @@
 import pymysql
 from dbconnection import MySQL
-from users import Users, User
 
 class Connection:
     def __init__(self, user_id, following_id, fav, date):
@@ -8,37 +7,66 @@ class Connection:
         self.following = following_id
         self.date = date
         self.added_to_favorites = fav
+
     def get_name(self):
         try:
-            user_name=" "
-            user_surname = " "
+            name = ""
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                    passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
-            sql = """SELECT * FROM users WHERE user_id = (%d)""" % (int(self.following))
+            sql = """SELECT user_type, user_id FROM users WHERE user_id = (%d)""" % (int(self.following))
             c.execute(sql)
             for row in c:
-                user_id, c_id, u_id, user_name, user_surname, user_email, user_password = row
-                print("df")
-                print(user_name)
-                print("df")
+                user_type, user_id = row
+
+            if user_type == 1:
+                sql = """SELECT user_name,user_surname FROM user_detail WHERE user_id = (%d)""" % (int(self.following))
+                c.execute(sql)
+                for row in c:
+                    user_name, user_surname = row
+                name = user_name + " " + user_surname
+
+            elif user_type == 2:
+                sql = """SELECT company_name, user_id FROM company_detail WHERE user_id = (%d)""" % (int(self.following))
+                c.execute(sql)
+                for row in c:
+                    company_name, user_id = row
+                name = company_name
+            else:
+                sql = """SELECT university_name, user_id FROM university_detail WHERE user_id = (%d)""" % (int(self.following))
+                c.execute(sql)
+                for row in c:
+                    university_name, user_id = row
+                name = university_name
             c.close()
             conn.close()
         except Exception as e:
             print(str(e))
-        return user_name + " " + user_surname
+        return name
 
+    def get_num_of_connections(self):
+
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+        sql = """SELECT num_of_connections,user_id FROM connections_detail WHERE user_id = (%d)""" % (int(self.following))
+        c.execute(sql)
+        for row in c:
+            numC, user_id = row
+        c.close()
+        conn.close()
+        print("mal")
+        return numC
 
     def get_email(self):
         try:
-            user_email = " "
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                    passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
-            sql = """SELECT * FROM users WHERE user_id = (%d)""" % (int(self.following))
+            sql = """SELECT user_email, user_id FROM users WHERE user_id = (%d)""" % (int(self.following))
             c.execute(sql)
             for row in c:
-                user_id, c_id, u_id, user_name, user_surname, user_email, user_password = row
+                user_email, user_id = row
             c.close()
             conn.close()
         except Exception as e:
@@ -215,3 +243,55 @@ def num():
     except Exception as e:
         print(str(e))
     return number
+
+
+def conDetail_add(u_id):
+
+        try:
+            conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+            c = conn.cursor()
+
+            sql = """SELECT COUNT(*), user_id FROM connections WHERE user_id = (%d)""" % (int(u_id))
+            c.execute(sql)
+            for row in c:
+                number, user_id = row
+
+            sql = """SELECT COUNT(*),user_id FROM connections_detail WHERE user_id = (%d)""" % (int(u_id))
+            c.execute(sql)
+            for row in c:
+                is_there, user_id = row
+            print("isthere")
+            print(is_there)
+
+            if is_there == 0:
+                sql = """INSERT INTO connections_detail(user_id,num_of_connections)
+                                      VALUES (%d, %d )""" % (int(u_id), int(number))
+                c.execute(sql)
+                conn.commit()
+                print(number)
+                print("if 0")
+            else:
+                sql = """UPDATE connections_detail SET num_of_connections = (%d) WHERE user_id = (%d)""" % (int(number), int(u_id))
+                c.execute(sql)
+                conn.commit()
+                print("else")
+            c.close()
+            conn.close()
+        except Exception as e:
+            print(str(e))
+
+
+def conDetail_decrease(u_id):
+
+        try:
+            conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+            c = conn.cursor()
+            sql = """UPDATE connections_detail SET num_of_connections = num_of_connections - 1 WHERE user_id = (%d)""" % (int(u_id))
+            c.execute(sql)
+            conn.commit()
+            c.close()
+            conn.close()
+        except Exception as e:
+            print(str(e))
