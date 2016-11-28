@@ -9,7 +9,7 @@ class Users:
 
     def add_user(self, user):
         self.key += 1
-        #user.key = self.key
+        # user.key = self.key
         self.users[self.key] = user
 
     def get_user(self, key):
@@ -20,11 +20,42 @@ class Users:
 
 
 class User:
-    def __init__(self, user_id, user_type, user_email=" ", user_password=" "):
+    def __init__(self, user_id, user_type, user_email="", user_password=""):
         self.user_id = user_id
         self.user_type = user_type
         self.user_email = user_email
         self.user_password = user_password
+        self.user_name = ""
+        self.user_surname = ""
+        self.user_birth = ""
+        self.user_phone = ""
+        self.user_address = ""
+
+        if user_type == 1:
+            self.add_user_detail()
+        elif user_type == 2:
+            self.add_company_detail()
+        elif user_type == 3:
+            self.add_university_detail()
+
+    def add_user_detail(self, user_name="", user_surname="", user_birth="", user_phone="", user_address=""):
+        self.user_name = user_name
+        self.user_surname = user_surname
+        self.user_birth = user_birth
+        self.user_phone = user_phone
+        self.user_address = user_address
+        print('add user detail')
+
+    def add_company_detail(self, user_name="", user_phone="", user_address=""):
+        self.user_name = user_name
+        self.user_phone = user_phone
+        self.user_address = user_address
+        print('add company detail')
+
+    def add_university_detail(self, user_name="", user_address=""):
+        self.user_name = user_name
+        self.user_address = user_address
+        print('add university detail')
 
 
 def user_list():

@@ -397,9 +397,9 @@ def home():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    users = user_list()
     if request.method == 'GET':
         if 'user_email' in session:
+            users = user_list()
             print(session['user_email'])
             return render_template('profile.html', users=users)
         else:
