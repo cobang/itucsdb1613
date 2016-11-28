@@ -595,10 +595,12 @@ def send_single_message(key):
 @app.route('/timeline', methods=['GET', 'POST'])
 def timeline():
     posts = posts_get()
-
     if request.method == 'GET':
         if 'user_email' in session:
             print(session['user_email'])
+            current_email = session['user_email']
+            print( get_id(current_email))
+            current_user_id = get_id(current_email)
             return render_template('timeline.html', posts=posts)
         else:
             return redirect(url_for('home'))
@@ -737,6 +739,28 @@ def valid_login(user_email, user_password):
         return False
 
 
+def get_id(user_email):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+        sql = """select user_id from users where user_email = '%s'""" % user_email
+
+        c.execute(sql)
+        conn.commit()
+
+        for row in c:
+            user_id = row[0]
+
+        c.close()
+        conn.close()
+
+        print(user_id)
+        return user_id
+    except Exception as e:
+        print(str(e))
+
+
 if __name__ == '__main__':
     app.secret_key = 'SuperSecretKey'
     VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
@@ -746,5 +770,3 @@ if __name__ == '__main__':
         port, debug = 5000, True
 
     app.run(host='0.0.0.0', port=port, debug=debug)
-
-
