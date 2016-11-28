@@ -9,7 +9,7 @@ from connections import Connections, Recommendations, Connection, connection_add
     recommendation_add, recommendation_remove, num, remove_from_favorites, conDetail_add, conDetail_decrease
 from posts import posts_get, post_share, post_delete, post_update, post_comment_add
 from jobs import job_add, job_edit, job_delete, job_share
-from users import user_list, user_edit, user_delete
+from users import user_edit, user_delete, user_show
 from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message, delete_message, \
     get_name_surname
 
@@ -398,11 +398,17 @@ def home():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
+    user_id = get_id(session["user_email"])
+    return redirect(url_for('profile_id', user_id=user_id))
+
+
+@app.route('/profile/<user_id>', methods=['GET', 'POST'])
+def profile_id(user_id):
     if request.method == 'GET':
         if 'user_email' in session:
-            users = user_list()
+            user = user_show(user_id)
             print(session['user_email'])
-            return render_template('profile.html', users=users)
+            return render_template('profile.html', user_id=user_id, user=user)
         else:
             return render_template('home.html')
 
@@ -565,7 +571,7 @@ def messages():
         if 'logout' in request.form:
             logout()
         elif 'send' in request.form:
-            participant = int(request.form['send'])
+            participant = int(request.form['user'])
             if participant == 0:
                 participant = int(request.form['username'])
             content = request.form['message']

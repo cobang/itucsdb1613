@@ -20,7 +20,7 @@ class Users:
 
 
 class User:
-    def __init__(self, user_id, user_type, user_email="", user_password="", user_name="", user_surname="", user_birth="", user_phone="", user_address=""):
+    def __init__(self, user_id="", user_type="", user_email="", user_password="", user_name="", user_surname="", user_birth="", user_phone="", user_address=""):
         self.user_id = user_id
         self.user_type = user_type
         self.user_email = user_email
@@ -58,28 +58,28 @@ class User:
         print('add university detail')
 
 
-def user_list():
-    store = Users()
+def user_show(user_id):
+    user = User()
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """SELECT user_id, user_type, user_email, user_password FROM users"""
+        sql = """SELECT user_id, user_type, user_email, user_password FROM users WHERE  user_id = %d """ % (
+            int(user_id))
 
         c.execute(sql)
-
+        print(user_id)
         for row in c:
             user_id, user_type, user_email, user_password = row
             user = User(user_id=user_id, user_type=user_type, user_email=user_email, user_password=user_password)
-            store.add_user(user=user)
 
         c.close()
         conn.close()
 
     except Exception as e:
         print(str(e))
-
-    return store.get_users()
+    print(user)
+    return user
 
 
 def user_edit(user_id, user_name, user_surname):

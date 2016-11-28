@@ -3,14 +3,13 @@
     #edit {
     }
 </style>
-<li><a href="timeline">Timeline</a></li>
+<li><a href="../timeline">Timeline</a></li>
 <li class="active"><a href="profile">Profile</a></li>
-<li><a href="connections">Connections</a></li>
-<li><a href="messages">Messages</a></li>
-<li><a href="jobs">Jobs</a></li>
+<li><a href="../connections">Connections</a></li>
+<li><a href="../messages">Messages</a></li>
+<li><a href="../jobs">Jobs</a></li>
 {% endblock %} {% block title %} Profile {% endblock %} {% block content %}
 <div class="container contentContainer" id="topContainer">
-    {% for key,user in users %}
     <div class="row">
         <div class="col-md-5  toppad  pull-right col-md-offset-3 ">
             <br>
@@ -95,6 +94,5 @@
             </div>
         </div>
     </div>
-    {% endfor %}
 </div>
 {% endblock %}
