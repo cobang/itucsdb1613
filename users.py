@@ -20,16 +20,16 @@ class Users:
 
 
 class User:
-    def __init__(self, user_id, user_type, user_email="", user_password=""):
+    def __init__(self, user_id, user_type, user_email="", user_password="", user_name="", user_surname="", user_birth="", user_phone="", user_address=""):
         self.user_id = user_id
         self.user_type = user_type
         self.user_email = user_email
         self.user_password = user_password
-        self.user_name = ""
-        self.user_surname = ""
-        self.user_birth = ""
-        self.user_phone = ""
-        self.user_address = ""
+        self.user_name = user_name
+        self.user_surname = user_surname
+        self.user_birth = user_birth
+        self.user_phone = user_phone
+        self.user_address = user_address
 
         if user_type == 1:
             self.add_user_detail()
