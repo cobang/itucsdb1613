@@ -410,7 +410,7 @@ def profile_id(user_id):
             print(session['user_email'])
             return render_template('profile.html', user_id=user_id, user=user)
         else:
-            return render_template('home.html')
+            return render_template('../home.html')
 
     else:
         if 'logout' in request.form:
@@ -423,7 +423,7 @@ def profile_id(user_id):
         elif 'delete_user' in request.form:
             user_id = request.form['delete_user']
             user_delete(user_id=user_id)
-    return redirect('profile')
+    return redirect('../profile')
 
 
 @app.route('/about', methods=['GET', 'POST'])
@@ -634,7 +634,7 @@ def timeline():
         if 'user_email' in session:
             print(session['user_email'])
             current_email = session['user_email']
-            print( get_id(current_email))
+            print(get_id(current_email))
             current_user_id = get_id(current_email)
             return render_template('timeline.html', posts=posts)
         else:
@@ -717,6 +717,7 @@ def jobs():
 def signup():
     if 'signup' in request.form:
         print("Sign Up")
+        user_name = request.form['name']
         user_email = request.form['email']
         print(user_email)
         user_password = request.form['password']
@@ -732,6 +733,42 @@ def signup():
                 user_email, user_password, int(user_type))
 
             c.execute(sql)
+
+            if user_type == 1:
+                sql = """SELECT user_id FROM users WHERE  user_email = %s """ % (
+                    user_email)
+                c.execute(sql)
+                for row in c:
+                    user_id = row[0]
+
+                c.execute(sql)
+                sql = """INSERT INTO user_detail(user_name,user_id) VALUES ('%s', '%d')""" % (
+                    user_name, int(user_id))
+                c.execute(sql)
+
+            elif user_type == 2:
+                sql = """SELECT user_id FROM users WHERE  user_email = %s """ % (
+                    user_email)
+                c.execute(sql)
+                for row in c:
+                    user_id = row[0]
+
+                sql = """INSERT INTO company_detail(company_name) VALUES ('%s', '%d')""" % (
+                    user_name, int(user_id))
+
+                c.execute(sql)
+
+            elif user_type == 3:
+                sql = """SELECT user_id FROM users WHERE  user_email = %s """ % (
+                    user_email)
+                c.execute(sql)
+                for row in c:
+                    user_id = row[0]
+
+                sql = """INSERT INTO university_detail(university_name) VALUES ('%s', '%d')""" % (
+                    user_name, int(user_id))
+
+                c.execute(sql)
 
             conn.commit()
             c.close()

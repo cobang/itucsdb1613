@@ -20,7 +20,8 @@ class Users:
 
 
 class User:
-    def __init__(self, user_id="", user_type="", user_email="", user_password="", user_name="", user_surname="", user_birth="", user_phone="", user_address=""):
+    def __init__(self, user_id="", user_type="", user_email="", user_password="", user_name="", user_surname="",
+                 user_birth="", user_phone="", user_address=""):
         self.user_id = user_id
         self.user_type = user_type
         self.user_email = user_email
@@ -32,11 +33,11 @@ class User:
         self.user_address = user_address
 
         if user_type == 1:
-            self.add_user_detail()
+            self.add_user_detail(user_name, user_surname, user_birth, user_phone, user_address)
         elif user_type == 2:
-            self.add_company_detail()
+            self.add_company_detail(user_name, user_phone, user_address)
         elif user_type == 3:
-            self.add_university_detail()
+            self.add_university_detail(user_name, user_address)
 
     def add_user_detail(self, user_name="", user_surname="", user_birth="", user_phone="", user_address=""):
         self.user_name = user_name
@@ -71,6 +72,26 @@ def user_show(user_id):
         print(user_id)
         for row in c:
             user_id, user_type, user_email, user_password = row
+            if user_type == 1:
+                sql = """SELECT user_name, user_surname, user_birth, user_phone, user_address
+                          FROM user_detail WHERE  user_id = %d """ % (
+                    int(user_id))
+
+                c.execute(sql)
+
+            elif user_type == 2:
+                sql = """SELECT company_name, company_phone, company_address
+                          FROM company_detail WHERE company_id = %d """ % (
+                    int(user_id))
+
+                c.execute(sql)
+
+            elif user_type == 3:
+                sql = """SELECT university_name, university_address
+                          FROM university_detail WHERE  university_id = %d """ % (
+                    int(user_id))
+
+                c.execute(sql)
             user = User(user_id=user_id, user_type=user_type, user_email=user_email, user_password=user_password)
 
         c.close()
