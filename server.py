@@ -10,7 +10,8 @@ from connections import Connections, Recommendations, Connection, connection_add
 from posts import posts_get, post_share, post_delete, post_update, post_comment_add
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_list, user_edit, user_delete
-from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message, delete_message
+from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message, delete_message, \
+    get_name_surname
 
 app = Flask(__name__)
 
@@ -545,10 +546,11 @@ def added_connections():
     return redirect('added_connections')
 
 
-
 @app.route('/messages', methods=['GET', 'POST'])
 def messages():
-    my_id = 2  # TEMPORARY
+    current_email = session['user_email']
+    my_id = get_id(current_email)
+
     inbox = get_inbox(my_id)
 
     if request.method == 'GET':
@@ -596,12 +598,14 @@ def messages():
 
 @app.route('/send_message/<int:key>', methods=['GET', 'POST'])
 def send_single_message(key):
-    my_id = 2  # TEMPORARY
+    current_email = session['user_email']
+    my_id = get_id(current_email)
 
     if request.method == 'GET':
         if 'user_email' in session:
             print(session['user_email'])
-            return render_template('send_message.html', participant=key)
+            t = get_name_surname(my_id)
+            return render_template('send_message.html', participant=key, name=t[0], surname=t[1])
         else:
             return redirect(url_for('home'))
 
