@@ -662,13 +662,16 @@ def jobs():
         elif 'addJob' in request.form:
             title = request.form['title']
             description = request.form['description']
-            job_add(title, description)
-
+            company_id = 1
+            location_id = 2
+            job_add(title, description, company_id, location_id)
         elif 'editJob' in request.form:
             job_id = request.form['editJob']
             title = request.form['title']
             description = request.form['description']
-            job_edit(job_id, title, description)
+            location = request.form['location']
+            job_edit(job_id, title, description, location)
+
         elif 'deleteJob' in request.form:
             job_id = request.form['deleteJob']
             job_delete(job_id)
