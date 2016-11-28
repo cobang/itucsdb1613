@@ -9,7 +9,7 @@ class Users:
 
     def add_user(self, user):
         self.key += 1
-        user.key = self.key
+        #user.key = self.key
         self.users[self.key] = user
 
     def get_user(self, key):
@@ -20,10 +20,9 @@ class Users:
 
 
 class User:
-    def __init__(self, user_id, user_name, user_surname, user_email=" ", user_password=" "):
+    def __init__(self, user_id, user_type, user_email=" ", user_password=" "):
         self.user_id = user_id
-        self.user_name = user_name
-        self.user_surname = user_surname
+        self.user_type = user_type
         self.user_email = user_email
         self.user_password = user_password
 
@@ -34,13 +33,13 @@ def user_list():
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """SELECT user_id, user_name, user_surname, user_email, user_password FROM users"""
+        sql = """SELECT user_id, user_type, user_email, user_password FROM users"""
 
         c.execute(sql)
 
         for row in c:
-            user_id, user_name, user_surname, user_email, user_password = row
-            user = User(user_id=user_id, user_name=user_name, user_surname=user_surname, user_email=user_email, user_password=user_password)
+            user_id, user_type, user_email, user_password = row
+            user = User(user_id=user_id, user_type=user_type, user_email=user_email, user_password=user_password)
             store.add_user(user=user)
 
         c.close()

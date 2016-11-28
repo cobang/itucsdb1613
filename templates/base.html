@@ -34,121 +34,39 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-                <a class="navbar-brand" href="home">HumanNet</a>
+                <a class="navbar-brand" href="timeline">HumanNet</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     {% block navigationbar %}
-                    <li><a href="home">Home</a></li>
                     <li><a href="timeline">Timeline</a></li>
                     <li><a href="profile">Profile</a></li>
                     <li><a href="connections">Connections</a></li>
                     <li><a href="messages">Messages</a></li>
                     <li><a href="jobs">Jobs</a></li>
-                    <li><a href="about">About</a></li>
                     {% endblock %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Trigger the modal with a button -->
-                    <li><a data-toggle="modal" href="#signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                    <li><a data-toggle="modal" href="#login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li><a data-toggle="modal" href="#logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    <!--  Sign Up Modal -->
-    <div class="modal fade" id="signup">
+
+
+    <!--  Logout Modal -->
+    <div class="modal fade" id="logout">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Sign Up</h4>
+                    <h4 class="modal-title">Logout</h4>
                 </div>
                 <div class="modal-body">
                     <form role="form" action="" method="post" class="registration-form">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
-                                <input class="form-control" id="name" name="name" placeholder="Enter name" type="name" required autofocus>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="surname">Surname</label>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
-                                <input class="form-control" id="surname" name="surname" placeholder="Enter surname" type="surname" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email address</label>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
-                                <input class="form-control" id="email" name="email" placeholder="Enter email" type="email" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-lock fa-fw" aria-hidden="true"></i></span>
-                                <input class="form-control" id="password" name="password" placeholder="Enter password" type="password" required>
-                            </div>
-                        </div>
-                        <button name="signup" value="signup" class="btn btn-primary btn-block" type="submit">Sign Up</button>
-                        <hr>
-                        <div class="social-box">
-                            <div class="btn btn-block btn-social btn-facebook" scope="public_profile,email" onlogin="checkLoginState();">
-                                <i class="fa fa-facebook fa-fw"></i> Sign up with Facebook
-                            </div>
-                            <a class="btn btn-block btn-social btn-google-plus">
-                                <i class="fa fa-google-plus fa-fw"></i> Sign up with Google
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--  Login Modal -->
-    <div class="modal fade" id="login">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Login</h4>
-                </div>
-                <div class="modal-body">
-                    <form role="form" action="" method="post" class="registration-form">
-                        <div class="form-group">
-                            <label for="email">Email address</label>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
-                                <input class="form-control" id="email" name="email" placeholder="Enter email" type="email" required autofocus>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-lock fa-fw" aria-hidden="true"></i></span>
-                                <input class="form-control" id="password" name="password" placeholder="Enter password" type="password" required>
-                            </div>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" value="remember"> Remember me
-                            </label>
-                        </div>
-                        <p class="text-right"><a href="#">Forgot password?</a></p>
-                        <button class="btn btn-primary btn-block" name="login" value="login" type="submit">Login</button>
-                        <hr>
-                        <div class="social-box">
-                            <div class="btn btn-block btn-social btn-facebook" scope="public_profile,email" onlogin="checkLoginState();">
-                                <i class="fa fa-facebook"></i> Login with Facebook
-                            </div>
-                            <a class="btn btn-block btn-social btn-google-plus">
-                                <i class="fa fa-google-plus"></i> Login with Google
-                            </a>
-                        </div>
+                        <p>Are you sure!!!</p>
+                        <button class="btn btn-danger btn-block" name="logout" value="logout" type="submit">Logout</button>
                     </form>
                 </div>
             </div>

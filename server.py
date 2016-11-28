@@ -362,16 +362,18 @@ DEFAULT CHARACTER SET = utf8;"""
 
 @app.route('/', methods=['GET', 'POST'])
 def home_page():
-    if 'user_email' in session:
-        print(session['user_email'])
-    else:
-        return render_template('timeline.html')
-
     if request.method == 'GET':
+        if 'user_email' in session:
+            print(session['user_email'])
+            return redirect(url_for('timeline'))
+        else:
+            return render_template('home.html')
 
-        return render_template('home.html')
     else:
-        signup()
+        if 'login' in request.form:
+            login()
+        elif 'signup' in request.form:
+            signup()
 
     return redirect('home')
 
@@ -379,10 +381,16 @@ def home_page():
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     if request.method == 'GET':
-
-        return render_template('home.html')
+        if 'user_email' in session:
+            print(session['user_email'])
+            return redirect(url_for('timeline'))
+        else:
+            return render_template('home.html')
     else:
-        signup()
+        if 'login' in request.form:
+            login()
+        elif 'signup' in request.form:
+            signup()
 
     return redirect('home')
 
@@ -391,13 +399,15 @@ def home():
 def profile():
     users = user_list()
     if request.method == 'GET':
+        if 'user_email' in session:
+            print(session['user_email'])
+            return render_template('profile.html', users=users)
+        else:
+            return render_template('home.html')
 
-        return render_template('profile.html', users=users)
     else:
-        if 'signup' in request.form:
-            signup()
-        elif 'login' in request.form:
-            login()
+        if 'logout' in request.form:
+            logout()
         elif 'edit_user' in request.form:
             user_id = request.form['edit_user']
             user_name = request.form['name']
@@ -415,7 +425,9 @@ def about():
 
         return render_template('about.html')
     else:
-        if 'signup' in request.form:
+        if 'login' in request.form:
+            login()
+        elif 'signup' in request.form:
             signup()
 
     return redirect('about')
@@ -446,13 +458,20 @@ def connections():
         print(str(e))
     rec_storage = storage.get_recommendations()
     if request.method == 'GET':
-        return render_template('connections.html', recommendations=rec_storage)
+        if 'user_email' in session:
+            print(session['user_email'])
+            return render_template('connections.html', recommendations=rec_storage)
+        else:
+            return redirect(url_for('home'))
+
     else:
         rec_id = int(request.form['following_id'])
         u_id = int(request.form['user_id'])
-        signup()
         key_id = int(request.form['key'])
-        if 'add_Connection' in request.form:
+
+        if 'logout' in request.form:
+            logout()
+        elif 'add_Connection' in request.form:
             dateTime = datetime.datetime.now()
             print("addConnection")
             storage.delete_recommendation(key=key_id)
@@ -482,13 +501,20 @@ def added_connections():
     except Exception as e:
         print(str(e))
     added = added_Con.get_connections()
+
     if request.method == 'GET':
-        return render_template('added_connections.html', connections=added)
+        if 'user_email' in session:
+            print(session['user_email'])
+            return render_template('added_connections.html', connections=added)
+        else:
+            return redirect(url_for('home'))
+
     else:
         rec_id = int(request.form['following_id'])
         u_id = int(request.form['user_id'])
-        signup()
-        if 'remove_Connection' in request.form:
+        if 'logout' in request.form:
+            logout()
+        elif 'remove_Connection' in request.form:
             connection_remove(u_id, rec_id)
             recommendation_add(120, rec_id)
             key_id = int(request.form['key'])
@@ -506,10 +532,17 @@ def messages():
     inbox = get_inbox(my_id)
 
     if request.method == 'GET':
-        chats = inbox.chats
-        return render_template('messages.html', chats=chats)
+        if 'user_email' in session:
+            print(session['user_email'])
+            chats = inbox.chats
+            return render_template('messages.html', chats=chats)
+        else:
+            return redirect(url_for('home'))
+
     else:
-        if 'send' in request.form:
+        if 'logout' in request.form:
+            logout()
+        elif 'send' in request.form:
             participant = int(request.form['send'])
             if participant == 0:
                 participant = int(request.form['username'])
@@ -541,9 +574,16 @@ def send_single_message(key):
     my_id = 2  # TEMPORARY
 
     if request.method == 'GET':
-        return render_template('send_message.html', participant=key)
+        if 'user_email' in session:
+            print(session['user_email'])
+            return render_template('send_message.html', participant=key)
+        else:
+            return redirect(url_for('home'))
+
     else:
-        if 'send' in request.form:
+        if 'logout' in request.form:
+            logout()
+        elif 'send' in request.form:
             # participant = int(request.form['send'])
             content = request.form['message']
             date = datetime.datetime.now()
@@ -557,11 +597,16 @@ def timeline():
     posts = posts_get()
 
     if request.method == 'GET':
-        return render_template('timeline.html', posts=posts)
+        if 'user_email' in session:
+            print(session['user_email'])
+            return render_template('timeline.html', posts=posts)
+        else:
+            return redirect(url_for('home'))
 
     else:
-        signup()
-        if 'share' in request.form:
+        if 'logout' in request.form:
+            logout()
+        elif 'share' in request.form:
             print("share")
             text = request.form['post']
             date = datetime.datetime.now()
@@ -603,10 +648,16 @@ def jobs():
     jobs_archive = job_share()  # "jobs" shows exist jobs
 
     if request.method == 'GET':
-        return render_template('jobs.html', jobs=jobs_archive)
+        if 'user_email' in session:
+            print(session['user_email'])
+            return render_template('jobs.html', jobs=jobs_archive)
+        else:
+            return redirect(url_for('home'))
+
     else:
-        signup()
-        if 'addJob' in request.form:
+        if 'logout' in request.form:
+            logout()
+        elif 'addJob' in request.form:
             title = request.form['title']
             description = request.form['description']
             job_add(title, description)
@@ -623,22 +674,22 @@ def jobs():
     return redirect('jobs')
 
 
-
 def signup():
     if 'signup' in request.form:
         print("Sign Up")
-        user_name = request.form['name']
-        user_surname = request.form['surname']
         user_email = request.form['email']
+        print(user_email)
         user_password = request.form['password']
+        user_type = request.form['type']
+        print(user_type)
 
         try:
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                    passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
-            sql = """INSERT INTO users(user_name, user_surname, user_email, user_password)
-                                   VALUES ('%s', '%s', '%s', '%s' )""" % (
-                user_name, user_surname, user_email, user_password)
+            sql = """INSERT INTO users(user_email, user_password, user_type)
+                                   VALUES ('%s', '%s', '%d' )""" % (
+                user_email, user_password, int(user_type))
 
             c.execute(sql)
 
@@ -659,9 +710,14 @@ def login():
         print(user_password)
         if valid_login(user_email, user_password):
             print('logged in')
-            flash('Successfully logged in')
             session['user_email'] = request.form['email']
-            print(general_id)
+            return redirect(url_for('timeline'))
+
+
+def logout():
+    session.pop('user_email', None)
+    print('logout')
+    return redirect(url_for('home'))
 
 
 def valid_login(user_email, user_password):

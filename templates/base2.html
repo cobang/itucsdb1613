@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    {% block head %}
+    <title>{% block title %}{% endblock %} - HumanNet</title>
+    {% endblock %}
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}" />
+    <!-- Own CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/timeline.css') }}" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/connections.css') }}" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/messages.css') }}" />
+
+</head>
+
+<body data-spy="scroll" data-target=".navbar-collapse">
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+                <a class="navbar-brand" href="home">HumanNet</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    {% block navigationbar %}
+                    <li><a href="home">Home</a></li>
+                    <li><a href="about">About</a></li>
+                    {% endblock %}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Trigger the modal with a button -->
+                    <li><a data-toggle="modal" href="#signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a data-toggle="modal" href="#login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--  Sign Up Modal -->
+    <div class="modal fade" id="signup">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Sign Up</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" action="" method="post" class="registration-form">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="email" name="email" placeholder="Enter email" type="email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-lock fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="password" name="password" placeholder="Enter password" type="password" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sel1">Select User Type:</label>
+                            <select class="form-control" name="type" id="sel1">
+                                <option value="1">Person</option>
+                                <option value="2">Company</option>
+                                <option value="3">University</option>
+                              </select>
+                        </div>
+                        <button name="signup" value="signup" class="btn btn-primary btn-block" type="submit">Sign Up</button>
+                        <hr>
+                        <div class="social-box">
+                            <div class="btn btn-block btn-social btn-facebook" scope="public_profile,email" onlogin="checkLoginState();">
+                                <i class="fa fa-facebook fa-fw"></i> Sign up with Facebook
+                            </div>
+                            <a class="btn btn-block btn-social btn-google-plus">
+                                <i class="fa fa-google-plus fa-fw"></i> Sign up with Google
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  Login Modal -->
+    <div class="modal fade" id="login">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Login</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" action="" method="post" class="registration-form">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="email" name="email" placeholder="Enter email" type="email" required autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-lock fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="password" name="password" placeholder="Enter password" type="password" required>
+                            </div>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="remember"> Remember me
+                            </label>
+                        </div>
+                        <p class="text-right"><a href="#">Forgot password?</a></p>
+                        <button class="btn btn-primary btn-block" name="login" value="login" type="submit">Login</button>
+                        <hr>
+                        <div class="social-box">
+                            <div class="btn btn-block btn-social btn-facebook" scope="public_profile,email" onlogin="checkLoginState();">
+                                <i class="fa fa-facebook"></i> Login with Facebook
+                            </div>
+                            <a class="btn btn-block btn-social btn-google-plus">
+                                <i class="fa fa-google-plus"></i> Login with Google
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENT block -->
+    {% block content %}{% endblock %}
+
+
+    <footer class="footer">
+        <div class="container" id="footer">
+            <p class="text-muted text-center">
+                <span>Copyrigth <i class="fa fa-copyright fa-fw" aria-hidden="true"></i> 2016, HumanNet, All rights reserved.</span>
+            </p>
+        </div>
+    </footer>
+
+
+    <script type="text/javascript" src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script>
+        $(".contentContainer").css("min-height", $(window).height());
+    </script>
+</body>
+
+</html>

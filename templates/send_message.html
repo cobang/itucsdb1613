@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 {% block navigationbar %}
-    <li><a href="{{ url_for('home') }}">Home</a></li>
     <li><a href="{{ url_for('timeline') }}">Timeline</a></li>
     <li><a href="{{ url_for('profile') }}">Profile</a></li>
     <li><a href="{{ url_for('connections') }}">Connections</a></li>
     <li class="active"><a href="{{ url_for('messages') }}">Messages</a></li>
     <li><a href="{{ url_for('jobs') }}">Jobs</a></li>
-    <li><a href="{{ url_for('about') }}">About</a></li>
 {% endblock %}
 {% block title %}
 Send Message
