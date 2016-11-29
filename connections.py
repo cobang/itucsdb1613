@@ -98,6 +98,7 @@ class Connection:
 
     def get_email(self):
         try:
+            user_email=""
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                    passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()

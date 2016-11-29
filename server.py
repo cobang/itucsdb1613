@@ -487,8 +487,6 @@ def connections():
             conDetail_add(u_id)
         elif 'conList' in request.form:
             print("conList")
-        elif 'add_to_favorites' in request.form:
-            add_to_favorites(u_id, rec_id)
     return redirect('connections')
 
 
@@ -551,7 +549,14 @@ def added_connections(key):
             add_to_favorites(u_id, rec_id)
         elif 'remove_from_favorites':
             remove_from_favorites(u_id, rec_id)
-    return redirect('added_connections')
+    if key == 0:
+        return redirect(url_for('added_connections', key = '0'))
+    elif key == 1:
+        return redirect(url_for('added_connections', key = '1'))
+    elif key == 2:
+        return redirect(url_for('added_connections', key = '2'))
+    elif key == 3:
+        return redirect(url_for('added_connections', key = '3'))
 
 
 @app.route('/messages', methods=['GET', 'POST'])
