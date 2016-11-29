@@ -300,7 +300,7 @@ DEFAULT CHARACTER SET = utf8;"""
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`university_detail` ;
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`university_detail` (
-  `university_id` INT(11) NOT NULL,
+  `university_id` INT(11) NOT NULL AUTO_INCREMENT,
   `university_name` VARCHAR(45) NULL DEFAULT NULL,
   `university_address` VARCHAR(45) NULL DEFAULT NULL,
   `user_id` INT(11) NOT NULL,
@@ -428,6 +428,7 @@ def about():
             signup()
 
     return redirect('about')
+
 
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
@@ -787,7 +788,7 @@ def signup():
                 for row in c:
                     user_id = row[0]
 
-                sql = """INSERT INTO company_detail(company_name) VALUES ('%s', '%d')""" % (
+                sql = """INSERT INTO company_detail(company_name, user_id) VALUES ('%s', '%d')""" % (
                     user_name, int(user_id))
 
                 c.execute(sql)
@@ -801,9 +802,9 @@ def signup():
                 for row in c:
                     user_id = row[0]
                 print('insert')
-                sql = """INSERT INTO university_detail(university_name) VALUES ('%s', '%d')""" % (
+                sql = """INSERT INTO university_detail(university_name, user_id) VALUES ('%s', '%d')""" % (
                     user_name, int(user_id))
-
+                print(sql)
                 c.execute(sql)
 
             conn.commit()

@@ -141,6 +141,7 @@ def user_edit(user_id, user_name="", user_surname="", user_phone="", user_addres
                 print('update university detail')
                 sql = """UPDATE university_detail SET university_name = '%s', university_address = '%s' WHERE user_id = %d """ % (
                     user_name, user_address, int(user_id))
+                print(sql)
                 c.execute(sql)
 
         conn.commit()
