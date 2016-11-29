@@ -21,28 +21,26 @@ class Users:
 
 class User:
     def __init__(self, user_id="", user_type="", user_email="", user_password="", user_name="", user_surname="",
-                 user_birth="", user_phone="", user_address=""):
+                 user_phone="", user_address=""):
         self.user_id = user_id
         self.user_type = user_type
         self.user_email = user_email
         self.user_password = user_password
         self.user_name = user_name
         self.user_surname = user_surname
-        self.user_birth = user_birth
         self.user_phone = user_phone
         self.user_address = user_address
 
         if user_type == 1:
-            self.add_user_detail(user_name, user_surname, user_birth, user_phone, user_address)
+            self.add_user_detail(user_name, user_surname, user_phone, user_address)
         elif user_type == 2:
             self.add_company_detail(user_name, user_phone, user_address)
         elif user_type == 3:
             self.add_university_detail(user_name, user_address)
 
-    def add_user_detail(self, user_name="", user_surname="", user_birth="", user_phone="", user_address=""):
+    def add_user_detail(self, user_name="", user_surname="", user_phone="", user_address=""):
         self.user_name = user_name
         self.user_surname = user_surname
-        self.user_birth = user_birth
         self.user_phone = user_phone
         self.user_address = user_address
         print('add user detail')
@@ -74,15 +72,15 @@ def user_show(user_id):
             user_id, user_type, user_email, user_password = row
             user = User(user_id=user_id, user_type=user_type, user_email=user_email, user_password=user_password)
             if user_type == 1:
-                sql = """SELECT user_name, user_surname, date_of_birth, phone, address
+                sql = """SELECT user_name, user_surname, phone, address
                           FROM user_detail WHERE  user_id = %d """ % (
                     int(user_id))
                 print(sql)
 
                 c.execute(sql)
                 for row_user in c:
-                    user_name, user_surname, date_of_birth, phone, address = row_user
-                    user.add_user_detail(user_name, user_surname, date_of_birth, phone, address)
+                    user_name, user_surname, phone, address = row_user
+                    user.add_user_detail(user_name, user_surname, phone, address)
 
             elif user_type == 2:
                 sql = """SELECT company_name, company_phone, company_address
@@ -106,7 +104,6 @@ def user_show(user_id):
                     university_name, university_address = row_user
                     user.add_user_detail(university_name, university_address)
 
-
         c.close()
         conn.close()
 
@@ -116,15 +113,36 @@ def user_show(user_id):
     return user
 
 
-def user_edit(user_id, user_name, user_surname):
+def user_edit(user_id, user_name="", user_surname="", user_phone="", user_address=""):
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """UPDATE users SET user_name = '%s', user_surname = '%s'  WHERE user_id = %d """ % (
-            user_name, user_surname, int(user_id))
+        sql = """SELECT user_type FROM users WHERE  user_id = %d """ % (
+            int(user_id))
 
         c.execute(sql)
+        for row in c:
+            user_type = row[0]
+            if user_type == 1:
+                f = '%Y-%m-%d'
+                print('update user detail')
+                sql = """UPDATE user_detail SET user_name = '%s', user_surname = '%s', phone = '%s', address = '%s' WHERE user_id = %d """ % (
+                    user_name, user_surname, user_phone, user_address, int(user_id))
+                c.execute(sql)
+
+            elif user_type == 2:
+                print('update company detail')
+                sql = """UPDATE company_detail SET company_name = '%s', company_phone = '%s', company_address = '%s' WHERE user_id = %d """ % (
+                    user_name, user_phone, user_address, int(user_id))
+                c.execute(sql)
+
+            elif user_type == 3:
+                print('update university detail')
+                sql = """UPDATE university_detail SET university_name = '%s', university_address = '%s' WHERE user_id = %d """ % (
+                    user_name, user_address, int(user_id))
+                c.execute(sql)
+
         conn.commit()
         c.close()
         conn.close()
@@ -138,8 +156,25 @@ def user_delete(user_id):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """DELETE FROM users WHERE user_id = (%d) """ % (int(user_id))
+        sql = """DELETE FROM recommended WHERE following_id = (%d) """ % int(user_id)
+        print(sql)
         c.execute(sql)
+        sql = """DELETE FROM connections_detail WHERE user_id = (%d) """ % int(user_id)
+        print(sql)
+        c.execute(sql)
+        sql = """DELETE FROM user_detail WHERE user_id = (%d) """ % (int(user_id))
+        print(sql)
+        c.execute(sql)
+        sql = """DELETE FROM company_detail WHERE user_id = (%d) """ % (int(user_id))
+        print(sql)
+        c.execute(sql)
+        sql = """DELETE FROM university_detail WHERE user_id = (%d) """ % (int(user_id))
+        print(sql)
+        c.execute(sql)
+        sql = """DELETE FROM users WHERE user_id = (%d) """ % int(user_id)
+        print(sql)
+        c.execute(sql)
+
         conn.commit()
         c.close()
         conn.close()

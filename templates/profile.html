@@ -29,10 +29,6 @@
                             <table class="table table-user-information">
                                 <tbody>
                                     <tr>
-                                        <td>Date of Birth</td>
-                                        <td>{{ user.birth }}</td>
-                                    </tr>
-                                    <tr>
                                         <td>Address</td>
                                         <td>{{ user.user_address }}</td>
                                     </tr>
@@ -55,7 +51,15 @@
                     <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
                     <span class="pull-right">
                         <form action="" method="post">
-                            <a href="#edit{{ user.user_id }}" data-original-title="Edit this user" data-toggle="modal" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                            <span data-toggle="modal" data-target="#edit_user{{ user.user_id }}" >
+                                <a data-toggle="tooltip" data-placement="top" title="Edit User!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                            </span>
+                            <span data-toggle="modal" data-target="#edit_company{{ user.user_id }}" >
+                                <a data-toggle="tooltip" data-placement="top" title="Edit Company!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                            </span>
+                            <span data-toggle="modal" data-target="#edit_university{{ user.user_id }}" >
+                                <a data-toggle="tooltip" data-placement="top" title="Edit University!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                            </span>
                             <button name="delete_user" value="{{ user.user_id }}"class="btn btn-sm btn-danger" type="submit"><i class="glyphicon glyphicon-trash"></i></button>
                         </form>
                     </span>
@@ -64,8 +68,8 @@
             </div>
         </div>
     </div>
-    <!-- Edit Modal -->
-    <div class="modal fade" id="edit{{ user.user_id }}">
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="edit_user{{ user.user_id }}">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -86,6 +90,87 @@
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
                                 <input class="form-control" id="surname" name="surname" placeholder="{{ user.user_surname }}" type="surname" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="phone" name="phone" placeholder="{{ user.user_phone }}" type="phone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="address" name="address" placeholder="{{ user.user_address }}" type="address">
+                            </div>
+                        </div>
+                        <button name="edit_user" value="{{ user.user_id }}" class="btn btn-primary btn-block" type="submit">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Company Modal -->
+    <div class="modal fade" id="edit_company{{ user.user_id }}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" action="" method="post" class="registration-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="name" name="name" placeholder="{{ user.user_name }}" type="name" required autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="phone" name="phone" placeholder="{{ user.user_phone }}" type="phone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="address" name="address" placeholder="{{ user.user_address }}" type="address">
+                            </div>
+                        </div>
+                        <button name="edit_user" value="{{ user.user_id }}" class="btn btn-primary btn-block" type="submit">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit University Modal -->
+    <div class="modal fade" id="edit_university{{ user.user_id }}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Edit</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" action="" method="post" class="registration-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="name" name="name" placeholder="{{ user.user_name }}" type="name" required autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+                                <input class="form-control" id="address" name="address" placeholder="{{ user.user_address }}" type="address">
                             </div>
                         </div>
                         <button name="edit_user" value="{{ user.user_id }}" class="btn btn-primary btn-block" type="submit">Update</button>

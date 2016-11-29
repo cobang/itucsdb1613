@@ -323,7 +323,6 @@ CREATE TABLE IF NOT EXISTS `cl48-humannet`.`user_detail` (
   `user_id` INT(11) NOT NULL,
   `user_name` VARCHAR(20) NOT NULL,
   `user_surname` VARCHAR(20) NOT NULL,
-  `date_of_birth` DATE NULL DEFAULT NULL,
   `phone` VARCHAR(15) NULL DEFAULT NULL,
   `address` VARCHAR(45) NULL DEFAULT NULL,
   INDEX `fk_user_detail_users1_idx` (`user_id` ASC),
@@ -406,10 +405,15 @@ def profile_id(user_id):
             user_id = request.form['edit_user']
             user_name = request.form['name']
             user_surname = request.form['surname']
-            user_edit(user_id, user_name, user_surname)
+            user_phone = request.form['phone']
+            user_address = request.form['address']
+            user_edit(user_id, user_name, user_surname, user_phone, user_address)
         elif 'delete_user' in request.form:
             user_id = request.form['delete_user']
             user_delete(user_id=user_id)
+            session.pop('user_email', None)
+            print('logout')
+            return redirect(url_for('../home'))
     return redirect('../profile')
 
 
