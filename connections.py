@@ -1,4 +1,5 @@
 import pymysql
+import datetime
 from dbconnection import MySQL
 
 class Connection:
@@ -93,6 +94,21 @@ class Connections:
     def get_connections(self):
         return self.connections.items()
 
+    def add_forhtml(self,id):
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        sql = """SELECT following_id, user_id FROM connections WHERE user_id = (%d)""" % (int(id))
+        c.execute(sql)
+        for row in c:
+            following_id, user_id =row
+            connection_new = Connection(id, following_id=user_id, fav=0, date=0)
+            self.add_connection(connection_new)
+        c.close()
+        conn.close()
+        return self.connections.items()
+
 
 class Recommendations:
     def __init__(self):
@@ -124,7 +140,6 @@ class Recommendations:
 
     def get_recommendations(self):
         return self.recommendations.items()
-
 
 def connection_add(u_id, fol_id, time):
     try:
@@ -295,3 +310,23 @@ def conDetail_decrease(u_id):
             conn.close()
         except Exception as e:
             print(str(e))
+
+
+def create_recfor_new_user(u_id):
+
+    conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                           passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+    f = '%Y-%m-%d %H:%M:%S'
+    c = conn.cursor()
+
+    sql = """SELECT user_type, user_id FROM users WHERE user_id != (%d) AND (SELECT COUNT(*) FROM recommended
+                    WHERE recommended.user_id = (%d) AND recommended.following_id=users.user_id) = 0
+                    AND (SELECT COUNT(*) FROM connections
+                    WHERE connections.user_id = (%d) AND connections.following_id=users.user_id) = 0""" % (int(u_id), int(u_id),int(u_id) )
+    c.execute(sql)
+    for row in c:
+        user_type, user_id = row
+        print()
+        recommendation_add(u_id, user_id)
+    c.close()
+    conn.close()

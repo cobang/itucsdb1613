@@ -27,9 +27,9 @@
                 <br>
                 <div class="list-group">
                     <a href="added_connections" class="list-group-item" style="background-color: #be809b"><b>Go to Connections</b></a>
-                    <a href="#" class="list-group-item">People</a>
-                    <a href="#" class="list-group-item">Companies</a>
-                    <a href="#" class="list-group-item">Universities</a>
+                    <a href="added_connections/1" class="list-group-item">People</a>
+                    <a href="added_connections/2" class="list-group-item">Companies</a>
+                    <a href="added_connections/3" class="list-group-item">Universities</a>
                 </div>
             </div>
             <div class="col-sm-8">
@@ -56,7 +56,8 @@
                                         <p>{{ connection.get_email() }}</p>
                                         <br>
                                         <div class="media-body">
-                                            <a href="#" class="btn btn-xs" data-toggle="modal" data-target="#list" style="background-color: #9ba5cd; color: #0f0f0f"><span>{{ connection.get_num_of_connections() }} connections</span></a>
+                                            <input type="submit" name="conList" value=" {{ connection.get_num_of_connections() }} connections "
+                                                   class="btn btn-xs" data-toggle="modal" data-target="#list" style="background-color: #9ba5cd; color: #0f0f0f"/>
                                             &nbsp;<div class="modal fade" id="list" role="dialog">
                                             <div class="modal-dialog">
                                                 <!-- Modal content-->
@@ -66,7 +67,7 @@
                                                         <h4 class="modal-title">Connections List</h4>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <p>Connections of a profile will be listed here.</p>
+
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
