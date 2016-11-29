@@ -2,7 +2,7 @@
 {% block navigationbar %}
     <li><a href="/timeline">Timeline</a></li>
     <li><a href="/profile">Profile</a></li>
-    <li class="/active"><a href="connections">Connections</a></li>
+    <li class="active"><a href="/connections">Connections</a></li>
     <li><a href="/messages">Messages</a></li>
     <li><a href="/jobs">Jobs</a></li>
 {% endblock %}
@@ -75,7 +75,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                            <a href="profile" class="btn btn-xs" style="background-color: #b8e2d9; color: #0f0f0f"><span>Go to profile</span></a>
+                                            <a href="profile/{{connection.following}}" class="btn btn-xs" style="background-color: #b8e2d9; color: #0f0f0f"><span>Go to profile</span></a>
                                             <br><br>
                                             <p>
                                                 <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Message</a>
