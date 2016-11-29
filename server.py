@@ -7,9 +7,9 @@ from flask import Flask
 from flask import render_template, request, redirect, url_for, flash, session
 from connections import Connections, Recommendations, Connection, connection_add, connection_remove, add_to_favorites, \
     recommendation_add, recommendation_remove, num, remove_from_favorites, conDetail_add, conDetail_decrease, create_recfor_new_user
-from posts import posts_get, post_share, post_delete, post_update, post_comment_add
+from posts import posts_get, post_share, post_delete, post_update, post_comment_add, get_name
 from jobs import job_add, job_edit, job_delete, job_share
-from users import user_list, user_edit, user_delete
+from users import user_edit, user_delete, user_show
 from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message, delete_message, \
     get_name_surname
 
@@ -38,7 +38,6 @@ def connection():
 -- Table `cl48-humannet`.`users`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`users` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`users` (
   `user_id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_email` VARCHAR(25) NOT NULL,
@@ -55,7 +54,6 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `cl48-humannet`.`posts`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`posts` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`posts` (
   `post_id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
@@ -77,7 +75,6 @@ DEFAULT CHARACTER SET = utf8;"""
 -- Table `cl48-humannet`.`comment`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`comment` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`comment` (
   `comment_id` INT(11) NOT NULL AUTO_INCREMENT,
   `comment_text` VARCHAR(140) NOT NULL,
@@ -106,7 +103,6 @@ DEFAULT CHARACTER SET = utf8;"""
 -- Table `cl48-humannet`.`company_detail`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`company_detail` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`company_detail` (
   `company_id` INT(11) NOT NULL,
   `user_id` INT(11) NOT NULL,
@@ -129,7 +125,6 @@ DEFAULT CHARACTER SET = utf8;"""
 -- Table `cl48-humannet`.`connections`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`connections` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`connections` (
   `user_id` INT(11) NOT NULL,
   `following_id` INT(11) NOT NULL,
@@ -152,7 +147,6 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `cl48-humannet`.`connections_detail`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`connections_detail` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`connections_detail` (
   `user_id` INT(11) NOT NULL,
   `num_of_connections` INT(11) NOT NULL DEFAULT '0',
@@ -164,7 +158,6 @@ CREATE TABLE IF NOT EXISTS `cl48-humannet`.`connections_detail` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 DEFAULT CHARACTER SET = utf8;
-
         """
 
         c.execute(sql)
@@ -174,7 +167,6 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `cl48-humannet`.`messages`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`messages` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`messages` (
   `message_id` INT(11) NOT NULL AUTO_INCREMENT,
   `content` VARCHAR(140) NOT NULL,
@@ -190,7 +182,6 @@ DEFAULT CHARACTER SET = utf8;"""
 -- Table `cl48-humannet`.`conversations`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`conversations` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`conversations` (
   `in_out` INT(11) NOT NULL,
   `message_id` INT(11) NOT NULL,
@@ -210,7 +201,6 @@ CREATE TABLE IF NOT EXISTS `cl48-humannet`.`conversations` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 DEFAULT CHARACTER SET = utf8;
-
 """
         c.execute(sql)
 
@@ -219,9 +209,8 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `cl48-humannet`.`location`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`location` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`location` (
-  `location_id` INT(11) NOT NULL,
+  `location_id` INT(11) NOT NULL AUTO_INCREMENT,
   `location_state` VARCHAR(45) NOT NULL,
   `location_country` VARCHAR(45) NOT NULL,
   `location_zipcode` VARCHAR(45) NULL DEFAULT NULL,
@@ -242,7 +231,6 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `cl48-humannet`.`jobs`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`jobs` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`jobs` (
   `job_id` INT(11) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(30) NOT NULL,
@@ -266,7 +254,6 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `cl48-humannet`.`likes`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`likes` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`likes` (
   `user_id` INT(11) NOT NULL,
   `post_id` INT(11) NOT NULL,
@@ -292,7 +279,6 @@ DEFAULT CHARACTER SET = utf8;"""
 -- Table `cl48-humannet`.`recommended`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`recommended` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`recommended` (
   `following_id` INT(11) NOT NULL,
   `user_id` INT(11) NOT NULL,
@@ -312,7 +298,6 @@ DEFAULT CHARACTER SET = utf8;"""
 -- Table `cl48-humannet`.`university_detail`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`university_detail` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`university_detail` (
   `university_id` INT(11) NOT NULL,
   `university_name` VARCHAR(45) NULL DEFAULT NULL,
@@ -334,7 +319,6 @@ DEFAULT CHARACTER SET = utf8;"""
 -- Table `cl48-humannet`.`user_detail`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`user_detail` ;
-
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`user_detail` (
   `user_id` INT(11) NOT NULL,
   `user_name` VARCHAR(20) NOT NULL,
@@ -398,13 +382,22 @@ def home():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
+    if 'user_email' in session:
+        user_id = get_id(session["user_email"])
+        return redirect(url_for('profile_id', user_id=user_id))
+    else:
+        return redirect('../home')
+
+
+@app.route('/profile/<user_id>', methods=['GET', 'POST'])
+def profile_id(user_id):
     if request.method == 'GET':
         if 'user_email' in session:
-            users = user_list()
+            user = user_show(user_id)
             print(session['user_email'])
-            return render_template('profile.html', users=users)
+            return render_template('profile.html', user_id=user_id, user=user)
         else:
-            return render_template('home.html')
+            return redirect('../home')
 
     else:
         if 'logout' in request.form:
@@ -417,7 +410,7 @@ def profile():
         elif 'delete_user' in request.form:
             user_id = request.form['delete_user']
             user_delete(user_id=user_id)
-    return redirect('profile')
+    return redirect('../profile')
 
 
 @app.route('/about', methods=['GET', 'POST'])
@@ -432,7 +425,6 @@ def about():
             signup()
 
     return redirect('about')
-
 
 @app.route('/connections', methods=['GET', 'POST'])
 def connections():
@@ -510,14 +502,21 @@ def added_connections(key):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """SELECT * FROM connections WHERE user_id = (%d) AND (SELECT COUNT(*) FROM users WHERE user_type = (%d)
-                        AND connections.following_id=users.user_id)>0""" % (int(current_user_id), int(key))
-        c.execute(sql)
-
-        for row in c:
-            u_id, fol_id, fav, date = row
-            connection_new = Connection(current_user_id, following_id=fol_id, fav=fav, date=date)
-            added_Con.add_connection(connection=connection_new)
+        if key!=0:
+            sql = """SELECT * FROM connections WHERE user_id = (%d) AND (SELECT COUNT(*) FROM users WHERE user_type = (%d)
+                            AND connections.following_id=users.user_id)>0""" % (int(current_user_id), int(key))
+            c.execute(sql)
+            for row in c:
+                u_id, fol_id, fav, date = row
+                connection_new = Connection(current_user_id, following_id=fol_id, fav=fav, date=date)
+                added_Con.add_connection(connection=connection_new)
+        else:
+            sql = """SELECT * FROM connections WHERE user_id = (%d) """ % (int(current_user_id))
+            c.execute(sql)
+            for row in c:
+                u_id, fol_id, fav, date = row
+                connection_new = Connection(current_user_id, following_id=fol_id, fav=fav, date=date)
+                added_Con.add_connection(connection=connection_new)
         c.close()
         conn.close()
     except Exception as e:
@@ -570,7 +569,7 @@ def messages():
         if 'logout' in request.form:
             logout()
         elif 'send' in request.form:
-            participant = int(request.form['send'])
+            participant = int(request.form['user'])
             if participant == 0:
                 participant = int(request.form['username'])
             content = request.form['message']
@@ -628,26 +627,26 @@ def send_single_message(key):
 
 @app.route('/timeline', methods=['GET', 'POST'])
 def timeline():
-    posts = posts_get()
     if request.method == 'GET':
         if 'user_email' in session:
-            print(session['user_email'])
             current_email = session['user_email']
-            print( get_id(current_email))
             current_user_id = get_id(current_email)
-            return render_template('timeline.html', posts=posts)
+            posts = posts_get(current_user_id)
+            name = get_name(current_user_id)
+            return render_template('timeline.html', posts=posts, id=current_user_id, name=name )
         else:
             return redirect(url_for('home'))
 
     else:
+        current_email = session['user_email']
+        current_user_id = get_id(current_email)
         if 'logout' in request.form:
             logout()
         elif 'share' in request.form:
             print("share")
             text = request.form['post']
             date = datetime.datetime.now()
-            user_id = 6  # degistirilecek
-            post_share(user_id=user_id, text=text, date=date)
+            post_share(user_id=current_user_id, text=text, date=date)
 
         if 'delete' in request.form:
             print("delete")
@@ -660,21 +659,20 @@ def timeline():
             print("like")
             print(request.form['like'])
             post_id = request.form['like']
-            post_update(post_id, "LIKE_NUM")
+            post_update(post_id, "LIKE_NUM", current_user_id)
 
         if 'dislike' in request.form:
             print("dislike")
             print(request.form['dislike'])
             post_id = request.form['dislike']
-            post_update(post_id, "DISLIKE_NUM")
+            post_update(post_id, "DISLIKE_NUM", current_user_id)
 
         if 'comment' in request.form:
             print("comment")
             comment_text = request.form['comment_text']
             post_id = request.form['comment']
             date = datetime.datetime.now()
-            user_id = 6  # degisecek
-            post_comment_add(comment_text, post_id, date, user_id)
+            post_comment_add(comment_text, post_id, date, current_user_id)
 
     return redirect('timeline')
 
@@ -697,8 +695,8 @@ def jobs():
             title = request.form['title']
             description = request.form['description']
             company_id = 1
-            location_id = 2
-            job_add(title, description, company_id, location_id)
+            location = request.form['location']
+            job_add(title, description, company_id, location)
         elif 'editJob' in request.form:
             job_id = request.form['editJob']
             title = request.form['title']
@@ -716,6 +714,7 @@ def jobs():
 def signup():
     if 'signup' in request.form:
         print("Sign Up")
+        user_name = request.form['name']
         user_email = request.form['email']
         print(user_email)
         user_password = request.form['password']
@@ -729,8 +728,51 @@ def signup():
             sql = """INSERT INTO users(user_email, user_password, user_type)
                                    VALUES ('%s', '%s', '%d' )""" % (
                 user_email, user_password, int(user_type))
-
             c.execute(sql)
+            print(sql)
+            print(user_name)
+            if user_type == '1':
+                print('add user detail')
+                print(user_email)
+                sql = """SELECT user_id FROM users WHERE  user_email = '%s' """ % (
+                    user_email)
+                c.execute(sql)
+                for row in c:
+                    user_id = row[0]
+
+                c.execute(sql)
+                sql = """INSERT INTO user_detail(user_name,user_id) VALUES ('%s', '%d')""" % (
+                    user_name, int(user_id))
+                c.execute(sql)
+                print(sql)
+
+            elif user_type == '2':
+                print('add company detail')
+                sql = """SELECT user_id FROM users WHERE  user_email = '%s' """ % (
+                    user_email)
+                c.execute(sql)
+                print(sql)
+                for row in c:
+                    user_id = row[0]
+
+                sql = """INSERT INTO company_detail(company_name) VALUES ('%s', '%d')""" % (
+                    user_name, int(user_id))
+
+                c.execute(sql)
+
+            elif user_type == '3':
+                print('add university detail')
+                print(user_email)
+                sql = """SELECT user_id FROM users WHERE  user_email = '%s' """ % (
+                    user_email)
+                c.execute(sql)
+                for row in c:
+                    user_id = row[0]
+                print('insert')
+                sql = """INSERT INTO university_detail(university_name) VALUES ('%s', '%d')""" % (
+                    user_name, int(user_id))
+
+                c.execute(sql)
 
             conn.commit()
             c.close()
@@ -784,7 +826,6 @@ def get_id(user_email):
         sql = """select user_id from users where user_email = '%s'""" % user_email
 
         c.execute(sql)
-        conn.commit()
 
         for row in c:
             user_id = row[0]
@@ -792,7 +833,6 @@ def get_id(user_email):
         c.close()
         conn.close()
 
-        print(user_id)
         return user_id
     except Exception as e:
         print(str(e))

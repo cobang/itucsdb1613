@@ -312,6 +312,7 @@ def conDetail_decrease(u_id):
             print(str(e))
 
 
+
 def create_recfor_new_user(u_id):
 
     conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
