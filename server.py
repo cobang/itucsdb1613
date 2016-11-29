@@ -412,9 +412,7 @@ def profile_id(user_id):
         elif 'delete_user' in request.form:
             user_id = request.form['delete_user']
             user_delete(user_id=user_id)
-            session.pop('user_email', None)
-            print('logout')
-            return redirect(url_for('../home'))
+            logout()
     return redirect('../profile')
 
 
