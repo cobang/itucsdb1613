@@ -28,7 +28,7 @@ Timeline
 
                         <div class="timeline-label">
 
-                            <h2><a href="#">My Name</a> <span>DATE</span></h2>
+                            <h2><strong><a href="profile/{{ id }}">{{ name }}</a></strong></h2>
 
                             <p>You can share some text:</p><br>
                             <form action="" method="post">
@@ -64,7 +64,7 @@ Timeline
 
                         <div class="timeline-label">
 
-                            <h2><a href="#">{{ post.user_name }}</a> <span> {{ post.date }}</span>
+                            <h2><strong><a href="profile/{{post.user}}">{{ post.user_name }}</a></strong> <span> {{ post.date }}</span>
                             <div class="btn-group btn-group-xs pull-right">
                                 <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown">
                                   <span class="glyphicon glyphicon-option-vertical"></span><span class="caret"></span>
@@ -104,7 +104,7 @@ Timeline
                                                 <div class="modal-body">
                                                 <p>The list of those who likes this post.</p>
                                                     {% for key, user in  post.likes %}
-                                                        <p>{{ key }}- {{ user.user_id }} {{ user.user_name }}</p>
+                                                        <p>{{ key }}- <a href="profile/{{ key }}" >{{ user.user_name }}</a></p>
                                                     {% endfor %}
                                                 </div>
                                                 <div class="modal-footer">
@@ -142,7 +142,7 @@ Timeline
                                                                 <div class="col-sm-5">
                                                                     <div class="panel panel-default">
                                                                         <div class="panel-heading">
-                                                                            <strong>{{ comment.user_name}} {{comment.user_surname}}</strong> <span class="text-muted">{{ comment.comment_date }}</span>
+                                                                            <strong><a href="profile/{{ comment.user_id }}" >{{ comment.user_name}} {{comment.user_surname}}</a></strong> <span class="text-muted">{{ comment.comment_date }}</span>
                                                                         </div>
                                                                         <div class="panel-body">
                                                                             {{ comment.comment_text }}

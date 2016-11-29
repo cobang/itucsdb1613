@@ -120,6 +120,14 @@ def post_delete(post_id):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
+        sql = """DELETE FROM comment WHERE post_id = (%d) """ % (int(post_id))
+        print(sql)
+        c.execute(sql)
+
+        sql = """DELETE FROM likes WHERE post_id = (%d) """ % (int(post_id))
+        print(sql)
+        c.execute(sql)
+
         sql = """DELETE FROM posts WHERE POST_ID = (%d) """ % (int(post_id))
         print(sql)
         c.execute(sql)
