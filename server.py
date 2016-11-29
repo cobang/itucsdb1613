@@ -629,26 +629,25 @@ def send_single_message(key):
 
 @app.route('/timeline', methods=['GET', 'POST'])
 def timeline():
-    posts = posts_get()
     if request.method == 'GET':
         if 'user_email' in session:
-            print(session['user_email'])
             current_email = session['user_email']
-            print(get_id(current_email))
             current_user_id = get_id(current_email)
+            posts = posts_get(current_user_id)
             return render_template('timeline.html', posts=posts)
         else:
             return redirect(url_for('home'))
 
     else:
+        current_email = session['user_email']
+        current_user_id = get_id(current_email)
         if 'logout' in request.form:
             logout()
         elif 'share' in request.form:
             print("share")
             text = request.form['post']
             date = datetime.datetime.now()
-            user_id = 6  # degistirilecek
-            post_share(user_id=user_id, text=text, date=date)
+            post_share(user_id=current_user_id, text=text, date=date)
 
         if 'delete' in request.form:
             print("delete")
@@ -661,21 +660,20 @@ def timeline():
             print("like")
             print(request.form['like'])
             post_id = request.form['like']
-            post_update(post_id, "LIKE_NUM")
+            post_update(post_id, "LIKE_NUM", current_user_id)
 
         if 'dislike' in request.form:
             print("dislike")
             print(request.form['dislike'])
             post_id = request.form['dislike']
-            post_update(post_id, "DISLIKE_NUM")
+            post_update(post_id, "DISLIKE_NUM", current_user_id)
 
         if 'comment' in request.form:
             print("comment")
             comment_text = request.form['comment_text']
             post_id = request.form['comment']
             date = datetime.datetime.now()
-            user_id = 6  # degisecek
-            post_comment_add(comment_text, post_id, date, user_id)
+            post_comment_add(comment_text, post_id, date, current_user_id)
 
     return redirect('timeline')
 
@@ -822,7 +820,6 @@ def get_id(user_email):
         sql = """select user_id from users where user_email = '%s'""" % user_email
 
         c.execute(sql)
-        conn.commit()
 
         for row in c:
             user_id = row[0]
@@ -830,7 +827,6 @@ def get_id(user_email):
         c.close()
         conn.close()
 
-        print(user_id)
         return user_id
     except Exception as e:
         print(str(e))
