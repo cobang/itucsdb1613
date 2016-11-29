@@ -91,7 +91,7 @@ def user_show(user_id):
                 c.execute(sql)
                 for row_user in c:
                     company_name, company_phone, company_address = row_user
-                    user.add_company_detail(company_name, company_phone, company_address)
+                    user.add_company_detail(user_name=company_name, user_phone=company_phone, user_address=company_address)
 
             elif user_type == 3:
                 sql = """SELECT university_name, university_address
@@ -102,7 +102,7 @@ def user_show(user_id):
                 c.execute(sql)
                 for row_user in c:
                     university_name, university_address = row_user
-                    user.add_user_detail(university_name, university_address)
+                    user.add_user_detail(user_name=university_name, user_address=university_address)
 
         c.close()
         conn.close()

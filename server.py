@@ -408,7 +408,22 @@ def profile_id(user_id):
             user_surname = request.form['surname']
             user_phone = request.form['phone']
             user_address = request.form['address']
+            print(user_name)
+            print(user_surname)
+            print(user_phone)
+            print(user_address)
             user_edit(user_id, user_name, user_surname, user_phone, user_address)
+        elif 'edit_company' in request.form:
+            user_id = request.form['edit_company']
+            user_name = request.form['name']
+            user_phone = request.form['phone']
+            user_address = request.form['address']
+            user_edit(user_id=user_id, user_name=user_name, user_phone=user_phone, user_address=user_address)
+        elif 'edit_university' in request.form:
+            user_id = request.form['edit_university']
+            user_name = request.form['name']
+            user_address = request.form['address']
+            user_edit(user_id=user_id, user_name=user_name, user_address=user_address)
         elif 'delete_user' in request.form:
             user_id = request.form['delete_user']
             user_delete(user_id=user_id)
