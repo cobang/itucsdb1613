@@ -9,7 +9,6 @@ class Jobs:
 
     def add_job(self, job):
         self.key += 1
-        job.key = self.key
         self.jobs[self.key] = job
 
     def get_job(self, key):
@@ -43,6 +42,7 @@ class Job:
         except Exception as e:
             print(str(e))
 
+
         return location_state
 
 
@@ -71,27 +71,24 @@ def job_share():
         return archive.get_jobs()
 
 
-def job_add(title, description, company_id, location_id):
+def job_add(title, description, company_id, location):
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        '''sql = """INSERT INTO location(location_state, location_country, location_zipcode, user_id)
-                         VALUES ('%s', '%s','%s','%d') """ % (location, 'Turkey', '12345', int(1))
-        print('hey')
+        sql = """INSERT INTO location(location_state, location_country, location_zipcode, user_id)
+                         VALUES ('%s', '%s','%s','%d') """ % (location, 'Turkey', '12345', int(3))
         c.execute(sql)
         conn.commit()
         sql = """SELECT location_id,location_state FROM location WHERE location_state= ('%s') """ % location
         c.execute(sql)
         for row in c:
             location_id, location_state = row
+        c = conn.cursor()
 
-        c = conn.cursor() '''
         sql = """INSERT INTO jobs(TITLE, DESCRIPTION,COMPANY_ID, LOCATION_ID)
-                               VALUES ('%s', '%s' , '%d', '%d' )""" % (title, description, int(company_id),
-                                                                       int(location_id))
+                               VALUES ('%s', '%s' , '%d', '%d' )""" % (title, description, int(company_id), int(location_id))
         c.execute(sql)
-
         conn.commit()
         c.close()
         conn.close()
@@ -105,15 +102,15 @@ def job_edit(job_id, title, description, location):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """INSERT INTO location WHERE location_state= ('%s') """ % location
-        c.execute(sql)
-        conn.commit()
-        sql = """SELECT location_id,location_state FROM location WHERE location_state= ('%s') """ % location
+        sql = """SELECT location_id, job_id FROM jobs WHERE job_id = (%d) """ % int(job_id)
         c.execute(sql)
         for row in c:
-            location_id, location_state = row
-        sql = """UPDATE jobs SET title = '%s', description = '%s', location_id='%d'  WHERE job_id = %d """ % (
-            title, description, location_id,int(job_id))
+            location_id, job_id = row
+        sql = """UPDATE location SET  location_state = '%s'  WHERE location_id = '%d' """ % (location, int(location_id))
+        c.execute(sql)
+        conn.commit()
+        sql = """UPDATE jobs SET title = '%s', description = '%s', location_id='%d'  WHERE job_id = '%d '"""\
+              % (title, description, int(location_id), int(job_id))
         c.execute(sql)
         conn.commit()
         c.close()
@@ -128,14 +125,15 @@ def job_delete(job_id):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """SELECT location.id,title FROM jobs WHERE job_id = (%d) """ % (int(job_id))
+        sql = """SELECT location_id, title FROM jobs WHERE job_id = (%d) """ % (int(job_id))
         c.execute(sql)
         for row in c:
             location_id, title = row
-        sql = """DELETE FROM location WHERE location_id = (%d) """ % (int(location_id))
+
+        sql = """DELETE FROM jobs WHERE job_id = (%d) """ % (int(job_id))
         c.execute(sql)
         conn.commit()
-        sql = """DELETE FROM jobs WHERE job_id = (%d) """ % (int(job_id))
+        sql = """DELETE FROM location WHERE location_id = (%d) """ % (int(location_id))
         c.execute(sql)
         conn.commit()
         c.close()

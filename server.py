@@ -221,7 +221,7 @@ DEFAULT CHARACTER SET = utf8;
 DROP TABLE IF EXISTS `cl48-humannet`.`location` ;
 
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`location` (
-  `location_id` INT(11) NOT NULL,
+  `location_id` INT(11) NOT NULL AUTO_INCREMENT,
   `location_state` VARCHAR(45) NOT NULL,
   `location_country` VARCHAR(45) NOT NULL,
   `location_zipcode` VARCHAR(45) NULL DEFAULT NULL,
@@ -696,8 +696,8 @@ def jobs():
             title = request.form['title']
             description = request.form['description']
             company_id = 1
-            location_id = 2
-            job_add(title, description, company_id, location_id)
+            location = request.form['location']
+            job_add(title, description, company_id, location)
         elif 'editJob' in request.form:
             job_id = request.form['editJob']
             title = request.form['title']
