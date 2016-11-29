@@ -7,7 +7,8 @@ from flask import Flask
 from flask import render_template, request, redirect, url_for, flash, session
 from connections import Connections, Recommendations, Connection, connection_add, connection_remove, add_to_favorites, \
     recommendation_add, recommendation_remove, num, remove_from_favorites, conDetail_add, conDetail_decrease, create_recfor_new_user
-from posts import posts_get, post_share, post_delete, post_update, post_comment_add, get_name, update_post_text
+from posts import posts_get, post_share, post_delete, post_update, post_comment_add, get_name, update_post_text, \
+    update_comment_text, delete_comment
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_edit, user_delete, user_show
 from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message, delete_message, \
@@ -691,6 +692,21 @@ def timeline():
             print(post_id)
             print(text)
             update_post_text(text, post_id, date)
+
+        elif 'edit_comment' in request.form:
+            print("edit_comment")
+            text = request.form['edit_text']
+            comment_id = request.form['edit_comment']
+            date = datetime.datetime.now()
+            print(comment_id)
+            print(text)
+            update_comment_text(text, comment_id, date)
+
+        elif 'delete_comment' in request.form:
+            print("delete_comment")
+            comment_id = request.form['delete_comment']
+            print(comment_id)
+            delete_comment(comment_id)
 
     return redirect('timeline')
 

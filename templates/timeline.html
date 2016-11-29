@@ -72,7 +72,6 @@ Timeline
                                 <ul class="dropdown-menu" role="menu">
                                     <form action="" method="post">
                                         <li><button type="submit" name="delete" method="post" value= {{ post.post_id }}>Delete</button></li>
-                                        <li><button type="submit" name="edit" method="post" value= {{ post.post_id }}>Edit</button></li>
 
                                     </form>
                                 </ul>
@@ -117,7 +116,7 @@ Timeline
                                 </div>
 
                                 <div class="col-sm-1">
-                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#Edit">Edit </span></button>
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#Edit"><i class="glyphicon glyphicon-edit"></i> </button>
 
                                     <!-- Modal -->
                                     <div class="modal fade" id="Edit" role="dialog">
@@ -170,6 +169,66 @@ Timeline
                                                                     </div>
                                                                     <!-- /thumbnail -->
                                                                 </div>
+                                                                <div class="col-sm-1">
+                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Edit1"><i class="glyphicon glyphicon-edit"></i>  </button>
+                                    <br><br><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#Del"><i class="glyphicon glyphicon-trash"></i>  </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="Edit1" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">Edit</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                <p>Edit comment</p>
+                                                    <form action="" method="post" class="form-inline">
+                                                        <div class="form-group">
+                                                        <label for="usr">New text:</label>
+                                                        <input type="text" class="form-control" name="edit_text">
+                                                        <button type="submit" name="edit_comment" class="btn btn-success pull-right" value={{ comment.comment_id }}><span class="glyphicon glyphicon-pencil"></span></button>
+                                                      </div>
+
+                                                  </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                       <div class="modal fade" id="Del" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">Delete comment</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                <p>Delete comment</p>
+                                                    <form action="" method="post" class="form-inline">
+                                                        <div class="form-group">
+                                                        <button type="submit" name="delete_comment" class="btn btn-danger pull-right" value={{ comment.comment_id }}><span class="glyphicon glyphicon-trash"></span></button>
+                                                      </div>
+
+                                                  </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
                                                                 <!-- /col-sm-1 -->
 
                                                                 <div class="col-sm-5">

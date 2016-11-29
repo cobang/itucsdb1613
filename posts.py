@@ -173,6 +173,38 @@ def update_post_text(text, post_id, date):
         print(str(e))
 
 
+def update_comment_text(text, comment_id, date):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        f = '%Y-%m-%d %H:%M:%S'
+        sql = """UPDATE comment SET comment_text = '%s', comment_date = '%s'  WHERE comment_id = %d """ % (text, date.strftime(f), int(comment_id))
+        c.execute(sql)
+        conn.commit()
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
+
+def delete_comment(comment_id):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+        sql = """DELETE FROM comment WHERE comment_id = (%d) """ % (int(comment_id))
+        c.execute(sql)
+        conn.commit()
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
+
 def post_comment_add(comment_text, post_id, date, user_id):
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
