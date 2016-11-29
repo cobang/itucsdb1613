@@ -235,12 +235,14 @@ def get_name_surname(user_id):
         c = conn.cursor()
 
         sql = """SELECT user_name, user_surname
-                 FROM user_details
+                 FROM user_detail
                  WHERE user_id = %d""" % user_id
         c.execute(sql)
 
+        user_info = ('', '')
         for name, surname in c:
             user_info = (name, surname)
+            print(user_info[0], user_info[1])
 
         c.close()
         conn.close()

@@ -634,7 +634,7 @@ def send_single_message(key):
     if request.method == 'GET':
         if 'user_email' in session:
             print(session['user_email'])
-            t = get_name_surname(my_id)
+            t = get_name_surname(key)
             return render_template('send_message.html', participant=key, name=t[0], surname=t[1])
         else:
             return redirect(url_for('home'))

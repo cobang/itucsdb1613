@@ -125,16 +125,17 @@ Messages
                                                                 {% endif %}
                                                             {% endif %}
 
-                                                            {# {{ msg.sender }} #}
-                                                            <span class="label label-{% if msg.sender == participant %}info{% else %}primary{% endif %} message_box_datetime">
-                                                                {{ msg.datetime }}
-                                                            </span>
-
                                                             {% if msg.sender != participant %}
                                                             <form class="reset" action="" method="post" style="float: right;">
                                                                 &nbsp;<button class="close" type="submit" name="delete_message" value="{{ msg.msg_id }}">&times;</button>
                                                             </form>
                                                             {% endif %}
+
+                                                            {# {{ msg.sender }} #}
+                                                            <span class="label label-{% if msg.sender == participant %}info{% else %}primary{% endif %} message_box_datetime">
+                                                                {{ msg.datetime }}
+                                                            </span>
+
                                                         </div>
                                                         <div class="panel-body message_box">
                                                             {{ msg.content }}
