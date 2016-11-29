@@ -27,6 +27,8 @@
                 <br>
                 <div class="list-group">
                     <a href="added_connections/0" class="list-group-item" style="background-color: #be809b"><b>Go to Added Connections</b></a>
+                    <br>
+                    <a href="#" class="list-group-item" style="background-color:#be809b"><b>Filter your added connections</b></a>
                     <a href="added_connections/1" class="list-group-item">People</a>
                     <a href="added_connections/2" class="list-group-item">Companies</a>
                     <a href="added_connections/3" class="list-group-item">Universities</a>
@@ -51,9 +53,8 @@
 
                                         <br>
                                         <img class="media-object" src="http://web.itu.edu.tr/yurdakulgu/profile-42914_960_720.png" width="84" height="84" style="float: left;margin-right:12px">
-                                         <p>Part-Time Software Developer</p>
-                                        <p>Student at Istanbul Technical University</p>
-                                        <p>{{ connection.get_email() }}</p>
+                                        <p>{{connection.get_detail()}}</p>
+                                        <p>Email: {{ connection.get_email() }}</p>
                                         <br>
                                         <div class="media-body">
                                             <input type="submit" name="conList" value=" {{ connection.get_num_of_connections() }} connections "

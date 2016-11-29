@@ -45,6 +45,43 @@ class Connection:
             print(str(e))
         return name
 
+    def get_detail(self):
+        try:
+            detail = ""
+            conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+            c = conn.cursor()
+            sql = """SELECT user_type, user_id FROM users WHERE user_id = (%d)""" % (int(self.following))
+            c.execute(sql)
+            for row in c:
+                user_type, user_id = row
+
+            if user_type == 1:
+                sql = """SELECT user_name,address FROM user_detail WHERE user_id = (%d)""" % (int(self.following))
+                c.execute(sql)
+                for row in c:
+                    user_name, address = row
+                detail = address
+
+            elif user_type == 2:
+                sql = """SELECT company_name, company_address FROM company_detail WHERE user_id = (%d)""" % (int(self.following))
+                c.execute(sql)
+                for row in c:
+                    company_name, company_address = row
+                detail = company_address
+            else:
+                sql = """SELECT university_address, user_id FROM university_detail WHERE user_id = (%d)""" % (int(self.following))
+                c.execute(sql)
+                for row in c:
+                    university_address, user_id = row
+                detail = university_address
+            c.close()
+            conn.close()
+        except Exception as e:
+            print(str(e))
+        return detail
+
+
     def get_num_of_connections(self):
 
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
