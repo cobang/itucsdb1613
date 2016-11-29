@@ -7,7 +7,7 @@ from flask import Flask
 from flask import render_template, request, redirect, url_for, flash, session
 from connections import Connections, Recommendations, Connection, connection_add, connection_remove, add_to_favorites, \
     recommendation_add, recommendation_remove, num, remove_from_favorites, conDetail_add, conDetail_decrease, create_recfor_new_user
-from posts import posts_get, post_share, post_delete, post_update, post_comment_add, get_name
+from posts import posts_get, post_share, post_delete, post_update, post_comment_add, get_name, update_post_text
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_edit, user_delete, user_show
 from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message, delete_message, \
@@ -652,31 +652,40 @@ def timeline():
             date = datetime.datetime.now()
             post_share(user_id=current_user_id, text=text, date=date)
 
-        if 'delete' in request.form:
+        elif 'delete' in request.form:
             print("delete")
             print(request.form['delete'])
             post_id = request.form['delete']
 
             post_delete(post_id=post_id)
 
-        if 'like' in request.form:
+        elif 'like' in request.form:
             print("like")
             print(request.form['like'])
             post_id = request.form['like']
             post_update(post_id, "LIKE_NUM", current_user_id)
 
-        if 'dislike' in request.form:
+        elif 'dislike' in request.form:
             print("dislike")
             print(request.form['dislike'])
             post_id = request.form['dislike']
             post_update(post_id, "DISLIKE_NUM", current_user_id)
 
-        if 'comment' in request.form:
+        elif 'comment' in request.form:
             print("comment")
             comment_text = request.form['comment_text']
             post_id = request.form['comment']
             date = datetime.datetime.now()
             post_comment_add(comment_text, post_id, date, current_user_id)
+
+        elif 'edit_post' in request.form:
+            print("edit_post")
+            text = request.form['edit_text']
+            post_id = request.form['edit_post']
+            date = datetime.datetime.now()
+            print(post_id)
+            print(text)
+            update_post_text(text, post_id, date)
 
     return redirect('timeline')
 
