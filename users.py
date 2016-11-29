@@ -72,27 +72,40 @@ def user_show(user_id):
         print(user_id)
         for row in c:
             user_id, user_type, user_email, user_password = row
+            user = User(user_id=user_id, user_type=user_type, user_email=user_email, user_password=user_password)
             if user_type == 1:
-                sql = """SELECT user_name, user_surname, user_birth, user_phone, user_address
+                sql = """SELECT user_name, user_surname, date_of_birth, phone, address
                           FROM user_detail WHERE  user_id = %d """ % (
                     int(user_id))
+                print(sql)
 
                 c.execute(sql)
+                for row_user in c:
+                    user_name, user_surname, date_of_birth, phone, address = row_user
+                    user.add_user_detail(user_name, user_surname, date_of_birth, phone, address)
 
             elif user_type == 2:
                 sql = """SELECT company_name, company_phone, company_address
-                          FROM company_detail WHERE company_id = %d """ % (
+                          FROM company_detail WHERE user_id = %d """ % (
                     int(user_id))
+                print(sql)
 
                 c.execute(sql)
+                for row_user in c:
+                    company_name, company_phone, company_address = row_user
+                    user.add_company_detail(company_name, company_phone, company_address)
 
             elif user_type == 3:
                 sql = """SELECT university_name, university_address
-                          FROM university_detail WHERE  university_id = %d """ % (
+                          FROM university_detail WHERE  user_id = %d """ % (
                     int(user_id))
+                print(sql)
 
                 c.execute(sql)
-            user = User(user_id=user_id, user_type=user_type, user_email=user_email, user_password=user_password)
+                for row_user in c:
+                    university_name, university_address = row_user
+                    user.add_user_detail(university_name, university_address)
+
 
         c.close()
         conn.close()
