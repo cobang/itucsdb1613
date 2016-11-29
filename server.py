@@ -593,9 +593,11 @@ def messages():
         if 'logout' in request.form:
             logout()
         elif 'send' in request.form:
-            participant = int(request.form['user'])
+            print('sending')
+            participant = int(request.form['send'])
             if participant == 0:
                 participant = int(request.form['username'])
+            print(str(participant))
             content = request.form['message']
             date = datetime.datetime.now()
 

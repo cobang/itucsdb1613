@@ -110,6 +110,7 @@ def get_inbox(user_id):
 
 
 def send_message(user_id, participant_id, content, date):
+    print('sending...')
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
@@ -118,12 +119,12 @@ def send_message(user_id, participant_id, content, date):
         sql = """INSERT INTO messages(content, message_datetime, is_liked)
                               VALUES('%s', '%s', 0)""" % (content, date.strftime(f))
         c.execute(sql)
+        print('message inserted')
 
         # sql = """SELECT MAX(message_id) FROM messages"""
         # c.execute(sql)
         # for x in c:
         #    msg_id = x[0]
-
         # sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
         #                      VALUES(%d, %d ,%d, %d)""" % (user_id, int(participant_id), 0, msg_id)
 
@@ -139,6 +140,7 @@ def send_message(user_id, participant_id, content, date):
            SELECT %d, %d, %d, MAX(message_id)
            FROM messages""" % (participant_id, user_id, 1)
         c.execute(sql)
+        print('conversations inserted')
 
         conn.commit()
         c.close()
