@@ -170,11 +170,11 @@ Timeline
                                                                     <!-- /thumbnail -->
                                                                 </div>
                                                                 <div class="col-sm-1">
-                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Edit1"><i class="glyphicon glyphicon-edit"></i>  </button>
-                                    <br><br><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#Del"><i class="glyphicon glyphicon-trash"></i>  </button>
+                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Edit{{ comment.comment_id }}"><i class="glyphicon glyphicon-edit"></i>  </button>
+                                    <br><br><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#Del{{ comment.comment_id }}"><i class="glyphicon glyphicon-trash"></i>  </button>
 
                                     <!-- Modal -->
-                                    <div class="modal fade" id="Edit1" role="dialog">
+                                    <div class="modal fade" id="Edit{{ comment.comment_id }}" role="dialog">
                                         <div class="modal-dialog">
 
                                             <!-- Modal content-->
@@ -202,7 +202,7 @@ Timeline
                                         </div>
 
                                     </div>
-                                       <div class="modal fade" id="Del" role="dialog">
+                                       <div class="modal fade" id="Del{{ comment.comment_id }}" role="dialog">
                                         <div class="modal-dialog">
 
                                             <!-- Modal content-->
