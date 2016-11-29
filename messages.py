@@ -58,23 +58,52 @@ def get_inbox(user_id):
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
 
+        # sql = """SELECT c.user_id, c.participant_id,
+        #                c.in_out, m.content, m.message_datetime,
+        #                m.message_id, m.is_liked,
+        #                u.user_name, u.user_surname
+        #         FROM messages AS m
+        #         INNER JOIN conversations AS c
+        #            ON c.message_id = m.message_id
+        #         INNER JOIN user_detail AS u
+        #            ON u.user_id = c.participant_id
+        #         WHERE c.user_id = %d
+        #         ORDER BY c.participant_id, m.message_datetime""" % user_id
         sql = """SELECT c.user_id, c.participant_id,
                         c.in_out, m.content, m.message_datetime,
                         m.message_id, m.is_liked,
-                        u.user_name, u.user_surname
+                        (CASE
+                             WHEN u.user_type = 3
+                                THEN uni.university_name
+                             WHEN u.user_type = 2
+                                THEN com.company_name
+                             WHEN u.user_type = 1
+                                THEN CONCAT_WS(' ', ud.user_name, ud.user_surname)
+                             ELSE
+                                NULL
+                        END) AS name
+
                  FROM messages AS m
                  INNER JOIN conversations AS c
                     ON c.message_id = m.message_id
-                 INNER JOIN user_detail AS u
-                    ON u.user_id = c.participant_id
+                 INNER JOIN users AS u
+                    ON u.user_id = c.user_id
+
+                 LEFT JOIN user_detail AS ud
+                    ON ud.user_id = c.participant_id
+                 LEFT JOIN university_detail AS uni
+                    ON uni.user_id = c.participant_id
+                 LEFT JOIN company_detail AS com
+                    ON com.user_id = c.participant_id
+
                  WHERE c.user_id = %d
-                 ORDER BY c.participant_id, m.message_datetime""" % user_id
+                 ORDER BY c.participant_id;""" % user_id
         c.execute(sql)
 
         old_p = 0
         chat = Chat()
 
-        for user, participant, in_out, content, msg_datetime, msg_id, is_liked, name, surname in c:
+        for user, participant, in_out, content, msg_datetime, msg_id, is_liked, name in c:
             if in_out == 0:
                 sender = user
                 receiver = participant
@@ -92,12 +121,12 @@ def get_inbox(user_id):
                     inbox.add(chat, old_p)
                 chat = Chat()
                 chat.name = name
-                chat.surname = surname
+                # chat.surname = surname
                 chat.add(msg)
             old_p = participant
 
         chat.name = name
-        chat.surname = surname
+        # chat.surname = surname
         inbox.add(chat, old_p)
 
         c.close()

@@ -60,7 +60,7 @@ Messages
                     <!-- Panel Heading -->
 
                         <div class="panel-heading">
-                            &nbsp;<a href="#">{# {{ participant }} #}{{ single_chat.name }} {{ single_chat.surname }}</a>
+                            &nbsp;<a href="#">{# {{ participant }} #}{{ single_chat.name }} {# {{ single_chat.surname }} #}</a>
                             <span style="float: right">
                                 {{ single_chat.get_last().datetime }}&nbsp;&nbsp;
                                 <form class="reset" action="" method="post">
@@ -83,7 +83,7 @@ Messages
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">{{ participant }}{# {{ single_chat.name }} {{ single_chat.surname }} #}</h4>
+                                        <h4 class="modal-title">{{ single_chat.name }}{# {{ participant }} {{ single_chat.surname }} #}</h4>
                                     </div>
 
                                     <div class="modal-body">
