@@ -729,11 +729,13 @@ def signup():
             sql = """INSERT INTO users(user_email, user_password, user_type)
                                    VALUES ('%s', '%s', '%d' )""" % (
                 user_email, user_password, int(user_type))
-
             c.execute(sql)
-
-            if user_type == 1:
-                sql = """SELECT user_id FROM users WHERE  user_email = %s """ % (
+            print(sql)
+            print(user_name)
+            if user_type == '1':
+                print('add user detail')
+                print(user_email)
+                sql = """SELECT user_id FROM users WHERE  user_email = '%s' """ % (
                     user_email)
                 c.execute(sql)
                 for row in c:
@@ -743,11 +745,14 @@ def signup():
                 sql = """INSERT INTO user_detail(user_name,user_id) VALUES ('%s', '%d')""" % (
                     user_name, int(user_id))
                 c.execute(sql)
+                print(sql)
 
-            elif user_type == 2:
-                sql = """SELECT user_id FROM users WHERE  user_email = %s """ % (
+            elif user_type == '2':
+                print('add company detail')
+                sql = """SELECT user_id FROM users WHERE  user_email = '%s' """ % (
                     user_email)
                 c.execute(sql)
+                print(sql)
                 for row in c:
                     user_id = row[0]
 
@@ -756,13 +761,15 @@ def signup():
 
                 c.execute(sql)
 
-            elif user_type == 3:
-                sql = """SELECT user_id FROM users WHERE  user_email = %s """ % (
+            elif user_type == '3':
+                print('add university detail')
+                print(user_email)
+                sql = """SELECT user_id FROM users WHERE  user_email = '%s' """ % (
                     user_email)
                 c.execute(sql)
                 for row in c:
                     user_id = row[0]
-
+                print('insert')
                 sql = """INSERT INTO university_detail(university_name) VALUES ('%s', '%d')""" % (
                     user_name, int(user_id))
 
