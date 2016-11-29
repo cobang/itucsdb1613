@@ -398,8 +398,11 @@ def home():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    user_id = get_id(session["user_email"])
-    return redirect(url_for('profile_id', user_id=user_id))
+    if 'user_email' in session:
+        user_id = get_id(session["user_email"])
+        return redirect(url_for('profile_id', user_id=user_id))
+    else:
+        return redirect('../home')
 
 
 @app.route('/profile/<user_id>', methods=['GET', 'POST'])
@@ -410,7 +413,7 @@ def profile_id(user_id):
             print(session['user_email'])
             return render_template('profile.html', user_id=user_id, user=user)
         else:
-            return render_template('../home.html')
+            return redirect('../home')
 
     else:
         if 'logout' in request.form:
