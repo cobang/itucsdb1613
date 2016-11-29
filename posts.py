@@ -156,6 +156,23 @@ def post_update(post_id, action, current_user_id):
         print(str(e))
 
 
+def update_post_text(text, post_id, date):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        f = '%Y-%m-%d %H:%M:%S'
+        sql = """UPDATE posts SET post_text = '%s', post_date = '%s'  WHERE post_id = %d """ % (text, date.strftime(f), int(post_id))
+        c.execute(sql)
+        conn.commit()
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))
+
+
 def post_comment_add(comment_text, post_id, date, user_id):
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
