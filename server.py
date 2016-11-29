@@ -12,7 +12,7 @@ from posts import posts_get, post_share, post_delete, post_update, post_comment_
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_edit, user_delete, user_show
 from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message, delete_message, \
-    get_name_surname
+    get_name
 
 app = Flask(__name__)
 
@@ -634,8 +634,8 @@ def send_single_message(key):
     if request.method == 'GET':
         if 'user_email' in session:
             print(session['user_email'])
-            t = get_name_surname(key)
-            return render_template('send_message.html', participant=key, name=t[0], surname=t[1])
+            t = get_name(key)
+            return render_template('send_message.html', participant=key, name=t[0])
         else:
             return redirect(url_for('home'))
 

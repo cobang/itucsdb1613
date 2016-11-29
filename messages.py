@@ -257,26 +257,47 @@ def delete_message(message_id):
         print(str(e))
 
 
-def get_name_surname(user_id):
+def get_name(user_id):
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
 
-        sql = """SELECT user_name, user_surname
-                 FROM user_detail
-                 WHERE user_id = %d""" % user_id
+        #sql = """SELECT user_name, user_surname
+        #         FROM user_detail
+        #         WHERE user_id = %d""" % user_id
+        sql = """SELECT (CASE
+                          WHEN u.user_type = 3
+                              THEN uni.university_name
+                          WHEN u.user_type = 2
+                              THEN com.company_name
+                          WHEN u.user_type = 1
+                              THEN CONCAT_WS(' ', ud.user_name, ud.user_surname)
+                          ELSE
+                              NULL
+                        END) AS name
+                  FROM users AS u
+                  LEFT JOIN user_detail AS ud
+                      ON ud.user_id = u.user_id
+                  LEFT JOIN university_detail AS uni
+                      ON uni.user_id = u.user_id
+                  LEFT JOIN company_detail AS com
+                      ON com.user_id = u.user_id
+                  WHERE u.user_id = %d""" % user_id
         c.execute(sql)
 
-        user_info = ('', '')
-        for name, surname in c:
-            user_info = (name, surname)
-            print(user_info[0], user_info[1])
+        #user_info = ('', '')
+        #for name, surname in c:
+        #    user_info = (name, surname)
+        #    print(user_info[0], user_info[1])
+
+        for n in c:
+            name = n
 
         c.close()
         conn.close()
 
-        return user_info
+        return name
 
     except Exception as e:
         print(str(e))
