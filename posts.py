@@ -70,20 +70,19 @@ def posts_get(current_user_id):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """
-SELECT T1.post_id, T1.user_id, T1.post_text,T1.post_date, T2.like_num
+        sql = """SELECT T1.post_id, T1.user_id, T1.post_text,T1.post_date
 FROM (SELECT post_id, user_id, post_text,post_date  FROM posts INNER JOIN
-(SELECT following_id FROM connections where user_id = %d) AS follow
-ON posts.user_id = follow.following_id) T1 INNER JOIN
-(SELECT post_id, COUNT(user_id) AS like_num FROM likes
- GROUP BY post_id) AS T2 ON T1.post_id = T2.post_id;""" % current_user_id
+(SELECT following_id FROM connections where user_id = %d
+UNION SELECT user_id FROM connections where user_id=%d) AS follow
+ON posts.user_id = follow.following_id) T1""" % (current_user_id,current_user_id)
         c.execute(sql)
 
         for row in c:
-            post_id, user_id, post_text, post_date, like_num = row
+            post_id, user_id, post_text, post_date = row
 
-            post = Post(post_id=post_id, user=user_id, text=post_text, date=post_date, like_num=like_num,
-            user_name = get_name(user_id), likes=get_likes(post_id), comments=get_post_comments(post_id))
+            post = Post(post_id=post_id, user=user_id, text=post_text, date=post_date,
+                        like_num=get_like_num(post_id), user_name=get_name(user_id),
+                        likes=get_likes(post_id), comments=get_post_comments(post_id))
             store.add_post(post=post)
 
         c.close()
@@ -101,10 +100,8 @@ def post_share(user_id, text, date):
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         f = '%Y-%m-%d %H:%M:%S'
-        print("a")
         sql = """INSERT INTO posts(USER_ID, POST_TEXT, POST_DATE)
                        VALUES (%d, '%s', '%s')""" % (user_id, text, date.strftime(f))
-        print(sql)
         c.execute(sql)
 
         conn.commit()
@@ -121,15 +118,12 @@ def post_delete(post_id):
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         sql = """DELETE FROM comment WHERE post_id = (%d) """ % (int(post_id))
-        print(sql)
         c.execute(sql)
 
         sql = """DELETE FROM likes WHERE post_id = (%d) """ % (int(post_id))
-        print(sql)
         c.execute(sql)
 
         sql = """DELETE FROM posts WHERE POST_ID = (%d) """ % (int(post_id))
-        print(sql)
         c.execute(sql)
 
         conn.commit()
@@ -149,11 +143,9 @@ def post_update(post_id, action, current_user_id):
         if action == "LIKE_NUM":
             sql = """INSERT INTO likes ( user_id, post_id )
                        VALUES( %d, %d )""" % (current_user_id, int(post_id))
-            print(sql)
             c.execute(sql)
         elif action == "DISLIKE_NUM":
             sql = """DELETE FROM likes WHERE %d = user_id and %d = post_id""" % (current_user_id, int(post_id))
-            print(sql)
             c.execute(sql)
 
         conn.commit()
@@ -174,7 +166,6 @@ def post_comment_add(comment_text, post_id, date, user_id):
         sql = """INSERT INTO comment(comment_text, comment_date, post_id, user_id)
                                VALUES ('%s', '%s', '%s', %d)""" % (comment_text, date.strftime(f), int(post_id), user_id)
 
-        print(sql)
         c.execute(sql)
 
         conn.commit()
@@ -199,10 +190,7 @@ def get_likes(post_id):
 
         for row in c:
             user_id, user_type = row
-            print("name:")
-            print(get_name(user_id))
             user = User(user_id=user_id, user_type=user_type, user_name=get_name(user_id))
-            print(user.user_id)
             store.add_user(user=user)
 
         c.close()
@@ -288,3 +276,24 @@ ON users.user_id = comments.user_id
         print(str(e))
 
     return store.get_comments()
+
+
+def get_like_num(post_id):
+    try:
+        like_num = 0
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        sql = """SELECT COUNT(user_id) AS like_num FROM likes WHERE post_id = %d;""" % post_id
+        c.execute(sql)
+
+        for row in c:
+            like_num = row[0]
+
+        c.close()
+        conn.close()
+        return like_num
+    except Exception as e:
+        print(str(e))
+        return like_num
