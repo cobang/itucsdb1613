@@ -79,7 +79,7 @@
                                             <a href="/profile/{{connection.following}}" class="btn btn-xs" style="background-color: #b8e2d9; color: #0f0f0f"><span>Go to profile</span></a>
                                             <br><br>
                                             <p>
-                                                <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Message</a>
+                                                <a href="/send_message/{{connection.following}}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Message</a>
                                                 <input type="hidden" name="following_id" value="{{ connection.following }}"/>
                                                 <input type="hidden" name="user_id" value="{{ connection.user }}"/>
                                                 <input type="hidden" name="key" value="{{ key }}"/>
