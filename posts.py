@@ -70,18 +70,41 @@ def posts_get(current_user_id):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """SELECT T1.post_id, T1.user_id, T1.post_text,T1.post_date
-FROM (SELECT post_id, user_id, post_text,post_date  FROM posts INNER JOIN
+
+        sql = """SELECT P1.post_id, P1.user_id, post_text,post_date,like_num, name FROM
+(SELECT T1.post_id, user_id, post_text,post_date,like_num FROM (SELECT *  FROM posts INNER JOIN
 (SELECT following_id FROM connections where user_id = %d
-UNION SELECT user_id FROM connections where user_id=%d) AS follow
-ON posts.user_id = follow.following_id) T1""" % (current_user_id,current_user_id)
+UNION SELECT user_id FROM connections where user_id= %d) AS follow
+ON posts.user_id = follow.following_id) AS T1 LEFT JOIN
+(SELECT post_id ,COUNT(user_id) AS like_num FROM likes) AS T2
+ON T1.post_id = T2.post_id) AS P1 LEFT JOIN (SELECT u.user_id ,(CASE
+                          WHEN u.user_type = 3
+                              THEN uni.university_name
+                          WHEN u.user_type = 2
+                              THEN com.company_name
+                          WHEN u.user_type = 1
+                              THEN CONCAT_WS(' ', ud.user_name, ud.user_surname)
+                          ELSE
+                              NULL
+                        END)AS name
+                  FROM users AS u
+                  LEFT JOIN user_detail AS ud
+                      ON ud.user_id = u.user_id
+                  LEFT JOIN university_detail AS uni
+                      ON uni.user_id = u.user_id
+                  LEFT JOIN company_detail AS com
+                      ON com.user_id = u.user_id
+                  ) AS P2 ON P1.user_id= P2.user_id""" % (current_user_id, current_user_id)
         c.execute(sql)
 
         for row in c:
-            post_id, user_id, post_text, post_date = row
+            post_id, user_id, post_text, post_date, like_num, name = row
+
+            if like_num == None:
+                like_num = 0
 
             post = Post(post_id=post_id, user=user_id, text=post_text, date=post_date,
-                        like_num=get_like_num(post_id), user_name=get_name(user_id),
+                        like_num=like_num, user_name=name,
                         likes=get_likes(post_id), comments=get_post_comments(post_id))
             store.add_post(post=post)
 
@@ -231,15 +254,33 @@ def get_likes(post_id):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """SELECT users.user_id, user_type FROM users INNER JOIN
-                (SELECT user_id FROM likes WHERE %d=post_id) AS who_like
-                ON users.user_id IN (who_like.user_id)""" % post_id
+        sql = """SELECT P1.user_id,  P1.user_type, name  FROM
+(SELECT users.user_id, user_type FROM users INNER JOIN
+                (SELECT user_id FROM likes WHERE post_id= %d) AS who_like
+                ON users.user_id IN (who_like.user_id)) AS P1 LEFT JOIN (SELECT u.user_id ,(CASE
+                          WHEN u.user_type = 3
+                              THEN uni.university_name
+                          WHEN u.user_type = 2
+                              THEN com.company_name
+                          WHEN u.user_type = 1
+                              THEN CONCAT_WS(' ', ud.user_name, ud.user_surname)
+                          ELSE
+                              NULL
+                        END)AS name
+                  FROM users AS u
+                  LEFT JOIN user_detail AS ud
+                      ON ud.user_id = u.user_id
+                  LEFT JOIN university_detail AS uni
+                      ON uni.user_id = u.user_id
+                  LEFT JOIN company_detail AS com
+                      ON com.user_id = u.user_id
+                  ) AS P2 ON P1.user_id= P2.user_id""" % post_id
 
         c.execute(sql)
 
         for row in c:
-            user_id, user_type = row
-            user = User(user_id=user_id, user_type=user_type, user_name=get_name(user_id))
+            user_id, user_type, user_name = row
+            user = User(user_id=user_id, user_type=user_type, user_name=user_name)
             store.add_user(user=user)
 
         c.close()
@@ -251,7 +292,7 @@ def get_likes(post_id):
     return store.get_users()
 
 
-def get_name(user_id):
+def posts_get_name(user_id):
     try:
         user_name = "NAME"
         user_surname = "SURNAME"
@@ -261,7 +302,6 @@ def get_name(user_id):
 
         sql = """SELECT user_type FROM users WHERE user_id = %d""" % user_id
         c.execute(sql)
-
         for row in c:
             user_type = row[0]
 
@@ -276,7 +316,6 @@ def get_name(user_id):
         elif user_type == 2:
             sql = """SELECT company_name FROM company_detail WHERE user_id = %d""" % user_id
             c.execute(sql)
-
             for row in c:
                 company_name = row[0]
                 user_name = company_name
@@ -284,7 +323,6 @@ def get_name(user_id):
         elif user_type == 3:
             sql = """SELECT university_name FROM university_detail WHERE user_id = %d""" % user_id
             c.execute(sql)
-
             for row in c:
                 university_name = row[0]
                 user_name = university_name
@@ -303,18 +341,36 @@ def get_post_comments(id_post):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """SELECT comment_id, comment_text, comment_date,
+        sql = """SELECT P1.*, name FROM
+(SELECT comment_id, comment_text, comment_date,
 post_id, users.user_id
  FROM users INNER JOIN
-(SELECT * FROM comment WHERE %d = post_id) AS comments
-ON users.user_id = comments.user_id
+(SELECT * FROM comment WHERE post_id = %d) AS comments
+ON users.user_id = comments.user_id) AS P1 LEFT JOIN (SELECT u.user_id ,(CASE
+                          WHEN u.user_type = 3
+                              THEN uni.university_name
+                          WHEN u.user_type = 2
+                              THEN com.company_name
+                          WHEN u.user_type = 1
+                              THEN CONCAT_WS(' ', ud.user_name, ud.user_surname)
+                          ELSE
+                              NULL
+                        END)AS name
+                  FROM users AS u
+                  LEFT JOIN user_detail AS ud
+                      ON ud.user_id = u.user_id
+                  LEFT JOIN university_detail AS uni
+                      ON uni.user_id = u.user_id
+                  LEFT JOIN company_detail AS com
+                      ON com.user_id = u.user_id
+                  ) AS P2 ON P1.user_id= P2.user_id
 """ % id_post
 
         c.execute(sql)
         for row in c:
-            comment_id, comment_text, comment_date, post_id, user_id = row
+            comment_id, comment_text, comment_date, post_id, user_id, user_name = row
             comment = Comment(comment_id=comment_id, comment_text=comment_text, comment_date=comment_date,
-                              post_id=post_id, user_id=user_id, user_name=get_name(user_id))
+                              post_id=post_id, user_id=user_id, user_name= user_name)
 
             store.add_comment(comment)
 

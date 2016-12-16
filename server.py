@@ -7,7 +7,7 @@ from flask import Flask
 from flask import render_template, request, redirect, url_for, flash, session
 from connections import Connections, Recommendations, Connection, connection_add, connection_remove, add_to_favorites, \
     recommendation_add, recommendation_remove, num, remove_from_favorites, conDetail_add, conDetail_decrease, create_recfor_new_user
-from posts import posts_get, post_share, post_delete, post_update, post_comment_add, get_name, update_post_text, \
+from posts import posts_get, post_share, post_delete, post_update, post_comment_add, posts_get_name, update_post_text, \
     update_comment_text, delete_comment
 from jobs import job_add, job_edit, job_delete, job_share
 from users import user_edit, user_delete, user_show
@@ -658,7 +658,7 @@ def timeline():
             current_email = session['user_email']
             current_user_id = get_id(current_email)
             posts = posts_get(current_user_id)
-            name = get_name(current_user_id)
+            name = posts_get_name(current_user_id)
             return render_template('timeline.html', posts=posts, id=current_user_id, name=name )
         else:
             return redirect(url_for('home'))
