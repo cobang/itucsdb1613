@@ -15,7 +15,11 @@ class Connection:
     def get_name(self):
         u_name = ""
         if self.userd.user_type==1:
-            u_name = self.userd.user_name+ " " + self.userd.user_surname
+            if self.userd.user_surname is None:
+                surname=""
+            else:
+                surname = self.userd.user_surname
+            u_name = self.userd.user_name+ " " + surname
         else:
             u_name=self.userd.user_name
         return u_name
