@@ -51,15 +51,21 @@
                     <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary" href="/send_message/{{ user.user_id }}"><i class="glyphicon glyphicon-envelope"></i></a>
                     <span class="pull-right">
                         <form action="" method="post">
+                            {% if user.user_type==1 %}
                             <span data-toggle="modal" data-target="#edit_user{{ user.user_id }}" >
                                 <a data-toggle="tooltip" data-placement="top" title="Edit User!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
                             </span>
+                            {% endif %}
+                            {% if user.user_type==2 %}
                             <span data-toggle="modal" data-target="#edit_company{{ user.user_id }}" >
                                 <a data-toggle="tooltip" data-placement="top" title="Edit Company!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
                             </span>
+                            {% endif %}
+                            {% if user.user_type==3 %}
                             <span data-toggle="modal" data-target="#edit_university{{ user.user_id }}" >
                                 <a data-toggle="tooltip" data-placement="top" title="Edit University!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
                             </span>
+                            {% endif %}
                             <button name="delete_user" value="{{ user.user_id }}"class="btn btn-sm btn-danger" type="submit"><i class="glyphicon glyphicon-trash"></i></button>
                         </form>
                     </span>
@@ -68,6 +74,7 @@
             </div>
         </div>
     </div>
+    {% if user.user_type==1 %}
     <!-- Edit User Modal -->
     <div class="modal fade" id="edit_user{{ user.user_id }}">
         <div class="modal-dialog">
@@ -112,6 +119,8 @@
             </div>
         </div>
     </div>
+    {% endif %}
+    {% if user.user_type==2 %}
     <!-- Edit Company Modal -->
     <div class="modal fade" id="edit_company{{ user.user_id }}">
         <div class="modal-dialog">
@@ -149,6 +158,8 @@
             </div>
         </div>
     </div>
+    {% endif %}
+    {% if user.user_type==3 %}
     <!-- Edit University Modal -->
     <div class="modal fade" id="edit_university{{ user.user_id }}">
         <div class="modal-dialog">
@@ -179,5 +190,6 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
