@@ -19,11 +19,11 @@ class Jobs:
 
 
 class Job:
-    def __init__(self, job_id, title, description, company_id, location_id):
+    def __init__(self, job_id, title, description, user_id, location_id):
         self.job_id = job_id
         self.title = title
         self.description = description
-        self.company_id = company_id
+        self.user_id = user_id
         self.location_id = location_id
 
     def get_location_name(self):
@@ -31,11 +31,12 @@ class Job:
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                    passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
-            sql = """SELECT location_country, location_state FROM location WHERE location_id = (%d) """ % \
-                  (int(self.location_id))
+            sql = """SELECT location_state,location_country FROM location WHERE location_id = (%d) """ % \
+                  self.location_id
             c.execute(sql)
             for row in c:
-                location_country, location_state = row
+                 location_state,location_country = row
+            print(location_state)
             conn.commit()
             c.close()
             conn.close()
@@ -57,9 +58,9 @@ def job_share():
         c.execute(sql)
 
         for row in c:
-            job_id, title, description, company_id, location_id = row
-            job = Job(job_id=job_id, title=title, description=description, company_id=company_id,
-                      location_id=location_id)
+            job_id, user_id, location_id, title, description = row
+            job = Job(job_id=job_id, user_id=user_id, location_id=location_id, title=title, description=description,
+                      )
             archive.add_job(job=job)
 
         c.close()
@@ -71,13 +72,13 @@ def job_share():
         return archive.get_jobs()
 
 
-def job_add(title, description, company_id, location):
+def job_add(title, description, user_id, location):
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
         sql = """INSERT INTO location(location_state, location_country, location_zipcode, user_id)
-                         VALUES ('%s', '%s','%s','%d') """ % (location, 'Turkey', '12345', int(3))
+                         VALUES ('%s', '%s','%s','%d') """ % (location, '', '', user_id)
         c.execute(sql)
         conn.commit()
         sql = """SELECT location_id,location_state FROM location WHERE location_state= ('%s') """ % location
@@ -85,9 +86,8 @@ def job_add(title, description, company_id, location):
         for row in c:
             location_id, location_state = row
         c = conn.cursor()
-
-        sql = """INSERT INTO jobs(TITLE, DESCRIPTION,COMPANY_ID, LOCATION_ID)
-                               VALUES ('%s', '%s' , '%d', '%d' )""" % (title, description, int(company_id), int(location_id))
+        sql = """INSERT INTO jobs(user_id, location_id, title, description)
+                               VALUES ('%d', '%d' , '%s', '%s' )""" % (int(user_id),int(location_id), title, description,)
         c.execute(sql)
         conn.commit()
         c.close()
@@ -99,6 +99,7 @@ def job_add(title, description, company_id, location):
 
 def job_edit(job_id, title, description, location):
     try:
+
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
@@ -143,3 +144,16 @@ def job_delete(job_id):
         print(str(e))
 
 
+def apply_job(job_id, user_id):
+    try:
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+        sql = """INSERT INTO job_appliers (job_id, user_id) VALUES ('%d', '%d') """ % (job_id, user_id)
+        c.execute(sql)
+        conn.commit()
+        c.close()
+        conn.close()
+
+    except Exception as e:
+        print(str(e))

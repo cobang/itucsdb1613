@@ -9,7 +9,7 @@ from connections import Connections, Recommendations, Connection, connection_add
     recommendation_add, recommendation_remove, remove_from_favorites, conDetail_add, conDetail_decrease, create_recfor_new_user
 from posts import posts_get, post_share, post_delete, post_update, post_comment_add, posts_get_name, update_post_text, \
     update_comment_text, delete_comment
-from jobs import job_add, job_edit, job_delete, job_share
+from jobs import job_add, job_edit, job_delete, job_share, apply_job
 from users import user_edit, user_delete, user_show
 from messages import get_inbox, send_message, delete_conversation, like_message, unlike_message, delete_message, \
     get_name
@@ -761,29 +761,36 @@ def jobs():
     if request.method == 'GET':
         if 'user_email' in session:
             print(session['user_email'])
-            return render_template('jobs.html', jobs=jobs_archive)
+            current_email = session['user_email']
+            current_user_id = get_id(current_email)
+            return render_template('jobs.html', jobs=jobs_archive, id=current_user_id)
         else:
             return redirect(url_for('home'))
 
     else:
+        current_email = session['user_email']
+        current_user_id = get_id(current_email)
         if 'logout' in request.form:
             logout()
         elif 'addJob' in request.form:
             title = request.form['title']
             description = request.form['description']
-            company_id = 1
+            user_id = current_user_id
             location = request.form['location']
-            job_add(title, description, company_id, location)
+            job_add(title, description, user_id, location)
         elif 'editJob' in request.form:
             job_id = request.form['editJob']
             title = request.form['title']
             description = request.form['description']
             location = request.form['location']
             job_edit(job_id, title, description, location)
-
         elif 'deleteJob' in request.form:
             job_id = request.form['deleteJob']
             job_delete(job_id)
+        elif 'applyJob' in request.form:
+            job_id = int(request.form['applyJob'])
+            user_id = current_user_id
+            apply_job(job_id, user_id)
 
     return redirect('jobs')
 
