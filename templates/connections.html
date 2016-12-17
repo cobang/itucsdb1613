@@ -57,7 +57,7 @@
                                         <p>Email: {{ connection.get_email() }}</p>
                                         <br>
                                         <div class="media-body">
-                                            <a href="#" class="btn btn-xs" data-toggle="modal" data-target="#list{{connection.following}}" style="background-color: #9ba5cd; color: #0f0f0f"><span>{{ connection.get_num_of_connections() }} connections</span></a>
+                                            <a href="#" class="btn btn-xs" data-toggle="modal" data-target="#list{{connection.following}}" style="background-color: #9ba5cd; color: #0f0f0f"><span>{{ connection.num }} connections</span></a>
                                             &nbsp;<div class="modal fade" id="list{{connection.following}}" role="dialog">
                                             <div class="modal-dialog">
                                                 <!-- Modal content-->
@@ -67,7 +67,7 @@
                                                         <h4 class="modal-title">Connections List of {{connection.get_name()}}</h4>
                                                     </div>
                                                     <div class="modal-body">
-                                                    {% for key, user in  connection.get_List() %}
+                                                    {% for key, user in  connection.conList %}
                                                         <p>{{user.user_name}}</p>
                                                     {% endfor %}
                                                     </div>

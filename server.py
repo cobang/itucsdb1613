@@ -6,7 +6,7 @@ from dbconnection import MySQL
 from flask import Flask
 from flask import render_template, request, redirect, url_for, flash, session
 from connections import Connections, Recommendations, Connection, connection_add, connection_remove, add_to_favorites, \
-    recommendation_add, recommendation_remove, num, remove_from_favorites, conDetail_add, conDetail_decrease, create_recfor_new_user
+    recommendation_add, recommendation_remove, remove_from_favorites, conDetail_add, conDetail_decrease, create_recfor_new_user
 from posts import posts_get, post_share, post_delete, post_update, post_comment_add, posts_get_name, update_post_text, \
     update_comment_text, delete_comment
 from jobs import job_add, job_edit, job_delete, job_share
@@ -483,7 +483,7 @@ def connections():
         current_user_id = get_id(current_email)
     try:
         storage = Recommendations()
-        if storage.get == 0 or num < storage.key:
+        if storage.get == 0:
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                    passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()

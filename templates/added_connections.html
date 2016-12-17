@@ -68,7 +68,7 @@
                                                         <h4 class="modal-title">Connections List of {{connection.get_name()}}</h4>
                                                     </div>
                                                     <div class="modal-body">
-                                                    {% for key, user in  connection.get_List() %}
+                                                    {% for key, user in  connection.conList %}
                                                         <p>{{user.user_name}}</p>
                                                     {% endfor %}
                                                     </div>

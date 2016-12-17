@@ -11,6 +11,8 @@ class Connection:
         self.date = date
         self.added_to_favorites = fav
         self.userd = user_show(self.following)
+        self.num = 0
+        self.conList = self.get_List()
 
     def get_name(self):
         u_name = ""
@@ -39,14 +41,13 @@ class Connection:
             numC, user_id = row
         c.close()
         conn.close()
-        print("mal")
+        print("num")
         return numC
 
     def get_email(self):
         return self.userd.user_email
 
     def get_List(self):
-        i = 0
         user_list = Users()
         try:
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
@@ -57,17 +58,16 @@ class Connection:
             sql = """SELECT users.user_id, users.user_type FROM connections JOIN users WHERE connections.user_id = (%d) AND connections.following_id=users.user_id"""% (int(self.following))
             c.execute(sql)
             for row in c:
-                ++i
                 user_id, user_type = row
                 user = User(user_id=user_id, user_type=user_type, user_name=user_show(user_id).user_name)
                 user_list.add_user(user=user)
+                self.num += 1
                 print(user.user_name)
                 print("liste döngüsü")
-                print(i)
             c.close()
             conn.close()
             if user_list.key == 0:
-                user = User(user_id=0, user_type=0, user_name="No friends")
+                user = User(user_id=0, user_type=0, user_name="user does not follow anyone")
                 user_list.add_user(user=user)
         except Exception as e:
             print(str(e))
@@ -240,23 +240,6 @@ def remove_from_favorites (u_id, fol_id):
 
     except Exception as e:
         print(str(e))
-
-def num():
-    try:
-        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-        c = conn.cursor()
-
-        sql = """SELECT COUNT(*) FROM recommendations"""
-        c.execute(sql)
-        for row in c:
-            number = row
-        c.close()
-        conn.close()
-
-    except Exception as e:
-        print(str(e))
-    return number
 
 
 def conDetail_add(u_id):
