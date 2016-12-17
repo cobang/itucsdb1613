@@ -500,8 +500,6 @@ def connections():
             print("del")
             connection_add(u_id=u_id, fol_id=rec_id, time=dateTime)
             conDetail_add(u_id)
-        elif 'conList' in request.form:
-            print("conList")
     return redirect('connections')
 
 
@@ -519,7 +517,7 @@ def added_connections(key):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        if key!=0:
+        if key !=0:
             sql = """SELECT * FROM connections WHERE user_id = (%d) AND (SELECT COUNT(*) FROM users WHERE user_type = (%d)
                             AND connections.following_id=users.user_id)>0""" % (int(current_user_id), int(key))
             c.execute(sql)
