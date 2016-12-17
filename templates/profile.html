@@ -48,25 +48,49 @@
                 </div>
 
                 <div class="panel-footer">
-                    <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary" href="/send_message/{{ user.user_id }}"><i class="glyphicon glyphicon-envelope"></i></a>
+                    {% if user.user_id == current_id %}
+                        <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary disabled" href="/send_message/{{ user.user_id }}"><i class="glyphicon glyphicon-envelope"></i></a>
+                    {% else %}
+                        <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary" href="/send_message/{{ user.user_id }}"><i class="glyphicon glyphicon-envelope"></i></a>
+                    {% endif %}
                     <span class="pull-right">
                         <form action="" method="post">
                             {% if user.user_type==1 %}
-                            <span data-toggle="modal" data-target="#edit_user{{ user.user_id }}" >
-                                <a data-toggle="tooltip" data-placement="top" title="Edit User!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
-                            </span>
+                                {% if user.user_id == current_id %}
+                                    <span data-toggle="modal" data-target="#edit_user{{ user.user_id }}" >
+                                        <a data-toggle="tooltip" data-placement="top" title="Edit User!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                                    </span>
+                                {% else %}
+                                    <span data-toggle="modal" data-target="#edit_user{{ user.user_id }}" >
+                                        <a data-toggle="tooltip" data-placement="top" title="Edit User!"type="button" class="btn btn-sm btn-warning disabled"><i class="glyphicon glyphicon-edit"></i></a>
+                                    </span>
+                                {% endif %}
+                            {% elif user.user_type==2 %}
+                                {% if user.user_id == current_id %}
+                                    <span data-toggle="modal" data-target="#edit_company{{ user.user_id }}" >
+                                        <a data-toggle="tooltip" data-placement="top" title="Edit Company!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                                    </span>
+                                {% else %}
+                                    <span data-toggle="modal" data-target="#edit_company{{ user.user_id }}" >
+                                        <a data-toggle="tooltip" data-placement="top" title="Edit Company!"type="button" class="btn btn-sm btn-warning disabled"><i class="glyphicon glyphicon-edit"></i></a>
+                                    </span>
+                                {% endif %}
+                            {% else %}
+                                {% if user.user_id == current_id %}
+                                    <span data-toggle="modal" data-target="#edit_university{{ user.user_id }}" >
+                                        <a data-toggle="tooltip" data-placement="top" title="Edit University!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                                    </span>
+                                {% else %}
+                                    <span data-toggle="modal" data-target="#edit_university{{ user.user_id }}" >
+                                        <a data-toggle="tooltip" data-placement="top" title="Edit University!"type="button" class="btn btn-sm btn-warning disabled"><i class="glyphicon glyphicon-edit"></i></a>
+                                    </span>
+                                {% endif %}
                             {% endif %}
-                            {% if user.user_type==2 %}
-                            <span data-toggle="modal" data-target="#edit_company{{ user.user_id }}" >
-                                <a data-toggle="tooltip" data-placement="top" title="Edit Company!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
-                            </span>
+                            {% if user.user_id == current_id %}
+                                <button name="delete_user" value="{{ user.user_id }}"class="btn btn-sm btn-danger" type="submit"><i class="glyphicon glyphicon-trash"></i></button>
+                            {% else %}
+                                <button name="delete_user" value="{{ user.user_id }}"class="btn btn-sm btn-danger disabled" type="submit"><i class="glyphicon glyphicon-trash"></i></button>
                             {% endif %}
-                            {% if user.user_type==3 %}
-                            <span data-toggle="modal" data-target="#edit_university{{ user.user_id }}" >
-                                <a data-toggle="tooltip" data-placement="top" title="Edit University!"type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
-                            </span>
-                            {% endif %}
-                            <button name="delete_user" value="{{ user.user_id }}"class="btn btn-sm btn-danger" type="submit"><i class="glyphicon glyphicon-trash"></i></button>
                         </form>
                     </span>
                 </div>

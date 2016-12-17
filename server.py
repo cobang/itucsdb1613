@@ -409,19 +409,22 @@ def home():
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     if 'user_email' in session:
-        user_id = get_id(session["user_email"])
+        user_id = int(get_id(session["user_email"]))
         return redirect(url_for('profile_id', user_id=user_id))
     else:
         return redirect('../home')
 
 
-@app.route('/profile/<user_id>', methods=['GET', 'POST'])
+@app.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 def profile_id(user_id):
     if request.method == 'GET':
         if 'user_email' in session:
             user = user_show(user_id)
+            current_id = int(get_id(session["user_email"]))
             print(session['user_email'])
-            return render_template('profile.html', user_id=user_id, user=user)
+            print(type(user_id))
+            print(type(user.user_id))
+            return render_template('profile.html', user_id=user_id, user=user, current_id=current_id)
         else:
             return redirect('../home')
 
