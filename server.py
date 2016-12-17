@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `cl48-humannet`.`users` (
   `user_id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_email` VARCHAR(25) NOT NULL,
   `user_password` VARCHAR(16) NOT NULL,
-  `usertype` INT(1) NOT NULL,
+  `user_type` INT(1) NOT NULL,
   PRIMARY KEY (`user_id`))
 DEFAULT CHARACTER SET = utf8;
         """
@@ -105,12 +105,10 @@ DEFAULT CHARACTER SET = utf8;"""
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`company_detail` ;
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`company_detail` (
-  `company_id` INT(11) NOT NULL,
   `user_id` INT(11) NOT NULL,
   `company_name` VARCHAR(45) NOT NULL,
   `company_address` VARCHAR(45) NULL DEFAULT NULL,
   `company_phone` VARCHAR(45) NULL DEFAULT NULL,
-  INDEX `fk_company_detail_company1_idx` (`company_id` ASC),
   INDEX `fk_company_detail_users1_idx` (`user_id` ASC),
   CONSTRAINT `fk_company_detail_users1`
     FOREIGN KEY (`user_id`)
@@ -232,21 +230,27 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `cl48-humannet`.`jobs`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`jobs` ;
+
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`jobs` (
   `job_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `location_id` INT(11) NOT NULL,
   `title` VARCHAR(30) NOT NULL,
   `description` VARCHAR(140) NOT NULL,
-  `company_id` INT(11) NOT NULL,
-  `location_id` INT(11) NOT NULL,
-  INDEX `fk_jobs_location1_idx` (`location_id` ASC),
   PRIMARY KEY (`job_id`),
+  INDEX `fk_jobs_location1_idx` (`location_id` ASC),
+  INDEX `fk_jobs_users1_idx` (`user_id` ASC),
   CONSTRAINT `fk_jobs_location1`
     FOREIGN KEY (`location_id`)
     REFERENCES `cl48-humannet`.`location` (`location_id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_jobs_users1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `cl48-humannet`.`users` (`user_id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-DEFAULT CHARACTER SET = utf8;
-                        """
+DEFAULT CHARACTER SET = utf8;"""
 
         c.execute(sql)
 
@@ -300,11 +304,9 @@ DEFAULT CHARACTER SET = utf8;"""
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cl48-humannet`.`university_detail` ;
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`university_detail` (
-  `university_id` INT(11) NOT NULL AUTO_INCREMENT,
-  `university_name` VARCHAR(45) NULL DEFAULT NULL,
-  `university_address` VARCHAR(45) NULL DEFAULT NULL,
   `user_id` INT(11) NOT NULL,
-  INDEX `fk_university_detail_university1_idx` (`university_id` ASC),
+  `university_name` VARCHAR(45) NOT NULL,
+  `university_address` VARCHAR(45) NULL DEFAULT NULL,
   INDEX `fk_university_detail_users1_idx` (`user_id` ASC),
   CONSTRAINT `fk_university_detail_users1`
     FOREIGN KEY (`user_id`)
@@ -323,7 +325,7 @@ DROP TABLE IF EXISTS `cl48-humannet`.`user_detail` ;
 CREATE TABLE IF NOT EXISTS `cl48-humannet`.`user_detail` (
   `user_id` INT(11) NOT NULL,
   `user_name` VARCHAR(20) NOT NULL,
-  `user_surname` VARCHAR(20) NOT NULL,
+  `user_surname` VARCHAR(20) NULL DEFAULT NULL,
   `phone` VARCHAR(15) NULL DEFAULT NULL,
   `address` VARCHAR(45) NULL DEFAULT NULL,
   INDEX `fk_user_detail_users1_idx` (`user_id` ASC),
@@ -333,6 +335,30 @@ CREATE TABLE IF NOT EXISTS `cl48-humannet`.`user_detail` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 DEFAULT CHARACTER SET = utf8;"""
+
+        c.execute(sql)
+
+        sql="""-- -----------------------------------------------------
+-- Table `cl48-humannet`.`job_appliers`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `cl48-humannet`.`job_appliers` ;
+
+CREATE TABLE IF NOT EXISTS `cl48-humannet`.`job_appliers` (
+  `job_id` INT(11) NULL,
+  `user_id` INT(11) NULL,
+  INDEX `fk_job_appliers_jobs1_idx` (`job_id` ASC),
+  INDEX `fk_job_appliers_users1_idx` (`user_id` ASC),
+  PRIMARY KEY (`job_id`, `user_id`),
+  CONSTRAINT `fk_job_appliers_jobs1`
+    FOREIGN KEY (`job_id`)
+    REFERENCES `cl48-humannet`.`jobs` (`job_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_job_appliers_users1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `cl48-humannet`.`users` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)"""
 
         c.execute(sql)
 
