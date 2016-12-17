@@ -46,7 +46,8 @@
                                     <textarea name="description" class="form-control" rows="8" id="description"></textarea>
                                 </div>
                             </div>
-                            <button name="addJob" value="addJob" class="btn btn-primary btn-block" type="submit">Add Job</button>
+                            <form role="form" action="" method="post">
+                                <button name="addJob" value="addJob" class="btn btn-primary btn-block" type="submit">Add Job</button>
                             <hr>
                         </form>
                     </div>
@@ -58,6 +59,7 @@
             <div class="col-md-4">
                 <div class="panel panel-info">
                     <div class="panel-heading">
+                        {% if job.user_id == id %}
                         <div class="dropdown pull-right close">
                             <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
                                      <span class="glyphicon glyphicon-option-vertical"></span>
@@ -67,6 +69,7 @@
                                 <li><a data-toggle="modal" href="#deletejob{{ job.job_id }}">Delete</a></li>
                             </ul>
                         </div>
+                        {% endif %}
                         <h4><i class="fa fa-briefcase fa-fw"></i> {{ job.title }}</h4>
 
                     </div>
@@ -74,9 +77,13 @@
                         <p><i class="glyphicon glyphicon-pushpin" aria-hidden="true"></i> {{ job.get_location_name()}}</p>
                         <p>{{ job.description }}</p>
                     </div>
-                    <div class="panel-footer"><button type="button" class="btn btn-success ">Apply</button>
 
+                    <div class="panel-footer">
+                     <form action="" method="post">
+                        <button name="applyJob" value="{{ job.job_id }}" class="btn btn-success" type="submit">Apply</button>
+                     </form>
                     </div>
+
                 </div>
             </div>
             <!--  Edit Job Modal -->
