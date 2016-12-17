@@ -1,5 +1,7 @@
 import pymysql
 import datetime
+from users import Users, User,user_show
+
 from dbconnection import MySQL
 
 class Connection:
@@ -8,78 +10,18 @@ class Connection:
         self.following = following_id
         self.date = date
         self.added_to_favorites = fav
+        self.userd = user_show(self.following)
 
     def get_name(self):
-        try:
-            name = ""
-            conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-            c = conn.cursor()
-            sql = """SELECT user_type, user_id FROM users WHERE user_id = (%d)""" % (int(self.following))
-            c.execute(sql)
-            for row in c:
-                user_type, user_id = row
-
-            if user_type == 1:
-                sql = """SELECT user_name,user_surname FROM user_detail WHERE user_id = (%d)""" % (int(self.following))
-                c.execute(sql)
-                for row in c:
-                    user_name, user_surname = row
-                name = user_name + " " + user_surname
-
-            elif user_type == 2:
-                sql = """SELECT company_name, user_id FROM company_detail WHERE user_id = (%d)""" % (int(self.following))
-                c.execute(sql)
-                for row in c:
-                    company_name, user_id = row
-                name = company_name
-            else:
-                sql = """SELECT university_name, user_id FROM university_detail WHERE user_id = (%d)""" % (int(self.following))
-                c.execute(sql)
-                for row in c:
-                    university_name, user_id = row
-                name = university_name
-            c.close()
-            conn.close()
-        except Exception as e:
-            print(str(e))
-        return name
+        u_name = ""
+        if self.userd.user_type==1:
+            u_name = self.userd.user_name+ " " + self.userd.user_surname
+        else:
+            u_name=self.userd.user_name
+        return u_name
 
     def get_detail(self):
-        try:
-            detail = ""
-            conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
-            c = conn.cursor()
-            sql = """SELECT user_type, user_id FROM users WHERE user_id = (%d)""" % (int(self.following))
-            c.execute(sql)
-            for row in c:
-                user_type, user_id = row
-
-            if user_type == 1:
-                sql = """SELECT user_name,address FROM user_detail WHERE user_id = (%d)""" % (int(self.following))
-                c.execute(sql)
-                for row in c:
-                    user_name, address = row
-                detail = address
-
-            elif user_type == 2:
-                sql = """SELECT company_name, company_address FROM company_detail WHERE user_id = (%d)""" % (int(self.following))
-                c.execute(sql)
-                for row in c:
-                    company_name, company_address = row
-                detail = company_address
-            else:
-                sql = """SELECT university_address, user_id FROM university_detail WHERE user_id = (%d)""" % (int(self.following))
-                c.execute(sql)
-                for row in c:
-                    university_address, user_id = row
-                detail = university_address
-            c.close()
-            conn.close()
-        except Exception as e:
-            print(str(e))
-        return detail
+        return self.userd.user_address
 
 
     def get_num_of_connections(self):
@@ -97,21 +39,36 @@ class Connection:
         return numC
 
     def get_email(self):
+        return self.userd.user_email
+
+    def get_List(self):
+        i = 0
+        user_list = Users()
         try:
-            user_email=""
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                    passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
-            sql = """SELECT user_email, user_id FROM users WHERE user_id = (%d)""" % (int(self.following))
+            print("followingicfor")
+
+            sql = """SELECT users.user_id, users.user_type FROM connections JOIN users WHERE connections.user_id = (%d) AND connections.following_id=users.user_id"""% (int(self.following))
             c.execute(sql)
             for row in c:
-                user_email, user_id = row
+                ++i
+                user_id, user_type = row
+                user = User(user_id=user_id, user_type=user_type, user_name=user_show(user_id).user_name)
+                user_list.add_user(user=user)
+                print(user.user_name)
+                print("liste döngüsü")
+                print(i)
             c.close()
             conn.close()
+            if user_list.key == 0:
+                user = User(user_id=0, user_type=0, user_name="No friends")
+                user_list.add_user(user=user)
         except Exception as e:
             print(str(e))
-        return user_email
 
+        return user_list.get_users()
 
 class Connections:
     def __init__(self):
@@ -369,3 +326,6 @@ def create_recfor_new_user(u_id):
         recommendation_add(u_id, user_id)
     c.close()
     conn.close()
+
+
+
