@@ -76,7 +76,7 @@ def posts_get(current_user_id):
 (SELECT following_id FROM connections where user_id = %d
 UNION SELECT user_id FROM connections where user_id= %d) AS follow
 ON posts.user_id = follow.following_id) AS T1 LEFT JOIN
-(SELECT post_id ,COUNT(user_id) AS like_num FROM likes) AS T2
+(SELECT post_id, COUNT(*) AS like_num FROM likes GROUP BY post_id) AS T2
 ON T1.post_id = T2.post_id) AS P1 LEFT JOIN (SELECT u.user_id ,(CASE
                           WHEN u.user_type = 3
                               THEN uni.university_name
@@ -94,7 +94,7 @@ ON T1.post_id = T2.post_id) AS P1 LEFT JOIN (SELECT u.user_id ,(CASE
                       ON uni.user_id = u.user_id
                   LEFT JOIN company_detail AS com
                       ON com.user_id = u.user_id
-                  ) AS P2 ON P1.user_id= P2.user_id""" % (current_user_id, current_user_id)
+                  ) AS P2 ON P1.user_id= P2.user_id;""" % (current_user_id, current_user_id)
         c.execute(sql)
 
         for row in c:
@@ -390,7 +390,7 @@ def get_like_num(post_id):
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
 
-        sql = """SELECT COUNT(user_id) AS like_num FROM likes WHERE post_id = %d;""" % post_id
+        sql = """SELECT COUNT(user_id) AS like_num FROM likes WHERE post_id = %d""" % post_id
         c.execute(sql)
 
         for row in c:
