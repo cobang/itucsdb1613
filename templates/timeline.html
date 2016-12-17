@@ -106,7 +106,7 @@ Timeline
                                                 <div class="modal-body">
                                                 <p>The list of those who likes this post.</p>
                                                     {% for key, user in  post.likes %}
-                                                        <p>{{ key }}- <a href="profile/{{ key }}" >{{ user.user_name }}</a></p>
+                                                        <p>{{ key }}- <a href="profile/{{ user.user_id }}" >{{ user.user_name }}</a></p>
                                                     {% endfor %}
                                                 </div>
                                                 <div class="modal-footer">
@@ -175,9 +175,13 @@ Timeline
                                                                     <!-- /thumbnail -->
                                                                 </div>
                                                                 <div class="col-sm-1">
-                                                                    {% if post.user==id %}
+                                                                    {% if comment.user_id==id %}
                                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#Edit{{ comment.comment_id }}"><i class="glyphicon glyphicon-edit"></i>  </button>
                                     <br><br><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#Del{{ comment.comment_id }}"><i class="glyphicon glyphicon-trash"></i>  </button>
+                                                                    {% else %}
+                                                                        {% if post.user==id %}
+                                    <br><br><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#Del{{ comment.comment_id }}"><i class="glyphicon glyphicon-trash"></i>  </button>
+                                                                        {% endif %}
                                                                     {% endif %}
                                     <!-- Modal -->
                                     <div class="modal fade" id="Edit{{ comment.comment_id }}" role="dialog">
