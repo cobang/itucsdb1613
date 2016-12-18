@@ -188,6 +188,10 @@ def job_delete(job_id):
         for row in c:
             location_id, title = row
 
+        sql = """DELETE FROM job_appliers WHERE job_id = (%d) """ % (int(job_id))
+        c.execute(sql)
+        conn.commit()
+
         sql = """DELETE FROM jobs WHERE job_id = (%d) """ % (int(job_id))
         c.execute(sql)
         conn.commit()
