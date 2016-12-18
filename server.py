@@ -606,13 +606,13 @@ def messages():
     current_email = session['user_email']
     my_id = get_id(current_email)
 
-    inbox = get_inbox(my_id)
+    inbox, names = get_inbox(my_id)
 
     if request.method == 'GET':
         if 'user_email' in session:
             print(session['user_email'])
             chats = inbox.chats
-            return render_template('messages.html', chats=chats)
+            return render_template('messages.html', chats=chats, names=names)
         else:
             return redirect(url_for('home'))
 

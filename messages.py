@@ -53,6 +53,7 @@ class Inbox:
 
 def get_inbox(user_id):
     inbox = Inbox()
+    names = []
     try:
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
@@ -76,7 +77,7 @@ def get_inbox(user_id):
                  INNER JOIN conversations AS c
                     ON c.message_id = m.message_id
                  INNER JOIN users AS u
-                    ON u.user_id = c.user_id
+                    ON u.user_id = c.participant_id
 
                  LEFT JOIN user_detail AS ud
                     ON ud.user_id = c.participant_id
@@ -118,13 +119,44 @@ def get_inbox(user_id):
         # chat.surname = surname
         inbox.add(chat, old_p)
 
+        # # GET FOLLOWERS # #
+        sql = """SELECT c.following_id,
+                        (CASE
+                             WHEN u.user_type = 3
+                                THEN uni.university_name
+                             WHEN u.user_type = 2
+                                THEN com.company_name
+                             WHEN u.user_type = 1
+                                THEN CONCAT_WS(' ', ud.user_name, ud.user_surname)
+                             ELSE
+                                NULL
+                        END) AS name
+
+                 FROM connections AS c
+                 INNER JOIN users AS u
+                    ON u.user_id = c.following_id
+
+                 LEFT JOIN user_detail AS ud
+                    ON c.following_id = ud.user_id
+                 LEFT JOIN university_detail AS uni
+                    ON c.following_id = uni.user_id
+                 LEFT JOIN company_detail AS com
+                    ON c.following_id = com.user_id
+
+                 WHERE c.user_id = %d
+                 ORDER BY name;""" % user_id
+        c.execute(sql)
+
+        for name in c:
+            names.append(name)
+
         c.close()
         conn.close()
 
     except Exception as e:
         print(str(e))
 
-    return inbox
+    return inbox, names
 
 
 def send_message(user_id, participant_id, content, date):

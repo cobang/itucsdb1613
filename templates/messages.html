@@ -1,6 +1,7 @@
 {#
 parameters:
     chats (inbox.chats)
+    names
 #}
 {% extends "base.html" %}
 {% block navigationbar %}
@@ -32,6 +33,27 @@ Messages
                         </div>
                         <div class="modal-content">
                             <br/>
+
+                            <form action="" method="post" style="padding: 1em">
+                                <div class="form-group">
+                                    To:
+                                    <select name="username">
+                                        {% for user_id, name in names %}
+                                            <option value="{{ user_id }}">{{ name }}</option>
+                                        {% endfor %}
+                                        {# <option value="1">eins</option>
+                                        <option value="2">zwei</option> #}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control no_resize" name="message" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-info" type="submit" name="send" value="0">Send</button>
+                                </div>
+                            </form>
+
+                            {#
                             <form action="" method="post" style="padding: 1em">
                                 <div class="form-group">
                                     To: <input type="text" name="username" value="1"><br/>
@@ -43,6 +65,8 @@ Messages
                                     <button class="btn btn-info" type="submit" name="send" value="0">Send</button>
                                 </div>
                             </form>
+                            #}
+
                         </div>
                     </div>
                 </div>
