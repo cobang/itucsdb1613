@@ -28,9 +28,9 @@ class Job:
         self.appliers = {}
         self.key = 0
 
-    def add_appliers(self, user_id):
-        self.appliers[self.key] = user_id
+    def add_appliers(self, user):
         self.key += 1
+        self.appliers[self.key] = user
 
     def get_appliers(self):
         return sorted(self.appliers)
@@ -55,6 +55,48 @@ class Job:
         return location_state
 
 
+def applier_name(user_id):
+    try:
+        user_name = "NAME"
+        conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+        c = conn.cursor()
+
+        sql = """SELECT user_type FROM users WHERE user_id = %d""" % user_id
+        c.execute(sql)
+        for row in c:
+            user_type = row[0]
+
+        if user_type == 1:
+            sql = """SELECT user_name, user_surname FROM user_detail WHERE user_id = %d""" % user_id
+            c.execute(sql)
+
+            for row in c:
+                user_name, user_surname = row
+                user_name = user_name + " " + user_surname
+
+        elif user_type == 2:
+            sql = """SELECT company_name FROM company_detail WHERE user_id = %d""" % user_id
+            c.execute(sql)
+            for row in c:
+                company_name = row[0]
+                user_name = company_name
+
+        elif user_type == 3:
+            sql = """SELECT university_name FROM university_detail WHERE user_id = %d""" % user_id
+            c.execute(sql)
+            for row in c:
+                university_name = row[0]
+                user_name = university_name
+
+        c.close()
+        conn.close()
+    except Exception as e:
+        print(str(e))
+
+    return user_name
+
+
 def job_share():
     archive = Jobs()
     try:
@@ -73,7 +115,8 @@ def job_share():
             sql = """SELECT user_id FROM job_appliers WHERE job_id= (%d) """ % job_id
             d.execute(sql)
             for row2 in d:
-                job.add_appliers(row2[0])
+                user_name = applier_name(row2[0])
+                job.add_appliers((row2[0], user_name))
                 print(row2[0])
             archive.add_job(job=job)
             print(job)
