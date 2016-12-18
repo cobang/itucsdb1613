@@ -25,6 +25,15 @@ class Job:
         self.description = description
         self.user_id = user_id
         self.location_id = location_id
+        self.appliers = {}
+        self.key = 0
+
+    def add_appliers(self, user_id):
+        self.appliers[self.key] = user_id
+        self.key += 1
+
+    def get_appliers(self):
+        return sorted(self.appliers)
 
     def get_location_name(self):
         try:
@@ -43,7 +52,6 @@ class Job:
         except Exception as e:
             print(str(e))
 
-
         return location_state
 
 
@@ -59,10 +67,16 @@ def job_share():
 
         for row in c:
             job_id, user_id, location_id, title, description = row
-            job = Job(job_id=job_id, user_id=user_id, location_id=location_id, title=title, description=description,
+            job = Job(job_id=job_id, user_id=user_id, location_id=location_id, title=title, description=description
                       )
+            d = conn.cursor()
+            sql = """SELECT user_id FROM job_appliers WHERE job_id= (%d) """ % job_id
+            d.execute(sql)
+            for row2 in d:
+                job.add_appliers(row2[0])
+                print(row2[0])
             archive.add_job(job=job)
-
+            print(job)
         c.close()
         conn.close()
         return archive.get_jobs()
