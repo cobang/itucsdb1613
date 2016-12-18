@@ -58,17 +58,6 @@ def get_inbox(user_id):
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
 
-        # sql = """SELECT c.user_id, c.participant_id,
-        #                c.in_out, m.content, m.message_datetime,
-        #                m.message_id, m.is_liked,
-        #                u.user_name, u.user_surname
-        #         FROM messages AS m
-        #         INNER JOIN conversations AS c
-        #            ON c.message_id = m.message_id
-        #         INNER JOIN user_detail AS u
-        #            ON u.user_id = c.participant_id
-        #         WHERE c.user_id = %d
-        #         ORDER BY c.participant_id, m.message_datetime""" % user_id
         sql = """SELECT c.user_id, c.participant_id,
                         c.in_out, m.content, m.message_datetime,
                         m.message_id, m.is_liked,
@@ -150,20 +139,10 @@ def send_message(user_id, participant_id, content, date):
         c.execute(sql)
         print('message inserted')
 
-        # sql = """SELECT MAX(message_id) FROM messages"""
-        # c.execute(sql)
-        # for x in c:
-        #    msg_id = x[0]
-        # sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
-        #                      VALUES(%d, %d ,%d, %d)""" % (user_id, int(participant_id), 0, msg_id)
-
         sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
            SELECT %d, %d, %d, MAX(message_id)
            FROM messages""" % (user_id, participant_id, 0)
         c.execute(sql)
-
-        # sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
-        #                      VALUES(%d, %d ,%d, %d)""" % (int(participant_id), user_id, 1, msg_id)
 
         sql = """INSERT INTO conversations(user_id, participant_id, in_out, message_id)
            SELECT %d, %d, %d, MAX(message_id)
@@ -263,9 +242,6 @@ def get_name(user_id):
                                passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
 
-        #sql = """SELECT user_name, user_surname
-        #         FROM user_detail
-        #         WHERE user_id = %d""" % user_id
         sql = """SELECT (CASE
                           WHEN u.user_type = 3
                               THEN uni.university_name
@@ -285,11 +261,6 @@ def get_name(user_id):
                       ON com.user_id = u.user_id
                   WHERE u.user_id = %d""" % user_id
         c.execute(sql)
-
-        #user_info = ('', '')
-        #for name, surname in c:
-        #    user_info = (name, surname)
-        #    print(user_info[0], user_info[1])
 
         for n in c:
             name = n
