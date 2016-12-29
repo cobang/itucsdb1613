@@ -3,9 +3,6 @@ Parts Implemented by Göksel ÇOBAN
 
 I implemented post, comment and like entities/relations and related operations.
 
-TABLES
-------
-
    .. figure:: https://github.com/itucsdb1613/itucsdb1613/blob/master/static/images/wiki/timeline_er.png?raw=true
       :scale: 50 %
       :alt: map to buried treasure
@@ -15,6 +12,9 @@ TABLES
       Comment table has five attributes: user_id, comment_text, comment_date, post_id and **comment_id** which is primary key.
 
       Likes table has two attributes: **user_id** and **post_id** which are primary keys.
+
+TABLES
+------
 
 **Creating Tables**
 
@@ -202,7 +202,7 @@ post_share: Takes user id, post text and post date as input. It adds new post. S
     """INSERT INTO posts(USER_ID, POST_TEXT, POST_DATE) VALUES (%d, '%s', '%s')""" % (user_id, text, date.strftime(f))
 
 post_delete: Takes post id as input. It firstly deletes comments and likes of this post because foreign constraint.
- After that, it deletes the comment.
+After that, it deletes the comment.
 
 .. code-block:: sql
 
