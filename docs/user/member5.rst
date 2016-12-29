@@ -69,7 +69,7 @@ Filtering Connections by User Type - Company
 
 Users can list their company type connections.
 
-      .. figure:: http://web.itu.edu.tr/yurdakulgu/db56.PNG
+   .. figure:: http://web.itu.edu.tr/yurdakulgu/db56.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -80,7 +80,7 @@ Filtering Connections by User Type - University
 
 Users can list their university type connections.
 
-      .. figure:: http://web.itu.edu.tr/yurdakulgu/db57.PNG
+    .. figure:: http://web.itu.edu.tr/yurdakulgu/db57.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -92,10 +92,10 @@ List of users followed by a user
 The user has 3 connections. If the button is clicked, a modal will be opened on the screen, which will list the users
 followed by the user Göksel Çoban.
 
-      .. figure:: http://web.itu.edu.tr/yurdakulgu/a.PNG
+    .. figure:: http://web.itu.edu.tr/yurdakulgu/a.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
-      .. figure:: http://web.itu.edu.tr/yurdakulgu/a1.PNG
+    .. figure:: http://web.itu.edu.tr/yurdakulgu/a1.PNG
       :scale: 50 %
       :alt: map to buried treasure
