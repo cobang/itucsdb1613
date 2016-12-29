@@ -153,8 +153,8 @@
                             <h4 class="modal-title">Appliers</h4>
                         </div>
                         <div class="modal-body">
-                            <p>The list of those who applied for this job.</p>
                             {% for index in job.appliers %}
+                                <p>The list of those who applied for this job.</p>
                             <p>{{ index }}- <a href="profile/{{ job.appliers[index][0] }}">{{ job.appliers[index][1] }}</a></p>
                             {% else %}
                             <p>No one is applied for this job.</p>
