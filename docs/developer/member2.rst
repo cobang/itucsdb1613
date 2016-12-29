@@ -1,13 +1,13 @@
 Parts Implemented by Merve ECEVİT
 =================================
 
-TABLES
-======
+Tables
+------
 
 Jobs, location and job appliers tables are implemented.
 
 First Table: Jobs
------------------
+^^^^^^^^^^^^^^^^^
 
 Job has the following attributes.
 
@@ -43,7 +43,7 @@ User ID takes the current User ID.
 
 
 Second Table: Location
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Location has the following attributes.
 
@@ -72,7 +72,7 @@ User ID is equal to the ID of the job owner.
         ON UPDATE NO ACTION)
 
 Third Table: Job Appliers
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Job Appliers has the following attributes.
 
@@ -100,8 +100,8 @@ User ID is equal to the ID of the applier.
         ON DELETE NO ACTION
         ON UPDATE NO ACTION)
 
-SOFTWARE DESIGN
-===============
+Software Design
+---------------
 Python classes are implemented for add-delete-update-select operations.
 
 **server.py:**
@@ -158,11 +158,11 @@ Python classes are implemented for add-delete-update-select operations.
        return redirect('jobs')
 
 
-DATABASE OPERATIONS
-===================
+Database Operations
+-------------------
 
 Functions
----------
+^^^^^^^^^
 
 **Add Job**:
 
