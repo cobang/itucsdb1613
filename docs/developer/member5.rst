@@ -354,7 +354,7 @@ DELETE query for deleting a row from recommended table.
 
 *Removing a user from favorites:*
 
- Connection table's add_to_favorites column is updated.
+Connection table's add_to_favorites column is updated.
 
 .. code-block:: python
 
