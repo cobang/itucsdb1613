@@ -1,17 +1,24 @@
-Welcome to itucsdb's documentation!
+Welcome to itucsdb1613's documentation!
 ===================================
 
-:Team: Team Name
+:Team: HumanNet
 
 :Members:
 
-   * Member 1
-   * Member 2
-   * Member 3
-   * Member 4
-   * Member 5
+   * Emre Özdil
+   * Arzugül Merve Ecevit
+   * Göksel Çoban
+   * Kaan Atukalp
+   * Güneş Yurdakul
 
-**project description goes here (a few paragraphs)**
+
+**A LinkedIn-like website aiming to connect people by mutual companies, and universities.
+
+There are 3 types of users: personal, company, and university. Personal profiles will be able to “connect” with each
+   other and “follow” related companies and universities. All types of users can share posts but have different profile
+   layouts.
+
+We are using bootstrap, flask, and mysql technologies.**
 
 Contents:
 
