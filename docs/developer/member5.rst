@@ -2,6 +2,11 @@ Parts Implemented by Güneş Yurdakul
 ================================
 
 
+
+Tables
+-----------------
+
+
 **Connections Table:**
   * User ID (Primary Key)
   * Following ID (Primary Key, Foreign Key)
@@ -79,7 +84,7 @@ Parts Implemented by Güneş Yurdakul
 
 ================================
 
-Classes:
+Classes
 -----------------
 
 *Connection:*
@@ -236,9 +241,16 @@ Recommendations class includes recommended connections list and methods for that
             return self.recommendations.items()
 
 
+
+================================
+
+Functions
+-----------------
+
 *Adding a connection to connections table:*
 
-INSERT INTO query for new connection.
+INSERT INTO query for new connection. This function is called whenever a user follows any other user and also recommendation
+remove function is also called, so that the user will be listed only on the added connections page.
 
 .. code-block:: python
 
@@ -261,6 +273,8 @@ INSERT INTO query for new connection.
 *Removing a connection from connections list:*
 
 DELETE query for deleting a row from connections table.
+This function is called whenever a user unfollows any of their existing connections. After this function add
+recommendation_add function is also called, so that the user will be listed on the recommended page.
 
 .. code-block:: python
 
@@ -284,6 +298,7 @@ DELETE query for deleting a row from connections table.
 *Adding a recommendation to recommended table:*
 
 INSERT INTO query for new recommendation.
+This function is called while creating recommended users for a newly signed up user or after unfollow operation.
 
 .. code-block:: python
 
@@ -306,6 +321,7 @@ INSERT INTO query for new recommendation.
 *Removing a recommendation from connections list:*
 
 DELETE query for deleting a row from recommended table.
+This function is called when the logged in user follows some user.
 
 .. code-block:: python
 
@@ -328,7 +344,7 @@ DELETE query for deleting a row from recommended table.
 
 *Updating a connection as favorite users:*
 
- Connection table's add_to_favorites column is updated.
+Connection table's add_to_favorites column is updated, if logged in user adds a followed user as favorite users.
 
 .. code-block:: python
 
@@ -354,7 +370,8 @@ DELETE query for deleting a row from recommended table.
 
 *Removing a user from favorites:*
 
-Connection table's add_to_favorites column is updated.
+Connection table's add_to_favorites column is updated, if logged in user removes a followed user from favorite users.
+
 
 .. code-block:: python
 
@@ -380,7 +397,7 @@ Connection table's add_to_favorites column is updated.
 
 *Adding connection detail:*
 
-A row is inserted into connections detail table.
+A row is inserted into connections detail table, if the logged in user follows any user.
 
 .. code-block:: python
 
