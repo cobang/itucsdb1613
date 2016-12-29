@@ -1,9 +1,5 @@
 Parts Implemented by Merve ECEVİT
 =================================
-
-Jobs Page
----------
-
 Any type of user can add job advertisement to jobs page by clicking the "Add Job" button.
 
    .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_1.png
@@ -13,7 +9,7 @@ Any type of user can add job advertisement to jobs page by clicking the "Add Job
       General look of Jobs Page
 
 Adding Job
-^^^^^^^^^^
+----------
 
 After clicking the add job button, a modal will come up.
 
@@ -46,7 +42,7 @@ Only the owner of the job advertisement can see the Dropdown menu.
       Editing/Deleting can be done by just the owner of the job
 
 Editing Job
-^^^^^^^^^^^
+-----------
 
 User can edit their own job advertisement by clicking "Edit" button which is under the dropdown menu.
 
@@ -65,7 +61,7 @@ Fields will be filled by user and job will be edited.
       Job is edited
 
 Deleting Job
-^^^^^^^^^^^^
+------------
 
 User can delete their own job advertisement by clicking "Delete" button which is under the dropdown menu.
 
@@ -83,7 +79,7 @@ If the user clicks "Delete Job", job will deleted.
       Job is deleted
 
 Applying to Job
-^^^^^^^^^^^^^^^
+---------------
 
 User can apply to jobs by pressing "Apply" button.
 
@@ -102,7 +98,7 @@ If the user is already applied to the job, "Apply" button will be disabled
       Apply Job button is disabled
 
 Appliers of a Job
-^^^^^^^^^^^^^^^^^
+-----------------
 
 User can see the appliers of a job by pressing "Appliers" button.
 
