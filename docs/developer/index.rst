@@ -8,6 +8,12 @@ Database Design
 
 **include the E/R diagram(s)**
 
+  .. figure:: http://web.itu.edu.tr/ozdile/images/itucsdb1613/sql.png
+      :scale: 50 %
+      :alt: map to buried treasure
+
+      This is the caption of the figure (a simple paragraph).
+
 Code
 ----
 
