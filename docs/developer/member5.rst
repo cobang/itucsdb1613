@@ -29,7 +29,6 @@ Parts Implemented by Güneş Yurdakul
     DEFAULT CHARACTER SET = utf8;
                     """
 
-            c.execute(sql)
 
 
 **Recommended Table:**
@@ -63,19 +62,19 @@ Parts Implemented by Güneş Yurdakul
 
 .. code-block:: sql
 
-    DROP TABLE IF EXISTS `cl48-humannet`.`connections_detail` ;
-CREATE TABLE IF NOT EXISTS `cl48-humannet`.`connections_detail` (
-  `user_id` INT(11) NOT NULL,
-  `num_of_connections` INT(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`user_id`),
-  INDEX `fk_connections_detail_users1_idx` (`user_id` ASC),
-  CONSTRAINT `fk_connections_detail_users1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `cl48-humannet`.`users` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-DEFAULT CHARACTER SET = utf8;
-        """
+        DROP TABLE IF EXISTS `cl48-humannet`.`connections_detail` ;
+    CREATE TABLE IF NOT EXISTS `cl48-humannet`.`connections_detail` (
+      `user_id` INT(11) NOT NULL,
+      `num_of_connections` INT(11) NOT NULL DEFAULT '0',
+      PRIMARY KEY (`user_id`),
+      INDEX `fk_connections_detail_users1_idx` (`user_id` ASC),
+      CONSTRAINT `fk_connections_detail_users1`
+        FOREIGN KEY (`user_id`)
+        REFERENCES `cl48-humannet`.`users` (`user_id`)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION)
+    DEFAULT CHARACTER SET = utf8;
+            """
 
 
 ================================
@@ -86,6 +85,7 @@ Classes:
 *Connection:*
 
 Holds all data of a connection, which are used both for interface and database operations.
+
 .. code-block:: python
 
     class Connection:
@@ -161,6 +161,7 @@ Holds all data of a connection, which are used both for interface and database o
 *Connections:*
 
 Connections class includes connections list and methods for that list including database operations.
+
 .. code-block:: python
 
     class Connections:
@@ -305,6 +306,7 @@ INSERT INTO query for new recommendation.
 *Removing a recommendation from connections list:*
 
 DELETE query for deleting a row from recommended table.
+
 .. code-block:: python
 
     def recommendation_remove(u_id, fol_id):
