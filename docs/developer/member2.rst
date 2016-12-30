@@ -1,5 +1,5 @@
-Parts Implemented by Merve ECEVİT
-=================================
+Parts Implemented by Merve ECEVİT - Jobs
+========================================
 
 
 **E/R Diagram of Job, Job Appliers and Location Tables**
