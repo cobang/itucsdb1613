@@ -1,4 +1,4 @@
-Parts Implemented by Güneş YURDAKUL
+Parts Implemented by Güneş YURDAKUL - Connections
 =================================
 
 Users can enter connections page by clicking "connections" on the navigation bar.
