@@ -2,7 +2,7 @@ Parts Implemented by Merve ECEVİT
 =================================
 Any type of user can add job advertisement to jobs page by clicking the "Add Job" button.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_1.png
+   .. figure:: images/member2/user_guide_1.png
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -13,7 +13,7 @@ Adding Job
 
 After clicking the add job button, a modal will come up.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_2.png
+   .. figure:: images/member2/user_guide_2.png
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -21,21 +21,21 @@ After clicking the add job button, a modal will come up.
 
 Fields will be filled by user and job will be added.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_3.png
+   .. figure:: images/member2/user_guide_3.png
       :scale: 50 %
       :alt: map to buried treasure
 
       Job is added
 In order to delete or edit a job, button should be pressed which is in right corner.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_4.png
+   .. figure:: images/member2/user_guide_4.png
       :scale: 50 %
       :alt: map to buried treasure
 
       Edit-Delete Dropdown Menu
 Only the owner of the job advertisement can see the Dropdown menu.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_14.png
+   .. figure:: images/member2/user_guide_14.png
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -46,7 +46,7 @@ Editing Job
 
 User can edit their own job advertisement by clicking "Edit" button which is under the dropdown menu.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_5.png
+   .. figure:: images/member2/user_guide_5.png
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -54,7 +54,7 @@ User can edit their own job advertisement by clicking "Edit" button which is und
 
 Fields will be filled by user and job will be edited.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_6.png
+   .. figure:: images/member2/user_guide_6.png
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -65,14 +65,14 @@ Deleting Job
 
 User can delete their own job advertisement by clicking "Delete" button which is under the dropdown menu.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_7.png
+   .. figure:: images/member2/user_guide_7.png
       :scale: 50 %
       :alt: map to buried treasure
 
       Delete Job Modal
 If the user clicks "Delete Job", job will deleted.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_8.png
+   .. figure:: images/member2/user_guide_8.png
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -83,7 +83,7 @@ Applying to Job
 
 User can apply to jobs by pressing "Apply" button.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_9.png
+   .. figure:: images/member2/user_guide_9.png
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -91,7 +91,7 @@ User can apply to jobs by pressing "Apply" button.
 
 If the user is already applied to the job, "Apply" button will be disabled
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_10.png
+   .. figure:: images/member2/user_guide_10.png
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -102,7 +102,7 @@ Appliers of a Job
 
 User can see the appliers of a job by pressing "Appliers" button.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_11.png
+   .. figure:: images/member2/user_guide_11.png
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -110,7 +110,7 @@ User can see the appliers of a job by pressing "Appliers" button.
 
 After clicking the "Appliers" button, a modal will come up and list of appliers will be shown.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_12.png
+   .. figure:: images/member2/user_guide_12.png
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -118,7 +118,7 @@ After clicking the "Appliers" button, a modal will come up and list of appliers 
 
 If no-one is applied to job, modal will look like as below.
 
-   .. figure:: https://raw.githubusercontent.com/itucsdb1613/itucsdb1613/master/static/images/guide/user_guide_13.png
+   .. figure:: images/member2/user_guide_13.png
       :scale: 50 %
       :alt: map to buried treasure
 
