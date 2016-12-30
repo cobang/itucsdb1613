@@ -1,4 +1,4 @@
-Parts Implemented by Güneş Yurdakul
+Parts Implemented by Güneş YURDAKUL
 ================================
 
 
@@ -87,8 +87,8 @@ Tables
 **ER Diagram**
 
 
-   .. figure:: images/member5/Picture1.png
-      :scale: 50 %
+   .. figure:: developer\images\Picture1.png
+      :scale: 80 %
       :alt: map to buried treasure
 
 
