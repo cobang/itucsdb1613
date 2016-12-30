@@ -1,14 +1,14 @@
 Developer Guide
 ===============
 
-**This section explains the development path of the website to developer.**
+**This section explains the development process of the website to developer.**
 
 Database Design
 ---------------
 
 **Database Schema**
 
-  .. figure:: mages/database.png
+  .. figure:: images/database.png
       :scale: 90 %
       :alt: map to buried treasure
 
