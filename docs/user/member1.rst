@@ -12,7 +12,7 @@ Sign up and login buttons locations at homepage
       :scale: 50 %
       :alt: map to buried treasure
 
-      Test account showed at homepage.
+      Homepage
 
 After the sign up button is pressed, sign up modal popped up.
 
@@ -20,15 +20,15 @@ After the sign up button is pressed, sign up modal popped up.
       :scale: 50 %
       :alt: map to buried treasure
 
+      Sign Up Modal
 
 After the login button is pressed, login modal popped up.
-
-    .. _connections: ../user/member5.html
 
     .. figure:: http://web.itu.edu.tr/ozdile/images/itucsdb1613/loginModal.png?raw=true
        :scale: 50 %
        :alt: map to buried treasure
 
+       Login Modal
 
 Logged in User Profile
 -------------------------
@@ -39,7 +39,7 @@ User can connect to self profile page via navigation bar.
       :scale: 50 %
       :alt: map to buried treasure
 
-      Unique profile page
+      User self profile page
 
 Another User Profile
 ----------------------
@@ -50,6 +50,7 @@ User can connect to self profile page via timeline, connections or job appliers.
       :scale: 50 %
       :alt: map to buried treasure
 
+      Another profile page
 
 Edit User Information
 -----------------------
@@ -60,4 +61,4 @@ After the edit button is pressed, edit modal popped up.
       :scale: 50 %
       :alt: map to buried treasure
 
-      Placeholders filled with old user information.
+      Edit Modal
