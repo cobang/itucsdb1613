@@ -5,16 +5,16 @@ Parts Implemented by Kaan ATUKALP
 
 Upon entering the messages page, the message inbox of the user is displayed as below.
 
-.. figure::  https://github.com/itucsdb1613/itucsdb1613/blob/master/static/images/wiki/messages_inbox.png?raw=true
-		:scale: 50 %
+.. figure::  images/wiki/messages_inbox.png
+		:scale: 80 %
 * Chats can be deleted by clicking "x" at the righmost corner of the chat box.
 
 **Sending a New Message**
 
 Users can compose a new message by clicking the "New Message" button and choose whom to send from the selection box. 
 
-.. figure::  https://github.com/itucsdb1613/itucsdb1613/blob/master/static/images/wiki/messages_new_msg.png?raw=true
-		:scale: 50 %
+.. figure::  images/wiki/messages_new_msg.png
+		:scale: 80 %
 * The selection box contains the users the user is following.
 
 
@@ -22,8 +22,8 @@ Users can compose a new message by clicking the "New Message" button and choose 
 
 Each chat is diplayed in a modal.
 
-.. figure:: https://github.com/itucsdb1613/itucsdb1613/blob/master/static/images/wiki/messages_chat.png?raw=true
-		:scale: 50 %
+.. figure:: images/wiki/messages_chat.png
+		:scale: 80 %
 * Users can send messages by using the textarea.
 * A message can be like by clicking "Like" on message boxes.
 * A liked message can be unliked by clicking the appearing "Liked!" text.
@@ -35,5 +35,5 @@ Each chat is diplayed in a modal.
 
 This page can be accessed by clicking the message button in profile pages or in the connections page. Allows the user to send a single message to any user.
 
-.. figure:: https://github.com/itucsdb1613/itucsdb1613/blob/master/static/images/wiki/messages_send_single_msg_1.png?raw=true
-		:scale: 50 %
+.. figure:: images/wiki/messages_send_single_msg_1.png
+		:scale: 80 %

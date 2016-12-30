@@ -1,6 +1,12 @@
 Parts Implemented by Kaan ATUKALP
 ================================
 
+    .. figure:: images/messages_er.png
+        :scale: 80 %
+        :alt: map to buried treasure
+
+    E/R diagram of messages and conversations tables.
+
 **Messages Table:**
   * Message ID (Primary Key)
   * Content

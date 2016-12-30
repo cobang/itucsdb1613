@@ -7,14 +7,16 @@ I implemented post, comment and like entities/relations and related operations.
       :scale: 80 %
       :alt: map to buried treasure
 
+      E/R diagram of post, comment and likes tables.
+
       Post table has four attributes: user_id, post_text, post_date and **post_id** which is primary key.
 
       Comment table has five attributes: user_id, comment_text, comment_date, post_id and **comment_id** which is primary key.
 
       Likes table has two attributes: **user_id** and **post_id** which are primary keys.
 
-Table
------
+Tables
+------
 
 **Creating Tables**
 
