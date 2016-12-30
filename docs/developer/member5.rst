@@ -84,6 +84,17 @@ Tables
 
 ================================
 
+**ER Diagram**
+
+
+   .. figure:: images/member5/Picture1.png
+      :scale: 50 %
+      :alt: map to buried treasure
+
+
+
+================================
+
 Classes
 -----------------
 
