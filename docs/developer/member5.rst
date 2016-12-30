@@ -87,7 +87,7 @@ Tables
 **ER Diagram**
 
 
-   .. figure:: developer\images\Picture1.png
+   .. figure:: images\Picture1.png
       :scale: 80 %
       :alt: map to buried treasure
 
