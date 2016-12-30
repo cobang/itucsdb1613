@@ -3,7 +3,7 @@ Parts Implemented by Göksel ÇOBAN
 
 I implemented post, comment and like entities/relations and related operations.
 
-   .. figure:: ../../static/images/wiki/timeline_er.png
+   .. figure:: images/timeline_er.png
       :scale: 50 %
       :alt: map to buried treasure
 
