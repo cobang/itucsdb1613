@@ -5,8 +5,11 @@ Parts Implemented by Merve ECEVİT
 **E/R Diagram of Job, Job Appliers and Location Tables**
 
 .. figure:: images/job_er.png
-      :scale: 80 %
-      :alt: map to buried treasure
+   :scale: 80 %
+   :figclass: align-center
+   :alt: map to buried treasure
+   
+   Entity/Relationship Diagram
       
 Tables
 ------
