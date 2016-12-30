@@ -1,5 +1,5 @@
-Parts Implemented by Merve ECEVİT
-=================================
+Parts Implemented by Merve ECEVİT - Jobs
+========================================
 Any type of user can add job advertisement to jobs page by clicking the "Add Job" button.
 
    .. figure:: images/member2/user_guide_1.png
