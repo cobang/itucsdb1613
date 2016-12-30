@@ -15,7 +15,7 @@ I implemented user, user details, company details and university entities and re
       
       University detail table keeps **user_id(FK)**, university_name, and university_address.
 
-TABLES
+Tables
 ------
 
 **Creating Tables**
@@ -85,7 +85,7 @@ University detail table keeps user_id(FK), university_name, and university_addre
     DEFAULT CHARACTER SET = utf8;
     
     
-CLASSES
+Classes
 -------
 
 User: Holds all data a user has.
@@ -93,8 +93,8 @@ User: Holds all data a user has.
 .. code-block:: python
 
     class User:
-    def __init__(self, user_id="", user_type="", user_email="", user_password="", user_name="", user_surname="",
-                 user_phone="", user_address=""):
+    def __init__(self, user_id="", user_type="", user_email="", user_password="", 
+                  user_name="", user_surname="", user_phone="", user_address=""):
         self.user_id = user_id
         self.user_type = user_type
         self.user_email = user_email
@@ -111,7 +111,8 @@ User: Holds all data a user has.
         elif user_type == 3:
             self.add_university_detail(user_name, user_address)
 
-    def add_user_detail(self, user_name="", user_surname="", user_phone="", user_address=""):
+    def add_user_detail(self, user_name="", user_surname="", user_phone="", 
+                        user_address=""):
         self.user_name = user_name
         self.user_surname = user_surname
         self.user_phone = user_phone
@@ -151,9 +152,59 @@ Users: Stores users in a dictionary.
         return sorted(self.users.items())
 
 
-FUNCTIONS
+Functions
 ---------
 
+**Profile page function**
+
+.. code-block:: python
+
+      @app.route('/profile/<int:user_id>', methods=['GET', 'POST'])
+      def profile_id(user_id):
+          if request.method == 'GET':
+              if 'user_email' in session:
+                  user = user_show(user_id)
+                  current_id = int(get_id(session["user_email"]))
+                  print(session['user_email'])
+                  print(type(user_id))
+                  print(type(user.user_id))
+                  return render_template('profile.html', user_id=user_id, 
+                     user=user, current_id=current_id)
+              else:
+                  return redirect('../home')
+
+          else:
+              if 'logout' in request.form:
+                  logout()
+              elif 'edit_user' in request.form:
+                  user_id = request.form['edit_user']
+                  user_name = request.form['name']
+                  user_surname = request.form['surname']
+                  user_phone = request.form['phone']
+                  user_address = request.form['address']
+                  print(user_name)
+                  print(user_surname)
+                  print(user_phone)
+                  print(user_address)
+                  user_edit(user_id, user_name, user_surname, user_phone, user_address)
+              elif 'edit_company' in request.form:
+                  user_id = request.form['edit_company']
+                  user_name = request.form['name']
+                  user_phone = request.form['phone']
+                  user_address = request.form['address']
+                  user_edit(user_id=user_id, user_name=user_name, 
+                     user_phone=user_phone, user_address=user_address)
+              elif 'edit_university' in request.form:
+                  user_id = request.form['edit_university']
+                  user_name = request.form['name']
+                  user_address = request.form['address']
+                  user_edit(user_id=user_id, user_name=user_name, user_address=user_address)
+              elif 'delete_user' in request.form:
+                  user_id = request.form['delete_user']
+                  user_delete(user_id=user_id)
+                  logout()
+          return redirect('../profile')
+          
 **Sign up Function**
 
 .. code-block:: python
@@ -170,7 +221,7 @@ FUNCTIONS
 
             try:
                 conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                       passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
                 c = conn.cursor()
                 sql = """INSERT INTO users(user_email, user_password, user_type)
                                        VALUES ('%s', '%s', '%d' )""" % (
@@ -188,7 +239,8 @@ FUNCTIONS
                         user_id = row[0]
 
                     c.execute(sql)
-                    sql = """INSERT INTO user_detail(user_name,user_id) VALUES ('%s', '%d')""" % (
+                    sql = """INSERT INTO user_detail(user_name,user_id) 
+                              VALUES ('%s', '%d')""" % (
                         user_name, int(user_id))
                     c.execute(sql)
                     print(sql)
@@ -202,7 +254,8 @@ FUNCTIONS
                     for row in c:
                         user_id = row[0]
 
-                    sql = """INSERT INTO company_detail(company_name, user_id) VALUES ('%s', '%d')""" % (
+                    sql = """INSERT INTO company_detail(company_name, user_id) 
+                              VALUES ('%s', '%d')""" % (
                         user_name, int(user_id))
 
                     c.execute(sql)
@@ -216,7 +269,8 @@ FUNCTIONS
                     for row in c:
                         user_id = row[0]
                     print('insert')
-                    sql = """INSERT INTO university_detail(university_name, user_id) VALUES ('%s', '%d')""" % (
+                    sql = """INSERT INTO university_detail(university_name, user_id) 
+                              VALUES ('%s', '%d')""" % (
                         user_name, int(user_id))
                     print(sql)
                     c.execute(sql)
@@ -246,10 +300,11 @@ FUNCTIONS
                 
     def valid_login(user_email, user_password):
         conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                               passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+                       passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
         c = conn.cursor()
-        sql = """SELECT * FROM users WHERE user_email='%s' and user_password='%s'""" % (
-            user_email, user_password)
+        sql = """SELECT * FROM users WHERE user_email='%s' and 
+                  user_password='%s'""" % (
+                  user_email, user_password)
 
         c.execute(sql)
 
@@ -276,7 +331,7 @@ FUNCTIONS
     def get_id(user_email):
       try:
           conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                 passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+                         passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
           c = conn.cursor()
           sql = """select user_id from users where user_email = '%s'""" % user_email
 
@@ -300,16 +355,18 @@ FUNCTIONS
         user = User()
         try:
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+                           passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
-            sql = """SELECT user_id, user_type, user_email, user_password FROM users WHERE  user_id = %d """ % (
+            sql = """SELECT user_id, user_type, user_email, user_password FROM users 
+                     WHERE  user_id = %d """ % (
                 int(user_id))
 
             c.execute(sql)
             print(user_id)
             for row in c:
                 user_id, user_type, user_email, user_password = row
-                user = User(user_id=user_id, user_type=user_type, user_email=user_email, user_password=user_password)
+                user = User(user_id=user_id, user_type=user_type, 
+                  user_email=user_email, user_password=user_password)
                 if user_type == 1:
                     sql = """SELECT user_name, user_surname, phone, address
                               FROM user_detail WHERE  user_id = %d """ % (
@@ -330,7 +387,8 @@ FUNCTIONS
                     c.execute(sql)
                     for row_user in c:
                         company_name, company_phone, company_address = row_user
-                        user.add_company_detail(user_name=company_name, user_phone=company_phone, user_address=company_address)
+                        user.add_company_detail(user_name=company_name,
+                           user_phone=company_phone, user_address=company_address)
 
                 elif user_type == 3:
                     sql = """SELECT university_name, university_address
@@ -341,7 +399,8 @@ FUNCTIONS
                     c.execute(sql)
                     for row_user in c:
                         university_name, university_address = row_user
-                        user.add_user_detail(user_name=university_name, user_address=university_address)
+                        user.add_user_detail(user_name=university_name, 
+                                 user_address=university_address)
 
             c.close()
             conn.close()
@@ -355,10 +414,11 @@ FUNCTIONS
 
 .. code-block:: python 
 
-    def user_edit(user_id, user_name="", user_surname="", user_phone="", user_address=""):
+    def user_edit(user_id, user_name="", user_surname="", user_phone="",
+                  user_address=""):
         try:
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+                           passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
             sql = """SELECT user_type FROM users WHERE  user_id = %d """ % (
                 int(user_id))
@@ -369,19 +429,23 @@ FUNCTIONS
                 if user_type == 1:
                     f = '%Y-%m-%d'
                     print('update user detail')
-                    sql = """UPDATE user_detail SET user_name = '%s', user_surname = '%s', phone = '%s', address = '%s' WHERE user_id = %d """ % (
+                    sql = """UPDATE user_detail SET user_name = '%s', user_surname = '%s',
+                                 phone = '%s', address = '%s' WHERE user_id = %d """ % (
                         user_name, user_surname, user_phone, user_address, int(user_id))
                     c.execute(sql)
 
                 elif user_type == 2:
                     print('update company detail')
-                    sql = """UPDATE company_detail SET company_name = '%s', company_phone = '%s', company_address = '%s' WHERE user_id = %d """ % (
+                    sql = """UPDATE company_detail SET company_name = '%s', 
+                           company_phone = '%s', company_address = '%s' 
+                           WHERE user_id = %d """ % (
                         user_name, user_phone, user_address, int(user_id))
                     c.execute(sql)
 
                 elif user_type == 3:
                     print('update university detail')
-                    sql = """UPDATE university_detail SET university_name = '%s', university_address = '%s' WHERE user_id = %d """ % (
+                    sql = """UPDATE university_detail SET university_name = '%s',
+                           university_address = '%s' WHERE user_id = %d """ % (
                         user_name, user_address, int(user_id))
                     print(sql)
                     c.execute(sql)
@@ -400,48 +464,62 @@ FUNCTIONS
     def user_delete(user_id):
         try:
             conn = pymysql.connect(host=MySQL.HOST, port=MySQL.PORT, user=MySQL.USER,
-                                   passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
+                           passwd=MySQL.PASSWORD, db=MySQL.DB, charset=MySQL.CHARSET)
             c = conn.cursor()
-            sql = """DELETE FROM recommended WHERE following_id = (%d) """ % int(user_id)
+            sql = """DELETE FROM recommended 
+                     WHERE following_id = (%d) """ % int(user_id)
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM connections_detail WHERE user_id = (%d) """ % int(user_id)
+            sql = """DELETE FROM connections_detail 
+                     WHERE user_id = (%d) """ % int(user_id)
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM connections WHERE following_id = (%d) """ % int(user_id)
+            sql = """DELETE FROM connections 
+                     WHERE following_id = (%d) """ % int(user_id)
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM conversations WHERE participant_id = (%d) """ % int(user_id)
+            sql = """DELETE FROM conversations 
+                     WHERE participant_id = (%d) """ % int(user_id)
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM jobs WHERE user_id = (%d) """ % int(user_id)
+            sql = """DELETE FROM jobs 
+                     WHERE user_id = (%d) """ % int(user_id)
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM comment WHERE user_id = (%d) """ % int(user_id)
+            sql = """DELETE FROM comment 
+                     WHERE user_id = (%d) """ % int(user_id)
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM posts WHERE user_id = (%d) """ % int(user_id)
+            sql = """DELETE FROM posts 
+                     WHERE user_id = (%d) """ % int(user_id)
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM likes WHERE user_id = (%d) """ % int(user_id)
+            sql = """DELETE FROM likes 
+                     WHERE user_id = (%d) """ % int(user_id)
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM job_appliers WHERE user_id = (%d) """ % int(user_id)
+            sql = """DELETE FROM job_appliers 
+                     WHERE user_id = (%d) """ % int(user_id)
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM location WHERE user_id = (%d) """ % int(user_id)
+            sql = """DELETE FROM location 
+                     WHERE user_id = (%d) """ % int(user_id)
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM user_detail WHERE user_id = (%d) """ % (int(user_id))
+            sql = """DELETE FROM user_detail 
+                     WHERE user_id = (%d) """ % (int(user_id))
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM company_detail WHERE user_id = (%d) """ % (int(user_id))
+            sql = """DELETE FROM company_detail 
+                     WHERE user_id = (%d) """ % (int(user_id))
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM university_detail WHERE user_id = (%d) """ % (int(user_id))
+            sql = """DELETE FROM university_detail 
+                     WHERE user_id = (%d) """ % (int(user_id))
             print(sql)
             c.execute(sql)
-            sql = """DELETE FROM users WHERE user_id = (%d) """ % int(user_id)
+            sql = """DELETE FROM users 
+                     WHERE user_id = (%d) """ % int(user_id)
             print(sql)
             c.execute(sql)
 
