@@ -4,7 +4,7 @@ Parts Implemented by Göksel ÇOBAN
 I implemented post, comment and like entities/relations and related operations.
 
    .. figure:: images/timeline_er.png
-      :scale: 50 %
+      :scale: 80 %
       :alt: map to buried treasure
 
       Post table has four attributes: user_id, post_text, post_date and **post_id** which is primary key.
