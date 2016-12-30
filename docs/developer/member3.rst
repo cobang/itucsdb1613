@@ -3,7 +3,7 @@ Parts Implemented by Göksel ÇOBAN
 
 I implemented post, comment and like entities/relations and related operations.
 
-   .. figure:: https://github.com/itucsdb1613/itucsdb1613/blob/master/static/images/wiki/timeline_er.png?raw=true
+   .. figure:: ../../static/images/wiki/timeline_er.png
       :scale: 50 %
       :alt: map to buried treasure
 
