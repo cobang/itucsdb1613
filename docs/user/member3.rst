@@ -11,7 +11,7 @@ This is an example timeline page of a new user named Göksel Çoban who has not 
 Users can share their opinion, emotion or whatever they like. They only need to write what they want and push the green share button.
 
    .. figure:: images/wiki/timeline010.png
-      :scale: 50 %
+      :scale: 80 %
       :alt: map to buried treasure
 
       Preview of page. This page shows the posts shared by the followers.
