@@ -9,7 +9,7 @@ Follow a User
 When the user clicks the connections page, recommended users will be listed. Recommended users are all the  users signed in
 to our social networking website HumanNet.
 If the current clicks the follow button on the profile card. The recommended connection will be deleted from recommended users. The followed user will be listed on "Added connections" page.
-   .. figure:: http://web.itu.edu.tr/yurdakulgu/db51.PNG
+   .. figure:: images/member5/db51.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -17,7 +17,7 @@ If the current clicks the follow button on the profile card. The recommended con
 
 After follow button is clicked, the user "Emre Özdil" is deleted from the recommended users.
 
-   .. figure:: http://web.itu.edu.tr/yurdakulgu/db52.PNG
+   .. figure:: images/member5/db52.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -29,7 +29,7 @@ Unfollow a User
 When the "Go to Added Connections" button is clicked, all the connections of logged in user are listed.
 When you click "Unfollow" button of a user, the user will be deleted.
 
-   .. figure:: http://web.itu.edu.tr/yurdakulgu/db53.PNG
+   .. figure:: images/member5/db53.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -37,7 +37,7 @@ When you click "Unfollow" button of a user, the user will be deleted.
 
 After unfollow operation.
 
-   .. figure:: http://web.itu.edu.tr/yurdakulgu/db54.PNG
+   .. figure:: images/member5/db54.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -47,7 +47,7 @@ After unfollow operation.
 Updating a followed user to your favorite users
 ---------------
 
-   .. figure:: http://web.itu.edu.tr/yurdakulgu/db55.PNG
+   .. figure:: images/member5/db55.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -58,7 +58,7 @@ Filtering Connections by User Type - Person
 
 Users can filter their added connections by person.
 
-   .. figure:: http://web.itu.edu.tr/yurdakulgu/db55u.PNG
+   .. figure:: images/member5/db55u.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -69,7 +69,7 @@ Filtering Connections by User Type - Company
 
 Users can list their company type connections.
 
-   .. figure:: http://web.itu.edu.tr/yurdakulgu/db56.PNG
+   .. figure:: images/member5/db56.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -80,7 +80,7 @@ Filtering Connections by User Type - University
 
 Users can list their university type connections.
 
-    .. figure:: http://web.itu.edu.tr/yurdakulgu/db57.PNG
+    .. figure:: images/member5/db57.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
@@ -92,10 +92,10 @@ List of users followed by a user
 The user has 3 connections. If the button is clicked, a modal will be opened on the screen, which will list the users
 followed by the user Göksel Çoban.
 
-    .. figure:: http://web.itu.edu.tr/yurdakulgu/a.PNG
+    .. figure:: images/member5/a.PNG
       :scale: 50 %
       :alt: map to buried treasure
 
-    .. figure:: http://web.itu.edu.tr/yurdakulgu/a1.PNG
+    .. figure:: images/member5/a1.PNG
       :scale: 50 %
       :alt: map to buried treasure
