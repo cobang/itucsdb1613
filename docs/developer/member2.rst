@@ -1,13 +1,19 @@
 Parts Implemented by Merve ECEVİT
 =================================
 
+
+**E/R Diagram of Job, Job Appliers and Location Tables**
+
+.. figure:: images/job_er.png
+      :scale: 80 %
+      :alt: map to buried treasure
+      
 Tables
 ------
 
 Jobs, location and job appliers tables are implemented.
 
-First Table: Jobs
-^^^^^^^^^^^^^^^^^
+**First Table: Jobs**
 
 Job has the following attributes.
 
@@ -42,8 +48,7 @@ User ID takes the current User ID.
         ON UPDATE NO ACTION)
 
 
-Second Table: Location
-^^^^^^^^^^^^^^^^^^^^^^
+**Second Table: Location**
 
 Location has the following attributes.
 
@@ -71,8 +76,7 @@ User ID is equal to the ID of the job owner.
         ON DELETE NO ACTION
         ON UPDATE NO ACTION)
 
-Third Table: Job Appliers
-^^^^^^^^^^^^^^^^^^^^^^^^^
+**Third Table: Job Appliers**
 
 Job Appliers has the following attributes.
 
@@ -100,8 +104,8 @@ User ID is equal to the ID of the applier.
         ON DELETE NO ACTION
         ON UPDATE NO ACTION)
 
-Software Design
----------------
+Classes
+-------
 Python classes are implemented for add-delete-update-select operations.
 
 **server.py:**
@@ -158,11 +162,8 @@ Python classes are implemented for add-delete-update-select operations.
        return redirect('jobs')
 
 
-Database Operations
--------------------
-
 Functions
-^^^^^^^^^
+---------
 
 **Add Job**:
 
@@ -171,15 +172,17 @@ Functions
 .. code-block:: sql
 
     """INSERT INTO location(location_state, location_country, location_zipcode, user_id)
-                         VALUES     ('%s', '%s','%s','%d') """ % (location, '', '', user_id)
+                         VALUES     ('%s', '%s','%s','%d') """ 
+                         % (location, '', '', user_id)
 
-    """SELECT location_id,location_state FROM location WHERE location_state= ('%s') """ % location
+    """SELECT location_id,location_state FROM location WHERE location_state= ('%s') """ 
+        % location
         for row in c:
             location_id, location_state = row
 
     """INSERT INTO jobs(user_id, location_id, title, description)
-                               VALUES ('%d', '%d' , '%s', '%s' )""" % (int(user_id),int(location_id), title, description)
-
+                               VALUES ('%d', '%d' , '%s', '%s' )"""
+                               % (int(user_id),int(location_id), title, description)
 
 - Queries add job's information to jobs and location tables.
 
@@ -192,9 +195,10 @@ Functions
     """SELECT location_id, job_id FROM jobs WHERE job_id = (%d) """ % int(job_id)
         for row in c:
             location_id, job_id = row
-    """UPDATE location SET  location_state = '%s'  WHERE location_id = '%d' """ % (location, int(location_id))
-    """UPDATE jobs SET title = '%s', description = '%s', location_id='%d'  WHERE job_id = '%d '"""\
-              % (title, description, int(location_id), int(job_id))
+    """UPDATE location SET  location_state = '%s'  WHERE location_id = '%d' """ 
+                                                   % (location, int(location_id))
+    """UPDATE jobs SET title = '%s', description = '%s', location_id='%d'  WHERE job_id = '%d '"""
+                            % (title, description, int(location_id), int(job_id))
 
 - Queries update the related rows in the jobs and location tables.
 
@@ -223,8 +227,8 @@ Functions
      """SELECT * FROM jobs"""
         for row in c:
             job_id, user_id, location_id, title, description = row
-            job = Job(job_id=job_id, user_id=user_id, location_id=location_id, title=title, description=description
-                      )
+            job = Job(job_id=job_id, user_id=user_id, location_id=location_id, 
+                     title=title, description=description)
             """SELECT user_id FROM job_appliers WHERE job_id= (%d) """ % job_id
             for row2 in d:
                 user_name = applier_name(row2[0])
@@ -238,7 +242,8 @@ Functions
 
 .. code-block:: sql
 
-    """INSERT INTO job_appliers (job_id, user_id) VALUES ('%d', '%d') """ % (job_id, user_id)
+    """INSERT INTO job_appliers (job_id, user_id) VALUES ('%d', '%d') """ 
+                                                  % (job_id, user_id)
 
 **Applier Name**
 
@@ -251,19 +256,22 @@ Functions
             user_type = row[0]
 
         if user_type == 1:
-            sql = """SELECT user_name, user_surname FROM user_detail WHERE user_id = %d""" % user_id
+            sql = """SELECT user_name, user_surname FROM user_detail WHERE user_id = %d""" 
+                                                                           % user_id
             for row in c:
                 user_name, user_surname = row
                 user_name = user_name + " " + user_surname
 
         elif user_type == 2:
-            sql = """SELECT company_name FROM company_detail WHERE user_id = %d""" % user_id
+            sql = """SELECT company_name FROM company_detail WHERE user_id = %d""" 
+                                                                           % user_id
             for row in c:
                 company_name = row[0]
                 user_name = company_name
 
         elif user_type == 3:
-            sql = """SELECT university_name FROM university_detail WHERE user_id = %d""" % user_id
+            sql = """SELECT university_name FROM university_detail WHERE user_id = %d""" 
+                                                                            % user_id
             for row in c:
                 university_name = row[0]
                 user_name = university_name
